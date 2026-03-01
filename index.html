@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kho Sim Số Đẹp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+        <div class="logo-container">
+            <svg width="24" height="24" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+            </svg>
+            <h2><a href="index.php" style="text-decoration: none; color: inherit;">SIM SỐ ĐẸP</a></h2>
+        </div>
+        
+        <nav class="nav-links">
+            <a href="sim.php">Trang Chủ</a>
+            <a href="#">Sim Số Đẹp</a>
+            <a href="#">Sim Phong Thủy</a>
+            <a href="#">Tin Tức</a>
+            <a href="#">Về Chúng Tôi</a>
+        </nav>
+        
+        <div class="user-actions">
+            <a href="login.php" class="btn btn-primary hidden-mobile" style="text-decoration: none;">Đăng nhập</a>
+            <!-- <a href="register.php" class="btn btn-secondary hidden-mobile" style="text-decoration: none;">Đăng ký</a> -->
+            <button class="btn btn-secondary btn-icon" id="openCartBtn" style="position: relative;">
+                <span class="material-symbols-outlined">shopping_cart</span>
+                <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+            </button>
+        </div>
+    </header>
+
+<main>
+    <section class="hero-section container">
+        <div class="hero-banner">
+            <div>
+                <h1>Kho Sim Số Đẹp Lớn Nhất Việt Nam</h1>
+            </div>
+            <div class="search-box">
+                <div class="search-icon">
+                    <span class="material-symbols-outlined">search</span>
+                </div>
+                <input type="text" placeholder="Nhập số bạn muốn tìm..." id="searchInput" />
+                <button class="btn btn-accent btn-search" id="btnSearch">Tìm kiếm</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container">
+        <h2 class="section-title">Sim VIP Bán Chạy</h2>
+
+        <div class="product-grid">
+
+            <!-- Sản phẩm 1 -->
+            <div class="product-card">
+                <div class="product-header">
+                    <h3>098.888.8888</h3>
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3T1ALkoVzeEkwjAEJFVkLwFT5KI0HdXy8guEVl3TXBH1h8EwfJuDiexk1ahRDbix2plAaYCPrVSq7hwz2GpwLuhwvy1AumYlcFkmCncOoNXHQQEJMrmKuDVkj40NcYYJKXsTL1Me-OfL62UW_k-dyvHIJNRJP6LfCyG-Y4gdxBOiylalOLvZjVfkjhOCChKXkYiZOxXCcu7-Rg5ukxRDGklDTh-7Jd7shyPcuO5DljlvC4LUDXIg1sh2cRFszjZ6NtQHn6KJLg2U" alt="Logo Nhà Mạng" />
+                </div>
+                <div class="product-price">
+                    <span class="price-current">3.500.000đ</span>
+                    <span class="price-old">4.000.000đ</span>
+                </div>
+                <button class="btn btn-accent btn-add-cart">
+                    <span class="material-symbols-outlined">add_shopping_cart</span>
+                    <span>Thêm vào giỏ</span>
+                </button>
+            </div>
+
+            <!-- Sản phẩm 2 -->
+            <div class="product-card">
+                <div class="product-header">
+                    <h3>091.666.8888</h3>
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOnh0S7ReK-bE-eHy5RBDsY6MIk7zhVws4k-rr8u2X8NPhHKq6THxe0Rx47yYjjTX0fWkybhBLFRsCqrL1bRJCvVgLT6A0W6W2-m_s1GoGNcA09s2f9ZUAEvW_evC6Svny_HubiGMGdFwsFsGGsJ6Pj-g3T0ArK9Pv0OHdpk5nXuLYqvIQ0x4GMRQmPp4qkXsGDu1Dye8wdS9bzVa2NXVfF_KIL14egusGuZWjZ8Dnv1nnS2nXE_FntfvHcOjYDGJaSzd1DiAXaic" alt="Logo Nhà Mạng" />
+                </div>
+                <div class="product-price">
+                    <span class="price-current">2.800.000đ</span>
+                </div>
+                <button class="btn btn-accent btn-add-cart">
+                    <span class="material-symbols-outlined">add_shopping_cart</span>
+                    <span>Thêm vào giỏ</span>
+                </button>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col-main">
+                <div class="footer-brand">
+                    <h2>SIM SỐ ĐẸP</h2>
+                </div>
+                <p class="footer-text">Địa chỉ: 123 Đường ABC, Quận 1, TP. Hồ Chí Minh</p>
+                <p class="footer-text">Hotline: 1900 1234</p>
+                <p class="footer-text">Email: support@simsodep.vn</p>
+            </div>
+            </div>
+        <div class="footer-bottom container">
+            <p class="footer-text">© 2026 SIM SỐ ĐẸP</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
+
+</body>
+</html>
