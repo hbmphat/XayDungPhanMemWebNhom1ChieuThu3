@@ -1,0 +1,27 @@
+# Thư mục phụ thuộc & Build cache
+node_modules
+.next
+.turbo
+out
+dist
+build
+
+# Cấu hình & Môi trường
+.env*
+!.env.example
+.git
+.gitignore
+.dockerignore
+
+# Log, Test & Tools
+npm-debug.log
+yarn-lock.json
+pnpm-lock.yaml
+coverage
+*.test.ts
+*.test.js
+__tests__
+
+# Hệ điều hành
+.DS_Store
+Thumbs.db
