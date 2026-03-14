@@ -76,6 +76,7 @@ services:
       - ./apps/api/.env
     networks:
       - app-network
+    command: ["php-fpm"]
     depends_on:
       db-main:
         condition: service_healthy

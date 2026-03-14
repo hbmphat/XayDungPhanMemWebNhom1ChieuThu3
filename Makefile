@@ -63,6 +63,10 @@ log:
 # Lệnh xem log nginx
 log-nginx:
 	docker compose logs nginx
+	
+# Lệnh xem log db
+log-db:
+	docker compose logs db-main
 
 # Lệnh xem log web-app
 log-web:
