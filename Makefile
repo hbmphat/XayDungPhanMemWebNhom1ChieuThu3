@@ -20,7 +20,7 @@ build-nginx:
 	docker compose build nginx
 
 # Lệnh build web-app
-build-web-app:
+build-web:
 	docker compose build web-app
 
 # Lệnh build api
@@ -30,17 +30,17 @@ build-api:
 # ----------------------------------------------------------------
 # (Dùng khi build lại từ đầu, bỏ qua cache-khi cache lỗi hoặc khi muốn đảm bảo build lại tất cả)
 # Lệnh build hệ thống không cache (dùng khi muốn đảm bảo build lại tất cả từ đầu)
-build-no-cache:
+build-nc:
 	docker compose build --no-cache
 # Lệnh build nginx không cache
-build-nginx-no-cache:
+build-nginx-nc:
 	docker compose build nginx --no-cache
 # Lệnh build web-app không cache
-build-web-app-no-cache:
+build-web-nc:
 	docker compose build web-app --no-cache
 
 # Lệnh build api không cache
-build-api-no-cache:
+build-api-nc:
 	docker compose build api --no-cache
 
 # ----------------------------------------------------------------
@@ -53,20 +53,21 @@ up:
 down:
 	docker compose down
 
+
 # -----------------------------------------------------------------
 
 # Lệnh xem log hệ thống
-logs:
+log:
 	docker compose logs
 
 # Lệnh xem log nginx
-logs-nginx:
+log-nginx:
 	docker compose logs nginx
 
 # Lệnh xem log web-app
-logs-web-app:
+log-web:
 	docker compose logs web-app
 
 # Lệnh xem log api
-logs-api:
+log-api:
 	docker compose logs api

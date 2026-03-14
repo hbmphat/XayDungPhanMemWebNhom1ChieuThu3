@@ -48,10 +48,16 @@ services:
     networks:
       - app-network
     user: root
-    volumes:
-      - ./apps/web-app:/app
-      - /app/node_modules
-
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3000 || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 50s
     depends_on:
       db-main:
         condition: service_healthy
