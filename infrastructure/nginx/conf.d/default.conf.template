@@ -1,11 +1,20 @@
 server {
     listen 80;
 
-    # 1. Home Page (Route gốc)
+    # 1. Home Page - Chuyển hướng tới Next.js
     location / {
         proxy_pass http://web-app:3000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # 2. API Route - Chuyển hướng tới Laravel
+    location /api/ {
+        proxy_pass http://api:9000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 }

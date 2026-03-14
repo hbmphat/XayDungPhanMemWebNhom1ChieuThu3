@@ -42,7 +42,9 @@ services:
     container_name: web-app
     expose:
       - "3000"
-    env_file: ./.env
+    env_file:
+      - ./.env
+      - ./apps/web-app/.env
     networks:
       - app-network
     depends_on:
@@ -50,5 +52,22 @@ services:
         condition: service_healthy
     restart: always
 
+  # 4. API (Laravel)
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: api
+    expose:
+      - "9000"
+    env_file:
+      - ./.env
+      - ./apps/api/.env
+    networks:
+      - app-network
+    depends_on:
+      db-main:
+        condition: service_healthy
+    restart: always
 volumes:
   pgdata:

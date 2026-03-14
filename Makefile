@@ -1,23 +1,60 @@
-# Biến cấu hình
-COMPOSE_FILE = infrastructure/docker-compose.yml
-
-# Lệnh build container
+# (Dùng khi build nhanh nhờ cache)
+# Lệnh build hệ thống 
 build:
-	docker compose -f $(COMPOSE_FILE) build --no-cache
+	docker compose build
+
+# Lệnh build nginx
+build-nginx:
+	docker compose build nginx
+
+# Lệnh build web-app
+build-web-app:
+	docker compose build web-app
+
+# Lệnh build api
+build-api:
+	docker compose build api
+
+# ----------------------------------------------------------------
+# (Dùng khi build lại từ đầu, bỏ qua cache-khi cache lỗi hoặc khi muốn đảm bảo build lại tất cả)
+# Lệnh build hệ thống không cache (dùng khi muốn đảm bảo build lại tất cả từ đầu)
+build-no-cache:
+	docker compose build --no-cache
+# Lệnh build nginx không cache
+build-nginx-no-cache:
+	docker compose build nginx --no-cache
+# Lệnh build web-app không cache
+build-web-app-no-cache:
+	docker compose build web-app --no-cache
+
+# Lệnh build api không cache
+build-api-no-cache:
+	docker compose build api --no-cache
+
+# ----------------------------------------------------------------
 
 # Lệnh khởi động hệ thống
 up:
-	docker compose -f $(COMPOSE_FILE) up -d
+	docker compose up -d
 
 # Lệnh dừng hệ thống
 down:
-	docker compose -f $(COMPOSE_FILE) down
+	docker compose down
 
-# Lệnh xem log
+# -----------------------------------------------------------------
+
+# Lệnh xem log hệ thống
 logs:
-	docker compose -f $(COMPOSE_FILE) logs -f web-app
+	docker compose logs
 
-# Lệnh khởi động lại nhanh (Re-deploy)
-deploy:
-	docker compose -f $(COMPOSE_FILE) pull
-	docker compose -f $(COMPOSE_FILE) up -d --build
+# Lệnh xem log nginx
+logs-nginx:
+	docker compose logs nginx
+
+# Lệnh xem log web-app
+logs-web-app:
+	docker compose logs web-app
+
+# Lệnh xem log api
+logs-api:
+	docker compose logs api
