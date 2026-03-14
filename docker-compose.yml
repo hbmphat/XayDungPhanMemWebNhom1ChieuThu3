@@ -47,6 +47,11 @@ services:
       - ./apps/web-app/.env
     networks:
       - app-network
+    user: root
+    volumes:
+      - ./apps/web-app:/app
+      - /app/node_modules
+
     depends_on:
       db-main:
         condition: service_healthy
@@ -69,5 +74,6 @@ services:
       db-main:
         condition: service_healthy
     restart: always
+
 volumes:
   pgdata:

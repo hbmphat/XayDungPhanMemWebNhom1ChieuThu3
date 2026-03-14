@@ -10,14 +10,14 @@ FROM php:8.3-fpm-alpine AS base
 # Cài đặt extension cần thiết
 RUN apk add --no-cache \
     libpng-dev libzip-dev zip unzip git postgresql-dev \
-    && docker-php-ext-install pdo_mysql bcmath gd zip
-
-WORKDIR /var/www/html
+    && docker-php-ext-install pdo_pgsql bcmath gd zip
+# Copy composer từ image chính thức
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Copy source code từ apps/api vào container
+WORKDIR /var/www/html
 COPY apps/api/ .
 COPY apps/api/.env.example .env
-# Copy vendor đã build ở stage 1
 COPY --from=vendor /app/vendor ./vendor
 
 # Thiết lập entrypoint
@@ -28,4 +28,5 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 9000
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["php-fpm"]

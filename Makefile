@@ -1,3 +1,15 @@
+# Setup toàn bộ hệ thống lần đầu tiên
+setup:
+	docker compose build
+	npm install
+	docker compose run --rm api composer install
+	docker compose run --rm web-app npm install
+# Cài đặt npm cho web-app
+npm-install:
+	docker compose run --rm web-app npm install
+# Cài đặt composer cho api
+composer-install:
+	docker compose run --rm api composer install
 # (Dùng khi build nhanh nhờ cache)
 # Lệnh build hệ thống 
 build:

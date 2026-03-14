@@ -1,9 +1,8 @@
 # 1. Pruner
 FROM node:24-slim AS pruner
 WORKDIR /app
-RUN npm install -g turbo
 COPY . .
-RUN turbo prune --scope=web-app --docker
+RUN npx turbo prune --scope=web-app --docker
 
 # 2. Deps
 FROM node:24-slim AS deps
@@ -17,11 +16,12 @@ FROM node:24-slim AS builder
 WORKDIR /app
 COPY --from=pruner /app/out/full/ .
 COPY --from=deps /app/node_modules ./node_modules
+
 WORKDIR /app/apps/web-app
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN --mount=type=cache,target=/app/apps/web-app/.next/cache \
     --mount=type=cache,target=/root/.turbo \
-    npx turbo run build --filter=web-app
+    ../../node_modules/.bin/turbo run build --filter=web-app
 
 # 4. Runner
 FROM node:24-slim AS runner
