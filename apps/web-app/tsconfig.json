@@ -24,8 +24,8 @@
       "@components/*": ["./app/_components/*"],
       "@hooks/*": ["./app/_hooks/*"],
       "@services/*": ["./app/_services/*"],
-      "@admin/*": ["./app/_admin/*"],
-      "@home/*": ["./app/_home/*"],
+      "@admin/*": ["./app/(admin)/admin/*"],
+      "@home/*": ["./app/(home)/*"],
     }
   },
   "include": [
