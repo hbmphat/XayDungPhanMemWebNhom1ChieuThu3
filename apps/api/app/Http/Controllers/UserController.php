@@ -7,7 +7,6 @@ use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -17,7 +16,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return new UserCollection(User::paginate(10));
+        return $this->successReponse([
+            'data' => new UserCollection(User::paginate(10)),
+            'message' => 'Danh sách người dùng'
+        ]);
     }
 
     /**
@@ -29,9 +31,11 @@ class UserController extends Controller
         $validated['password'] = Hash::make($validated['password']);
         $user = User::create($validated);
 
-        return (new UserResource($user))
-            ->response()
-            ->setStatusCode(201);
+        return $this->successReponse([
+            'data' => new UserResource($user),
+            'message' => 'Tạo thành công',
+            'code' => 201
+        ]);
     }
 
     /**
@@ -39,7 +43,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return new UserResource($user);
+        return $this->successReponse([
+            'data' => new UserResource($user),
+            'message' => 'Thông tin người dùng',
+        ]);
     }
 
     /**
@@ -58,7 +65,10 @@ class UserController extends Controller
         $user->update($validated);
 
 
-        return new UserResource($user);
+        return $this->successReponse([
+            'data' => new UserResource($user),
+            'message' => 'Cập nhật thành công',
+        ]);
     }
 
     /**
@@ -67,6 +77,8 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return response()->noContent();
+        return $this->successReponse([
+            'message' => 'Xóa thành công'
+        ]);
     }
 }
