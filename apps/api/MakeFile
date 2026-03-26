@@ -1,0 +1,41 @@
+name ?= Default
+# chạy server
+serve:
+	php artisan serve
+# chạy migration
+migrate:
+	php artisan migrate
+# -------------------------------------------------------------------------
+# make ... name=...
+# tạo model, controller, resource
+api:
+	php artisan make:model $(name) -mc --api
+# --api => không tạo create và edit
+# tạo request cho store và update
+request-set:
+	php artisan make:request $(name)/Store$(name)Request
+	php artisan make:request $(name)/Update$(name)Request
+# tạo resource cho show và index
+resource-set:
+	php artisan make:resource $(name)/$(name)Resource
+	php artisan make:resource $(name)/$(name)Collection
+# -------------------------------------------------------------------------
+# tạo request
+request:
+	php artisan make:request $(name)/$(name)Request
+# tạo resource
+resource:
+	php artisan make:resource $(name)/$(name)Resource
+# tạo collection
+collection:
+	php artisan make:resource $(name)/$(name)Collection
+# -------------------------------------------------------------------------
+# tạo controller
+controller:
+	php artisan make:controller $(name)Controller --api
+# tạo model
+model:
+	php artisan make:model $(name)
+# tạo migration
+migration:
+	php artisan make:migration create_$(name)_table --create=$(name)
