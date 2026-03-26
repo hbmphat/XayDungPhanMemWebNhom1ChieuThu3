@@ -16,10 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return $this->successReponse([
-            'data' => new UserCollection(User::paginate(10)),
-            'message' => 'Danh sách người dùng'
-        ]);
+        return $this->successReponse(new UserCollection(User::paginate(10)), 'Danh sách người dùng');
     }
 
     /**
@@ -31,11 +28,7 @@ class UserController extends Controller
         $validated['password'] = Hash::make($validated['password']);
         $user = User::create($validated);
 
-        return $this->successReponse([
-            'data' => new UserResource($user),
-            'message' => 'Tạo thành công',
-            'code' => 201
-        ]);
+        return $this->successReponse(new UserResource($user), 'Tạo thành công', 201);
     }
 
     /**
@@ -43,10 +36,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $this->successReponse([
-            'data' => new UserResource($user),
-            'message' => 'Thông tin người dùng',
-        ]);
+        return $this->successReponse(new UserResource($user), 'Thông tin người dùng');
     }
 
     /**
@@ -65,10 +55,7 @@ class UserController extends Controller
         $user->update($validated);
 
 
-        return $this->successReponse([
-            'data' => new UserResource($user),
-            'message' => 'Cập nhật thành công',
-        ]);
+        return $this->successReponse(new UserResource($user), 'Cập nhật thành công');
     }
 
     /**
@@ -77,8 +64,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return $this->successReponse([
-            'message' => 'Xóa thành công'
-        ]);
+        return $this->successReponse(null, 'Xóa thành công');
     }
 }
