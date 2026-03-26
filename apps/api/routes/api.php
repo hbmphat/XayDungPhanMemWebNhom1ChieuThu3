@@ -1,10 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/hello', function () {
-    return response()->json([
-        'message' => 'Hello from Laravel on Render!',
-        'environment' => app()->environment(),
-    ]);
-});
+Route::apiResource('users', UserController::class);
