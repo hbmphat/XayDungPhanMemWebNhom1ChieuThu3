@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import AdminLayoutWrapper from "../_components/AdminLayoutWrapper";
+import AdminLayoutWrapper from "@admin/_components/AdminLayoutWrapper";
 
 export const metadata: Metadata = {
   title: "Admin | STU Simshop",

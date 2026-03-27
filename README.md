@@ -28,8 +28,8 @@
          "fix:#01-lỗi nút đăng nhập biến mất"
       docs: Chỉ thay đổi tài liệu (README, comments...).
          "docs: cập nhật hướng dẫn cài đặt trong README"
-      refactor: Sửa lại code mà không thêm feat hay fix bug.
-         "refactor: tối ưu hóa query lấy SIM card"
+      ref: Sửa lại code mà không thêm feat hay fix bug.
+         "ref: tối ưu hóa query lấy SIM card"
       chore: Các công việc phụ (cập nhật build, deps, CI/CD...).
          "chore: cập nhật version laravel/framework lên 12"
    scope: module hay service đang làm
