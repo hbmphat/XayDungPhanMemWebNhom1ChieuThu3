@@ -2,7 +2,12 @@
 import { Bell, Menu, UserPlus } from "lucide-react";
 import { useSidebar } from "@shared/contexts/SidebarContext"; // Đảm bảo đúng đường dẫn
 
-export default function UserHeader({ total = 0 }: { total?: number }) {
+interface UserHeaderProps {
+  total?: number;
+  onAddClick: () => void;
+}
+
+export default function UserHeader({ total = 0, onAddClick }: UserHeaderProps) {
   const { toggle } = useSidebar();
 
   return (
@@ -30,7 +35,10 @@ export default function UserHeader({ total = 0 }: { total?: number }) {
           <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
         </button>
         <div className="h-6 w-px bg-slate-200 mx-2"></div>
-        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm shadow-indigo-200">
+        <button
+          onClick={onAddClick}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm shadow-indigo-200"
+        >
           <UserPlus className="w-4 h-5" />
           Add User
         </button>
