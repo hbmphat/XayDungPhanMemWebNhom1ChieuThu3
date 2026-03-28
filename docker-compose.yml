@@ -1,0 +1,86 @@
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  # 1. Nginx Gateway
+  nginx:
+    build:
+      context: .
+      dockerfile: infrastructure/nginx/Dockerfile
+    container_name: nginx-gateway
+    ports:
+      - "80:80"
+    env_file: ./.env
+    networks:
+      - app-network
+    depends_on:
+      web-app:
+        condition: service_started
+    restart: unless-stopped
+
+  # 2. Database
+  db-main:
+    image: postgres:18.3-alpine
+    container_name: db-main
+    env_file: ./.env
+    networks:
+      - app-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 3. Web-app (Next.js)
+  web-app:
+    build:
+      context: .
+      dockerfile: apps/web-app/Dockerfile
+    container_name: web-app
+    expose:
+      - "3000"
+    env_file:
+      - ./.env
+      - ./apps/web-app/.env
+    networks:
+      - app-network
+    user: root
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3000 || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 50s
+    depends_on:
+      db-main:
+        condition: service_healthy
+    restart: always
+
+  # 4. API (Laravel)
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: api
+    expose:
+      - "9000"
+    env_file:
+      - ./.env
+      - ./apps/api/.env
+    networks:
+      - app-network
+    command: ["php-fpm"]
+    depends_on:
+      db-main:
+        condition: service_healthy
+    restart: always
+
+volumes:
+  pgdata:

@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  /* --- Màu sắc (Primary) --- */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+
+  /* --- Cấu hình hệ thống --- */
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* --- Độ bo góc (Radius) --- */
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+}
+
+/* --- Định nghĩa biến gốc --- */
+:root {
+  --background: #f8fafc; /* Màu nền trang web của mẫu */
+  --foreground: #0f172a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #f8fafc;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased font-sans;
+  }
+}
+
+@layer components {
+  /* Class dùng chung cho card login */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  }
+
+  /* Định dạng chung cho input form */
+  .form-input {
+    @apply block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg 
+           focus:ring-2 focus:ring-primary-500 focus:border-primary-500 
+           text-sm transition-all bg-white;
+  }
+
+  /* Định dạng chung cho button chính */
+  .btn-primary {
+    @apply w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg 
+           shadow-sm text-sm font-semibold text-white bg-primary-600 
+           hover:bg-primary-700 transition-all active:scale-[0.98];
+  }
+
+  /* Định dạng chung cho button phụ (social) */
+  .btn-social {
+    @apply w-full inline-flex justify-center py-2.5 px-4 border border-slate-300 
+           rounded-lg bg-white text-sm font-medium text-slate-700 
+           hover:bg-slate-50 transition-colors;
+  }
+}
+
+/* --- Tinh chỉnh Scrollbar --- */
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
+@layer components {
+  #sidebar-toggle:checked ~ aside {
+    transform: translateX(0);
+  }
+  #sidebar-toggle:checked ~ .overlay {
+    display: block;
+  }
+}

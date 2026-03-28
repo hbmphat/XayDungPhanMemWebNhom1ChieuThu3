@@ -1,0 +1,32 @@
+# Bỏ qua các file cài đặt từ root hoặc các service khác
+node_modules
+.git
+.turbo
+
+# Laravel Cache & Sessions
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+!/storage/**/.gitignore
+
+# Dependencies
+vendor
+
+# Environment & Config
+.env*
+!.env.example
+.phpunit.cache
+
+# IDE & OS
+.DS_Store
+.vscode
+.idea
+.editorconfig
+
+# Docker & CI/CD
+Dockerfile
+docker-compose.yml
+.dockerignore
