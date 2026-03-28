@@ -24,6 +24,7 @@
       "@components/*": ["./app/_components/*"],
       "@hooks/*": ["./app/_hooks/*"],
       "@services/*": ["./app/_services/*"],
+      "@app_types/*": ["./app/_types/*"],
       "@admin/*": ["./app/(admin)/admin/*"],
       "@home/*": ["./app/(home)/*"],
     }
