@@ -4,30 +4,37 @@ import { userService } from '@services/users/userService';
 import { User, UserInput } from '@app/_types/users/user-types';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { PaginationMeta } from '@app_types/api-response'
 export const useUsers = () => {
+    // Define States & Hooks
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
-    const [meta, setMeta] = useState(null);
+    const [meta, setMeta] = useState<PaginationMeta | null>(null);
     const router = useRouter();
+
+    // fetchUsers
     const fetchUsers = async (page = 1) => {
         setLoading(true);
         try {
             const res = await userService.getAll(page);
-            setUsers(res?.data.data || []);
-            setMeta(res?.data.meta || null);
+            setUsers(res.data || []);
+            setMeta(res.meta || null);
+            console.log(users.length);
         } catch (error) {
             setUsers([]);
+            setMeta(null);
         } finally {
             setLoading(false);
         }
     };
 
+    // creatUser
     const creatUser = async (input: UserInput) => {
         setLoading(true);
         try {
             const res = await userService.create(input);
-            if (res.data.success) {
-                toast.success(res.data.message || "Success");
+            if (res.success) {
+                toast.success(res.message || "Success");
                 router.refresh();
             }
         } catch (error) {
@@ -35,12 +42,13 @@ export const useUsers = () => {
             setLoading(false);
         }
     };
+    // updateUser
     const updateUser = async (id: string, input: UserInput) => {
         setLoading(true);
         try {
             const res = await userService.update(id, input);
-            if (res.data.success) {
-                toast.success(res.data.message || "Success");
+            if (res.success) {
+                toast.success(res.message || "Success");
                 router.refresh();
             }
         } catch (error) {
@@ -48,6 +56,8 @@ export const useUsers = () => {
             setLoading(false);
         }
     };
+
+    // deleteUser
     const deleteUser = async (id: string) => {
         if (!confirm('Bạn có chắc chắn muốn xóa?')) return;
         try {

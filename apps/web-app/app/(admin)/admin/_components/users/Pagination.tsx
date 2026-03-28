@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { PaginationMeta } from "@app_types/api";
+import { PaginationMeta } from "@app/_types/api-response";
 interface PaginationProps {
   meta: PaginationMeta;
   onPageChange: (page: number) => void;
