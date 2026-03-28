@@ -5,6 +5,7 @@ export interface User {
   last_name: string;
   full_name: string;
   address: string;
+  phone: string;
   email: string;
   status: string;
   avatar?: string

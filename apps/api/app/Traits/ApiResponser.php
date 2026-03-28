@@ -6,7 +6,7 @@ use Illuminate\Http\Response;
 
 trait ApiResponser
 {
-    protected function successReponse($data, $message = null, $code = Response::HTTP_OK)
+    protected function successResponse($data, $message = null, $code = Response::HTTP_OK)
     {
         // Nếu $data là một Resource hoặc Collection, chuyển nó thành array/json
         if ($data instanceof \Illuminate\Http\Resources\Json\JsonResource) {

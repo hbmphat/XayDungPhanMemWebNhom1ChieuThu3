@@ -23,16 +23,36 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Lấy ID từ route để loại trừ chính nó khi check Unique
+        $userParam = $this->route('user');
+        $userId = $userParam instanceof \App\Models\User ? $userParam->id : $userParam;
+
         return [
-            'name' => 'sometimes|string|max:255',
+            'user_name' => [
+                'sometimes',
+                'string',
+                'max:255',
+                Rule::unique('users')->ignore($userId)
+            ],
+            'sometimes|string|max:255',
+            'first_name' => 'sometimes|string|max:255',
+            'last_name' => 'sometimes|string|max:255',
             'email' => [
                 'sometimes',
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->route('user'))
+                Rule::unique('users')->ignore($userId)
             ],
             'password' => 'sometimes|nullable|string|min:8',
+            'date_of_birth' => 'sometime|date',
+            'phone' => [
+                'sometimes',
+                'string',
+                'max:255',
+                Rule::unique('users')->ignore($userId)
+            ],
+            'address' => 'sometimes|string|max:255',
         ];
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\User\UserCollection;
@@ -16,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return $this->successReponse(new UserCollection(User::paginate(10)), 'Danh sách người dùng');
+        return $this->successResponse(new UserCollection(User::paginate(10)), 'Danh sách người dùng');
     }
 
     /**
@@ -25,10 +26,9 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $validated = $request->validated();
-        $validated['password'] = Hash::make($validated['password']);
         $user = User::create($validated);
 
-        return $this->successReponse(new UserResource($user), 'Tạo thành công', 201);
+        return $this->successResponse(new UserResource($user), 'Tạo thành công', 201);
     }
 
     /**
@@ -36,7 +36,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $this->successReponse(new UserResource($user), 'Thông tin người dùng');
+        return $this->successResponse(new UserResource($user), 'Thông tin người dùng');
     }
 
     /**
@@ -55,7 +55,7 @@ class UserController extends Controller
         $user->update($validated);
 
 
-        return $this->successReponse(new UserResource($user), 'Cập nhật thành công');
+        return $this->successResponse(new UserResource($user), 'Cập nhật thành công');
     }
 
     /**
@@ -64,6 +64,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return $this->successReponse(null, 'Xóa thành công');
+        return $this->successResponse(null, 'Xóa thành công');
     }
 }
