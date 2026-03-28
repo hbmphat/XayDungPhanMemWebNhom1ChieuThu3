@@ -26,8 +26,7 @@ trait ApiResponser
         return response()->json([
             'success' => true,
             'message' => $message,
-            'data'    => $data,
-            'errors'  => null
+            'data'    => $data
         ], $code);
     }
     protected function errorResponse($message, $code, $errors = null)
