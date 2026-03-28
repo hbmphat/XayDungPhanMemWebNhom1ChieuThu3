@@ -1,72 +1,74 @@
 "use client";
-import Pagination from "@app/(admin)/admin/_components/users/Pagination";
-import UserRow from "@app/(admin)/admin/_components/users/UserRow";
-import { useUsers } from "@app/_hooks/users/useUsers";
-import { useEffect } from "react";
+import UserRow from "./UserRow";
+import { User } from "@app/_types/users/user-types";
 
-export default function UserTable() {
-  const { users, loading, meta, fetchUsers } = useUsers();
+interface UserTableProps {
+  users: User[];
+  isLoading: boolean;
+}
 
-  useEffect(() => {
-    fetchUsers(1);
-  }, []);
-
-  if (loading && users.length === 0) {
-    return (
-      <div className="flex justify-center items-center p-10 bg-white border rounded-xl">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-3 text-slate-500 text-sm">
-          Đang tải danh sách...
-        </span>
-      </div>
-    );
-  }
+export default function UserTable({ users, isLoading }: UserTableProps) {
+  const tableHeaders = [
+    "User",
+    "Fullname",
+    "Email",
+    "Phone",
+    "Address",
+    "Role",
+    "Status",
+    "Actions",
+  ];
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-      <div className="overflow-x-auto">
-        <table
-          className="min-w-full divide-y divide-slate-200"
-          id="user-management-table"
-        >
-          <thead className="bg-slate-50">
-            <tr>
-              {[
-                "User",
-                "Fullname",
-                "Email",
-                "Address",
-                "Status",
-                "Actions",
-              ].map((head) => (
-                <th
-                  key={head}
-                  className="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
-                >
-                  {head}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-slate-200">
-            {users && users.length > 0 ? (
-              users.map((user) => <UserRow key={user.id} user={user} />)
-            ) : (
+    <div className="px-8 py-4">
+      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-200">
+            <thead className="bg-slate-50">
               <tr>
-                <td
-                  colSpan={5}
-                  className="px-6 py-10 text-center text-slate-500 text-sm"
-                >
-                  Không tìm thấy người dùng nào.
-                </td>
+                {tableHeaders.map((head) => (
+                  <th
+                    key={head}
+                    className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                  >
+                    {head}
+                  </th>
+                ))}
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-slate-200">
+              {isLoading ? (
+                // Skeleton loading rows
+                [...Array(5)].map((_, i) => (
+                  <tr key={i} className="animate-pulse">
+                    <td
+                      colSpan={8}
+                      className="px-6 py-6 border-b border-slate-100"
+                    >
+                      <div className="h-4 bg-slate-100 rounded w-full"></div>
+                    </td>
+                  </tr>
+                ))
+              ) : users.length > 0 ? (
+                users.map((user) => <UserRow key={user.user_id} user={user} />)
+              ) : (
+                <tr>
+                  <td
+                    colSpan={8}
+                    className="px-6 py-12 text-center text-slate-500"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-sm font-medium">
+                        Không tìm thấy người dùng nào.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-      {meta && (
-        <Pagination meta={meta} onPageChange={(page) => fetchUsers(page)} />
-      )}
     </div>
   );
 }

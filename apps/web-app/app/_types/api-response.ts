@@ -1,0 +1,22 @@
+export interface PaginatedResponse<T> {
+    success: boolean;
+    message: string;
+    data: T[];
+    links?: any;
+    meta: PaginationMeta;
+}
+export interface PaginationMeta {
+    current_page: number;
+    from: number;
+    last_page: number;
+    path: string;
+    per_page: number;
+    to: number;
+    total: number;
+    links?: any[];
+}
+export interface SingleResponse<T> {
+    success: boolean;
+    message: string;
+    data: T;
+}
