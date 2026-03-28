@@ -17,13 +17,15 @@ class User extends Authenticatable
     // Trường được phép chỉnh sửa
     protected $fillable = [
         'user_name',
-        'password',
-        'email',
+        'role',
+        'status',
         'first_name',
         'last_name',
+        'password',
+        'email',
         'date_of_birth',
         'address',
-        'phone'
+        'phone',
     ];
     // Trường đính kèm vào json response
     protected $appends = ['full_name'];

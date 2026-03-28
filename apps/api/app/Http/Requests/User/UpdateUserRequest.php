@@ -34,7 +34,6 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users')->ignore($userId)
             ],
-            'sometimes|string|max:255',
             'first_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
             'email' => [
@@ -53,6 +52,8 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users')->ignore($userId)
             ],
             'address' => 'sometimes|string|max:255',
+            'role' => 'sometimes|string|max:255',
+            'status' => 'sometimes|string|max:255',
         ];
     }
 }
