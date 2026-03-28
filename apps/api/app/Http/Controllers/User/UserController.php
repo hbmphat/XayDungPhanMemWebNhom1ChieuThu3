@@ -27,7 +27,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         $user = User::create($validated);
-
+        $user->refresh();
         return $this->successResponse(new UserResource($user), 'Tạo thành công', 201);
     }
 

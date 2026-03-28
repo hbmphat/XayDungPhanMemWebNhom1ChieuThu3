@@ -26,10 +26,10 @@ class StoreUserRequest extends FormRequest
             'user_name' => 'required|string|max:255|unique:users',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'phone' => 'required|string|max:255|unique:users',
             'date_of_birth' => 'required|date',
             'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|string|max:255|unique:users',
+            'address' => 'required|string|max:255',
             'password' => 'required|string|min:8',
         ];
     }
