@@ -1,28 +1,24 @@
 "use client";
-import { useUsers } from "@app/_hooks/users/useUsers";
-import { useEffect, useState } from "react";
-import SearchFilter from "@admin/_components/users/SearchFilter";
-import UserTable from "@admin/_components/users/UserTable";
-import Pagination from "@admin/_components/users/Pagination";
-import UserHeader from "@admin/_components/users/UserHeader";
-import UserModal from "@admin/_components/users/UserModal";
-import { UserInput } from "@app/_types/users/user-types";
+import {
+  SearchFilter,
+  UserTable,
+  Pagination,
+  UserHeader,
+  UserModal,
+} from "@admin/_components/users/_index";
+import { useUserManagement } from "@app/_hooks/users/userUserManegemet";
 
 export default function UserPage() {
-  const { users, loading, meta, fetchUsers, creatUser } = useUsers();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    users,
+    loading,
+    meta,
+    isModalOpen,
+    setIsModalOpen,
+    handleCreateUser,
+    fetchUsers,
+  } = useUserManagement();
 
-  // Lấy danh sách user khi vừa render
-  useEffect(() => {
-    fetchUsers(1);
-  }, []);
-  // xử lý tạo user
-  const handleCreateUser = async (data: UserInput) => {
-    const success = await creatUser(data);
-    if (success) {
-      fetchUsers(1);
-    }
-  };
   return (
     <>
       <UserHeader

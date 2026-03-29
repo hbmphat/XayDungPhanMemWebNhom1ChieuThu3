@@ -50,8 +50,9 @@ export const useUsers = () => {
             const res = await userService.update(id, input);
             if (res.success) {
                 toast.success(res.message || "Success");
-                router.refresh();
+                return true;
             }
+            return false;
         } catch (error) {
         } finally {
             setLoading(false);
@@ -62,9 +63,12 @@ export const useUsers = () => {
     const deleteUser = async (id: string) => {
         if (!confirm('Bạn có chắc chắn muốn xóa?')) return;
         try {
-            await userService.delete(id);
-            toast.success('Xóa thành công!');
-            fetchUsers();
+            const res = await userService.delete(id);
+            if (res.success) {
+                toast.success(res.message || "Success");
+                return true;
+            }
+            return false;
         } catch (error) {
         }
     };

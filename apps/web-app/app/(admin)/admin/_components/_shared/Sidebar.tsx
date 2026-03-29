@@ -1,5 +1,4 @@
 "use client";
-
 import {
   X,
   LayoutDashboard,
@@ -7,7 +6,7 @@ import {
   ShieldCheck,
   Users,
   Smartphone,
-} from "lucide-react"; // Thêm Smartphone cho Shop Sim
+} from "lucide-react";
 import SidebarLink from "@admin/_components/_shared/SidebarLink";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@shared/contexts/SidebarContext"; // Import hook từ shared

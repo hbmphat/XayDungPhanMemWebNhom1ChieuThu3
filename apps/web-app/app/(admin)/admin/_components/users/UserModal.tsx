@@ -12,8 +12,8 @@ import {
   UserPlus,
   X,
 } from "lucide-react";
-import { FormInput } from "./FormInput"; // Giả sử bạn để cùng thư mục
 import { UserInput } from "@app/_types/users/user-types";
+import FormInput from "./FormInput";
 interface UserModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,21 +26,23 @@ export default function UserModal({
   onCreate,
   isLoading,
 }: UserModalProps) {
-  //  Bật/tắt modal
+  // Bật/tắt Modal
   if (!isOpen) return null;
-  // xử lý nút Create
+
+  // Xử lý Submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    // Đóng gói input
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
 
-    // Chuyển đổi FormData thành Object UserInput
-    const data = Object.fromEntries(formData.entries()) as any;
+    const payload = {
+      ...data,
+      status: formData.get("status") === "on" ? "active" : "inactive",
+    } as UserInput;
 
-    // Xử lý riêng cho checkbox
-    data.status = formData.get("status") ? "active" : "inactive";
-
-    await onCreate(data);
-    onClose(); // Đóng modal sau khi tạo
+    // Gọi onCreate từ page.tsx
+    await onCreate(payload);
   };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
