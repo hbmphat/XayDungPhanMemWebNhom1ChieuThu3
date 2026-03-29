@@ -6,16 +6,23 @@ import UserTable from "@admin/_components/users/UserTable";
 import Pagination from "@admin/_components/users/Pagination";
 import UserHeader from "@admin/_components/users/UserHeader";
 import UserModal from "@admin/_components/users/UserModal";
+import { UserInput } from "@app/_types/users/user-types";
 
 export default function UserPage() {
-  const { users, loading, meta, fetchUsers } = useUsers();
+  const { users, loading, meta, fetchUsers, creatUser } = useUsers();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Lấy danh sách user khi vừa render
   useEffect(() => {
     fetchUsers(1);
   }, []);
-
+  // xử lý tạo user
+  const handleCreateUser = async (data: UserInput) => {
+    const success = await creatUser(data);
+    if (success) {
+      fetchUsers(1);
+    }
+  };
   return (
     <>
       <UserHeader
@@ -29,7 +36,12 @@ export default function UserPage() {
           <Pagination meta={meta} onPageChange={(page) => fetchUsers(page)} />
         )}
       </main>
-      <UserModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <UserModal
+        isOpen={isModalOpen}
+        isLoading={loading}
+        onClose={() => setIsModalOpen(false)}
+        onCreate={handleCreateUser}
+      />
     </>
   );
 }

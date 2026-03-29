@@ -19,7 +19,6 @@ export const useUsers = () => {
             const res = await userService.getAll(page);
             setUsers(res.data || []);
             setMeta(res.meta || null);
-            console.log(users.length);
         } catch (error) {
             setUsers([]);
             setMeta(null);
@@ -35,9 +34,11 @@ export const useUsers = () => {
             const res = await userService.create(input);
             if (res.success) {
                 toast.success(res.message || "Success");
-                router.refresh();
+                return true;
             }
+            return false;
         } catch (error) {
+            return false;
         } finally {
             setLoading(false);
         }

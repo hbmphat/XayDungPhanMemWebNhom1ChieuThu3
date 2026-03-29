@@ -15,14 +15,14 @@ export interface User {
 }
 
 export interface UserInput {
-  user_name: string;
-  first_name: string;
-  last_name: string;
-  email: string;
+  user_name?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
   password?: string;
-  date_of_birth: string;
-  phone: string;
-  address: string;
+  date_of_birth?: string;
+  phone?: string;
+  address?: string;
   role?: string;
   status?: string;
 }

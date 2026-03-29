@@ -13,12 +13,35 @@ import {
   X,
 } from "lucide-react";
 import { FormInput } from "./FormInput"; // Giả sử bạn để cùng thư mục
+import { UserInput } from "@app/_types/users/user-types";
 interface UserModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isLoading: boolean;
+  onCreate: (input: UserInput) => Promise<void>;
 }
-export default function UserModal({ isOpen, onClose }: UserModalProps) {
+export default function UserModal({
+  isOpen,
+  onClose,
+  onCreate,
+  isLoading,
+}: UserModalProps) {
+  //  Bật/tắt modal
   if (!isOpen) return null;
+  // xử lý nút Create
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    // Chuyển đổi FormData thành Object UserInput
+    const data = Object.fromEntries(formData.entries()) as any;
+
+    // Xử lý riêng cho checkbox
+    data.status = formData.get("status") ? "active" : "inactive";
+
+    await onCreate(data);
+    onClose(); // Đóng modal sau khi tạo
+  };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
       <div
@@ -50,7 +73,10 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
         </div>
 
         {/* Form Body */}
-        <form className="px-8 pb-8 space-y-5 overflow-y-auto custom-scrollbar">
+        <form
+          onSubmit={handleSubmit}
+          className="px-8 pb-8 space-y-5 overflow-y-auto custom-scrollbar"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <FormInput
               label="User Name"
@@ -128,7 +154,7 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  name="is_active"
+                  name="status"
                   defaultChecked={true}
                   className="sr-only peer"
                 />
@@ -157,7 +183,10 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
 
             <div className="relative flex items-center bg-surface-container-low rounded-xl border-b-2 border-outline-variant focus-within:border-primary px-3.5">
               <Briefcase className="w-4 h-4 text-outline mr-3" />
-              <select className="w-full bg-transparent border-none focus:ring-0 py-3 text-center text-on-surface font-medium text-sm appearance-none cursor-pointer">
+              <select
+                name="role"
+                className="w-full bg-transparent border-none focus:ring-0 py-3 text-center text-on-surface font-medium text-sm appearance-none cursor-pointer"
+              >
                 <option value="customer">Customer</option>
                 <option value="admin">System Admin</option>
               </select>
@@ -174,9 +203,41 @@ export default function UserModal({ isOpen, onClose }: UserModalProps) {
             >
               Cancel
             </button>
-            <button type="submit" className="btn-primary flex-[1.5]">
-              <UserPlus className="w-4 h-4 me-1" />
-              Create
+            <button
+              disabled={isLoading}
+              type="submit"
+              className="btn-primary flex-[1.5]"
+            >
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <svg
+                    className="animate-spin h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Creating...
+                </div>
+              ) : (
+                <>
+                  <UserPlus className="w-4 h-4 me-1" />
+                  Create
+                </>
+              )}
             </button>
           </div>
         </form>
