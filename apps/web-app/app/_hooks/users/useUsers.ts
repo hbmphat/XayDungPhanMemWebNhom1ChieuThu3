@@ -19,7 +19,6 @@ export const useUsers = () => {
             const res = await userService.getAll(page);
             setUsers(res.data || []);
             setMeta(res.meta || null);
-            console.log(users.length);
         } catch (error) {
             setUsers([]);
             setMeta(null);
@@ -35,9 +34,11 @@ export const useUsers = () => {
             const res = await userService.create(input);
             if (res.success) {
                 toast.success(res.message || "Success");
-                router.refresh();
+                return true;
             }
+            return false;
         } catch (error) {
+            return false;
         } finally {
             setLoading(false);
         }
@@ -49,8 +50,9 @@ export const useUsers = () => {
             const res = await userService.update(id, input);
             if (res.success) {
                 toast.success(res.message || "Success");
-                router.refresh();
+                return true;
             }
+            return false;
         } catch (error) {
         } finally {
             setLoading(false);
@@ -61,9 +63,12 @@ export const useUsers = () => {
     const deleteUser = async (id: string) => {
         if (!confirm('Bạn có chắc chắn muốn xóa?')) return;
         try {
-            await userService.delete(id);
-            toast.success('Xóa thành công!');
-            fetchUsers();
+            const res = await userService.delete(id);
+            if (res.success) {
+                toast.success(res.message || "Success");
+                return true;
+            }
+            return false;
         } catch (error) {
         }
     };

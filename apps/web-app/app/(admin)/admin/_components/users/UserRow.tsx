@@ -2,6 +2,7 @@ import { User } from "@app/_types/users/user-types";
 import { Edit2, Trash2, Shield, User as UserIcon } from "lucide-react";
 
 export default function UserRow({ user }: { user: User }) {
+  console.log(`User: ${user.user_name} | Status: ${user.status}`);
   return (
     <tr className="hover:bg-slate-50/50 transition-colors group">
       <td className="px-6 py-4 whitespace-nowrap">

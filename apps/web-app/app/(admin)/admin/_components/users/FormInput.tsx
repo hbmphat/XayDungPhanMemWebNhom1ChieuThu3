@@ -10,7 +10,7 @@ interface FormInputProps {
   isTextArea?: boolean;
 }
 
-export const FormInput = ({
+export default function FormInput({
   label,
   name,
   icon: Icon,
@@ -18,7 +18,7 @@ export const FormInput = ({
   type = "text",
   optional,
   isTextArea,
-}: FormInputProps) => {
+}: FormInputProps) {
   return (
     <div className="group flex flex-col gap-1.5">
       <label className="block text-[0.7rem] font-bold uppercase tracking-wider text-on-surface-variant px-1">
@@ -55,4 +55,4 @@ export const FormInput = ({
       </div>
     </div>
   );
-};
+}
