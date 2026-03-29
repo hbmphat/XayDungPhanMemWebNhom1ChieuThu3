@@ -15,29 +15,41 @@ export default function UserPage() {
     meta,
     isModalOpen,
     setIsModalOpen,
-    handleCreateUser,
-    fetchUsers,
+    currentUser,
+    onFetch,
+    handleOpenModal,
+    handleFormSubmit,
+    handleDelete,
   } = useUserManagement();
 
   return (
     <>
       <UserHeader
-        total={users.length}
-        onAddClick={() => setIsModalOpen(true)}
+        total={meta?.total || 0}
+        onAddClick={() => handleOpenModal()}
       />
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <SearchFilter />
-        <UserTable users={users} isLoading={loading} />
+        <UserTable
+          users={users}
+          isLoading={loading}
+          onDelete={handleDelete}
+          onEdit={handleOpenModal}
+        />
         {meta && (
-          <Pagination meta={meta} onPageChange={(page) => fetchUsers(page)} />
+          <Pagination meta={meta} onPageChange={(page) => onFetch(page)} />
         )}
       </main>
-      <UserModal
-        isOpen={isModalOpen}
-        isLoading={loading}
-        onClose={() => setIsModalOpen(false)}
-        onCreate={handleCreateUser}
-      />
+      {isModalOpen && (
+        <UserModal
+          key={currentUser?.user_id || "new-user-modal"}
+          isOpen={isModalOpen}
+          isLoading={loading}
+          currentUser={currentUser}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleFormSubmit}
+        />
+      )}
     </>
   );
 }

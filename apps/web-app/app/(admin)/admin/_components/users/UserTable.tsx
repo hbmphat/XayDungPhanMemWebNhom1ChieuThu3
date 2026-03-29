@@ -5,9 +5,16 @@ import { User } from "@app/_types/users/user-types";
 interface UserTableProps {
   users: User[];
   isLoading: boolean;
+  onDelete: (id: string) => void;
+  onEdit: (user: User) => void;
 }
 
-export default function UserTable({ users, isLoading }: UserTableProps) {
+export default function UserTable({
+  users,
+  isLoading,
+  onDelete,
+  onEdit,
+}: UserTableProps) {
   const tableHeaders = [
     "User",
     "Fullname",
@@ -38,7 +45,6 @@ export default function UserTable({ users, isLoading }: UserTableProps) {
             </thead>
             <tbody className="bg-white divide-y divide-slate-200">
               {isLoading ? (
-                // Skeleton loading rows
                 [...Array(5)].map((_, i) => (
                   <tr key={i} className="animate-pulse">
                     <td
@@ -50,7 +56,14 @@ export default function UserTable({ users, isLoading }: UserTableProps) {
                   </tr>
                 ))
               ) : users.length > 0 ? (
-                users.map((user) => <UserRow key={user.user_id} user={user} />)
+                users.map((user) => (
+                  <UserRow
+                    key={user.user_id}
+                    user={user}
+                    onDelete={onDelete}
+                    onEdit={onEdit}
+                  />
+                ))
               ) : (
                 <tr>
                   <td

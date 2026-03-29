@@ -7,31 +7,35 @@ import {
   MapPin,
   Phone,
   ShieldCheck,
-  User,
+  User as UserIcon,
   UserCog,
   UserPlus,
   X,
 } from "lucide-react";
-import { UserInput } from "@app/_types/users/user-types";
+import { User, UserInput } from "@app/_types/users/user-types";
 import FormInput from "./FormInput";
 interface UserModalProps {
   isOpen: boolean;
   onClose: () => void;
   isLoading: boolean;
-  onCreate: (input: UserInput) => Promise<void>;
+  currentUser: User | null;
+  onSubmit: (data: UserInput) => Promise<void>;
 }
 export default function UserModal({
   isOpen,
-  onClose,
-  onCreate,
   isLoading,
+  onClose,
+  onSubmit,
+  currentUser,
 }: UserModalProps) {
-  // Bật/tắt Modal
+  //  Trạng thái render hay không
   if (!isOpen) return null;
 
-  // Xử lý Submit
+  //  Xác định Create hay Update
+  const isEditMode = !!currentUser;
+
+  // Xú lý nút submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // Đóng gói input
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
@@ -40,41 +44,36 @@ export default function UserModal({
       ...data,
       status: formData.get("status") === "on" ? "active" : "inactive",
     } as UserInput;
+    await onSubmit(payload);
+  };
 
-    // Gọi onCreate từ page.tsx
-    await onCreate(payload);
+  // Định dạng lại dob từ BE
+  const formatDateForInput = (dateStr?: string) => {
+    if (!dateStr) return "";
+    const parts = dateStr.split("-");
+    if (parts.length !== 3) return dateStr;
+    const [day, month, year] = parts;
+    return `${year}-${month}-${day}`;
   };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
-      <div
-        className="bg-white 
-    dark:bg-slate-900 
-    w-full max-w-2xl 
-    rounded-2xl 
-    shadow-[0_20px_50px_rgba(0,0,0,0.3)] 
-    relative 
-    flex flex-col 
-    overflow-hidden 
-    max-h-[90vh] 
-    border border-slate-200/50"
-      >
-        {/* Header */}
+      <div className="bg-white dark:bg-slate-900 w-full max-w-2xl rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative flex flex-col overflow-hidden max-h-[90vh] border border-slate-200/50">
+        {/* Header: Đổi tiêu đề dựa trên chế độ */}
         <div className="px-8 pt-8 pb-4 flex justify-between items-start shrink-0">
           <div>
             <h2 className="text-2xl font-extrabold text-on-surface tracking-tight">
-              New user
+              {isEditMode ? `Edit User: ${currentUser.user_name}` : "New User"}
             </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 hover:bg-surface-container-high rounded-full transition-colors text-on-surface-variant"
+            className="p-2 hover:bg-surface-container-high rounded-full transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Form Body */}
         <form
           onSubmit={handleSubmit}
           className="px-8 pb-8 space-y-5 overflow-y-auto custom-scrollbar"
@@ -84,13 +83,16 @@ export default function UserModal({
               label="User Name"
               name="user_name"
               icon={UserCog}
+              defaultValue={currentUser?.user_name}
               placeholder="user123"
+              disabled={isEditMode}
             />
             <FormInput
               label="Email"
               name="email"
               icon={Mail}
               type="email"
+              defaultValue={currentUser?.email}
               placeholder="user123@gmail.com"
             />
           </div>
@@ -99,13 +101,15 @@ export default function UserModal({
             <FormInput
               label="First Name"
               name="first_name"
-              icon={User}
+              icon={UserIcon}
+              defaultValue={currentUser?.first_name}
               placeholder="Nguyen"
             />
             <FormInput
               label="Last Name"
               name="last_name"
-              icon={User}
+              icon={UserIcon}
+              defaultValue={currentUser?.last_name}
               placeholder="Van A"
             />
           </div>
@@ -116,13 +120,17 @@ export default function UserModal({
               name="password"
               icon={KeyRound}
               type="password"
-              placeholder="••••••••"
+              placeholder={
+                isEditMode ? "Leave blank to keep current" : "••••••••"
+              }
+              required={!isEditMode}
             />
             <FormInput
               label="Date of Birth"
               name="date_of_birth"
               icon={Calendar}
               type="date"
+              defaultValue={formatDateForInput(currentUser?.date_of_birth)}
             />
           </div>
 
@@ -131,55 +139,38 @@ export default function UserModal({
             name="phone"
             icon={Phone}
             type="tel"
+            defaultValue={currentUser?.phone}
             placeholder="+84 123456789"
           />
+
           <FormInput
             label="Address"
             name="address"
             icon={MapPin}
             isTextArea
+            defaultValue={currentUser?.address}
             placeholder="1a, District 1, HCM City"
           />
 
-          {/* Status & Role */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center justify-between p-3.5 bg-surface-container-low rounded-xl group">
-              {/* Phần bên trái: Icon và Chữ */}
-              <div className="flex items-center gap-1 outline-1 rounded-3xl p-1 transition-colors group-has-checked:bg-emerald-600">
-                <ShieldCheck className="w-6 h-6 text-primary transition-colors group-has-checked:text-white" />
-                <span className="text-[0.9rem] font-bold text-on-surface transition-colors group-has-checked:text-white">
+              <div className="flex items-center gap-1">
+                <ShieldCheck className="w-6 h-6 text-primary" />
+                <span className="text-[0.9rem] font-bold text-on-surface">
                   Active Status
                 </span>
               </div>
 
-              {/* Bên phải của (Toggle Track) */}
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
                   name="status"
-                  defaultChecked={true}
+                  defaultChecked={
+                    isEditMode ? currentUser.status === "active" : true
+                  }
                   className="sr-only peer"
                 />
-
-                {/* (Toggle Track) */}
-                <div
-                  className="
-      relative w-10 h-5 
-     bg-slate-400 dark:bg-slate-600 rounded-full 
-      peer-checked:bg-emerald-600 
-      transition-colors duration-200
-      after:content-[''] 
-      after:absolute 
-      after:top-0.5 
-      after:left-0.5 
-      after:bg-white 
-      after:rounded-full 
-      after:h-4 
-      after:w-4 
-      after:transition-all 
-      peer-checked:after:translate-x-5
-    "
-                ></div>
+                <div className="relative w-10 h-5 bg-slate-400 peer-checked:bg-emerald-600 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
               </label>
             </div>
 
@@ -187,6 +178,7 @@ export default function UserModal({
               <Briefcase className="w-4 h-4 text-outline mr-3" />
               <select
                 name="role"
+                defaultValue={currentUser?.role || "customer"}
                 className="w-full bg-transparent border-none focus:ring-0 py-3 text-center text-on-surface font-medium text-sm appearance-none cursor-pointer"
               >
                 <option value="customer">Customer</option>
@@ -196,7 +188,6 @@ export default function UserModal({
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex flex-col-reverse md:flex-row gap-3 pt-4 shrink-0">
             <button
               type="button"
@@ -212,40 +203,22 @@ export default function UserModal({
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
-                  <svg
-                    className="animate-spin h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Creating...
+                  {/* Loader SVG giữ nguyên */}
+                  {isEditMode ? "Updating..." : "Creating..."}
                 </div>
               ) : (
                 <>
-                  <UserPlus className="w-4 h-4 me-1" />
-                  Create
+                  {isEditMode ? (
+                    <UserCog className="w-4 h-4 me-1" />
+                  ) : (
+                    <UserPlus className="w-4 h-4 me-1" />
+                  )}
+                  {isEditMode ? "Update Changes" : "Create User"}
                 </>
               )}
             </button>
           </div>
         </form>
-
-        {/* Accent Bar */}
-        <div className="accent-gradient" />
       </div>
     </div>
   );

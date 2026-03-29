@@ -8,6 +8,9 @@ interface FormInputProps {
   type?: string;
   optional?: boolean;
   isTextArea?: boolean;
+  defaultValue?: string;
+  required?: boolean;
+  disabled?: boolean;
 }
 
 export default function FormInput({
@@ -18,6 +21,9 @@ export default function FormInput({
   type = "text",
   optional,
   isTextArea,
+  defaultValue,
+  required,
+  disabled,
 }: FormInputProps) {
   return (
     <div className="group flex flex-col gap-1.5">
@@ -31,7 +37,6 @@ export default function FormInput({
       </label>
 
       <div className="relative flex items-center">
-        {/* Icon: Dùng group-focus-within để đổi màu icon khi input được nhấn */}
         <Icon
           className={`w-4 h-4 absolute left-4 z-10 text-on-surface-variant transition-colors 
           group-focus-within:text-primary ${isTextArea ? "top-4" : ""}`}
@@ -41,15 +46,21 @@ export default function FormInput({
           <textarea
             name={name}
             placeholder={placeholder}
+            defaultValue={defaultValue}
+            disabled={disabled}
+            required={required}
             rows={2}
-            className="form-input pl-11 resize-none h-auto" // Dùng class chung
+            className="form-input pl-11 resize-none h-auto"
           />
         ) : (
           <input
             type={type}
             name={name}
             placeholder={placeholder}
-            className="form-input pl-11" // Dùng class chung
+            defaultValue={defaultValue}
+            disabled={disabled}
+            required={required}
+            className="form-input pl-11"
           />
         )}
       </div>
