@@ -1,34 +1,55 @@
 import { useEffect, useState } from "react";
 import { useUsers } from "./useUsers";
-import { UserInput } from "@app/_types/users/user-types";
+import { User, UserInput } from "@app/_types/users/user-types";
 
 // @app/_hooks/users/useUserManagement.ts
 export const useUserManagement = () => {
-    // Define States & Hooks
-    const { users, loading, meta, fetchUsers, creatUser } = useUsers();
+    //  Define States & Hooks
+    const { users, loading, meta, onFetch, onCreate, onDelete, onUpdate } = useUsers();
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // fetchUsers
-    useEffect(() => {
-        fetchUsers(1);
-    }, []);
-
-    // CreateUser
-    const handleCreateUser = async (data: UserInput) => {
-        const success = await creatUser(data);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    //  OpenModal
+    const handleOpenModal = (user: User | null = null) => {
+        setCurrentUser(user);
+        setIsModalOpen(true);
+    };
+    const handleFormSubmit = async (data: UserInput) => {
+        const success = currentUser
+            ? await onUpdate(currentUser.user_id, data)
+            : await onCreate(data);
         if (success) {
-            fetchUsers(1);
             setIsModalOpen(false);
+            onFetch(currentUser ? (meta?.current_page ?? 1) : 1);
         }
     };
+    // FetchUsers
+    useEffect(() => {
+        onFetch(1);
+    }, []);
 
+
+    //  DeleteUser
+    const handleDelete = async (id: string) => {
+        if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
+            const success = await onDelete(id);
+            if (success) {
+                onFetch(meta?.current_page ?? 1);
+            }
+        }
+    };
     return {
+        // Data states
         users,
         loading,
         meta,
+        // Modal states
         isModalOpen,
         setIsModalOpen,
-        handleCreateUser,
-        fetchUsers
+        currentUser,
+        // Actions
+        onFetch,
+        handleOpenModal,
+        handleFormSubmit,
+        handleDelete
     };
 };

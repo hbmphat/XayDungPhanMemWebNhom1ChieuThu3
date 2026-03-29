@@ -1,8 +1,15 @@
 import { User } from "@app/_types/users/user-types";
 import { Edit2, Trash2, Shield, User as UserIcon } from "lucide-react";
 
-export default function UserRow({ user }: { user: User }) {
-  console.log(`User: ${user.user_name} | Status: ${user.status}`);
+export default function UserRow({
+  user,
+  onDelete,
+  onEdit,
+}: {
+  user: User;
+  onDelete: (id: string) => void;
+  onEdit: (user: User) => void;
+}) {
   return (
     <tr className="hover:bg-slate-50/50 transition-colors group">
       <td className="px-6 py-4 whitespace-nowrap">
@@ -45,10 +52,16 @@ export default function UserRow({ user }: { user: User }) {
       </td>
       <td className="px-6 py-4 text-right">
         <div className="flex justify-start gap-1 ">
-          <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+          <button
+            onClick={() => onEdit(user)}
+            className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+          >
             <Edit2 className="w-4 h-4" />
           </button>
-          <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+          <button
+            onClick={() => onDelete(user.user_id)}
+            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
             <Trash2 className="w-4 h-4" />
           </button>
         </div>

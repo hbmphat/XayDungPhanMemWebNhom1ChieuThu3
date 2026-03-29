@@ -1,19 +1,17 @@
 "use client";
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { userService } from '@services/users/userService';
 import { User, UserInput } from '@app/_types/users/user-types';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 import { PaginationMeta } from '@app_types/api-response'
 export const useUsers = () => {
     // Define States & Hooks
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(false);
     const [meta, setMeta] = useState<PaginationMeta | null>(null);
-    const router = useRouter();
 
     // fetchUsers
-    const fetchUsers = async (page = 1) => {
+    const onFetch = useCallback(async (page: number) => {
         setLoading(true);
         try {
             const res = await userService.getAll(page);
@@ -25,10 +23,9 @@ export const useUsers = () => {
         } finally {
             setLoading(false);
         }
-    };
-
+    }, []);
     // creatUser
-    const creatUser = async (input: UserInput) => {
+    const onCreate = async (input: UserInput) => {
         setLoading(true);
         try {
             const res = await userService.create(input);
@@ -44,7 +41,7 @@ export const useUsers = () => {
         }
     };
     // updateUser
-    const updateUser = async (id: string, input: UserInput) => {
+    const onUpdate = async (id: string, input: UserInput) => {
         setLoading(true);
         try {
             const res = await userService.update(id, input);
@@ -54,13 +51,14 @@ export const useUsers = () => {
             }
             return false;
         } catch (error) {
+            return false;
         } finally {
             setLoading(false);
         }
     };
 
     // deleteUser
-    const deleteUser = async (id: string) => {
+    const onDelete = async (id: string) => {
         if (!confirm('Bạn có chắc chắn muốn xóa?')) return;
         try {
             const res = await userService.delete(id);
@@ -70,8 +68,19 @@ export const useUsers = () => {
             }
             return false;
         } catch (error) {
+            return false;
         }
     };
 
-    return { users, loading, meta, fetchUsers, creatUser, updateUser, deleteUser };
+    return {
+        // Data states
+        users,
+        loading,
+        meta,
+        // Actions
+        onFetch,
+        onCreate,
+        onUpdate,
+        onDelete
+    };
 };
