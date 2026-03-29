@@ -44,7 +44,7 @@ class UpdateUserRequest extends FormRequest
                 Rule::unique('users')->ignore($userId)
             ],
             'password' => 'sometimes|nullable|string|min:8',
-            'date_of_birth' => 'sometime|date',
+            'date_of_birth' => 'sometimes|date',
             'phone' => [
                 'sometimes',
                 'string',
