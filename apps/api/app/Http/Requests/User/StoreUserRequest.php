@@ -29,6 +29,7 @@ class StoreUserRequest extends FormRequest
             'date_of_birth' => 'required|date',
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'required|string|max:255|unique:users',
+            'status' => 'nullable|string',
             'address' => 'required|string|max:255',
             'password' => 'required|string|min:8',
         ];
