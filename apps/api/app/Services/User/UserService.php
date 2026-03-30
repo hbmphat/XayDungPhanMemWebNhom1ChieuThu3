@@ -10,7 +10,7 @@ class UserService
     /**
      * Lấy danh sách người dùng, phân trang mặc định 10 records
      */
-    public function getPaginatedUsers($perPage = 10): LengthAwarePaginator
+    public function getPaginatedUsers(int $perPage): LengthAwarePaginator
     {
         return User::latest()->paginate($perPage);
     }

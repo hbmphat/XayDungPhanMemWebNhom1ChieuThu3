@@ -9,6 +9,7 @@ use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Services\User\UserService;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
@@ -22,16 +23,17 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        $users = $this->userService->getPaginatedUsers();
+        $perPage = $this->getPerPage();
+        $users = $this->userService->getPaginatedUsers($perPage);
         return $this->successResponse(new UserCollection($users), 'Danh sách người dùng');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $user = $this->userService->createUser($validated);
@@ -41,7 +43,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user): JsonResponse
     {
         $result = $this->userService->getUser($user);
         return $this->successResponse(new UserResource($result), 'Thông tin người dùng');
@@ -50,7 +52,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         $validated = $request->validated();
         $user = $this->userService->updateUser($validated, $user);
@@ -60,8 +62,13 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): JsonResponse
     {
+        // $user = $this->currentUser();
+        // if ($user->role !== 'admin') {
+        //     return $this->unauthorized('Chỉ Admin mới có quyền xóa tài khoản');
+        // }
+
         $this->userService->deleteUser($user);
         return $this->successResponse(null, 'Xóa thành công');
     }
