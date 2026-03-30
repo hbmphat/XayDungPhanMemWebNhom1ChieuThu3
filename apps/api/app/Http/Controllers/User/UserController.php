@@ -8,16 +8,24 @@ use App\Http\Requests\User\UpdateUserRequest;
 use App\Http\Resources\User\UserCollection;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use App\Services\User\UserService;
 
 class UserController extends Controller
 {
+
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return $this->successResponse(new UserCollection(User::paginate(10)), 'Danh sách người dùng');
+        $users = $this->userService->getPaginatedUsers();
+        return $this->successResponse(new UserCollection($users), 'Danh sách người dùng');
     }
 
     /**
@@ -26,8 +34,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $validated = $request->validated();
-        $user = User::create($validated);
-        $user->refresh();
+        $user = $this->userService->createUser($validated);
         return $this->successResponse(new UserResource($user), 'Tạo thành công', 201);
     }
 
@@ -36,7 +43,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $this->successResponse(new UserResource($user), 'Thông tin người dùng');
+        $result = $this->userService->getUser($user);
+        return $this->successResponse(new UserResource($result), 'Thông tin người dùng');
     }
 
     /**
@@ -45,16 +53,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $validated = $request->validated();
-
-        if (!empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
-        }
-
-        $user->update($validated);
-
-
+        $user = $this->userService->updateUser($validated, $user);
         return $this->successResponse(new UserResource($user), 'Cập nhật thành công');
     }
 
@@ -63,7 +62,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        $this->userService->deleteUser($user);
         return $this->successResponse(null, 'Xóa thành công');
     }
 }
