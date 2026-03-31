@@ -52,7 +52,8 @@ up:
 # Lệnh dừng hệ thống
 down:
 	docker compose down
-
+db-up:
+	docker compose up -d db-main
 
 # -----------------------------------------------------------------
 
