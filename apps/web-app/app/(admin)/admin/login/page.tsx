@@ -1,4 +1,4 @@
-import { Mail, ShieldCheck, Lock, User } from "lucide-react";
+import { ShieldCheck, Lock, User } from "lucide-react";
 
 export default function Login() {
   return (

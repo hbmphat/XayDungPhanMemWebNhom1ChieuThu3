@@ -1,0 +1,78 @@
+name: Laravel API CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+# Chạy test
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./apps/api
+
+    services:
+      db-main:
+        image: postgres:18.3-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: simshop
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d simshop"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, dom, curl, libxml, pdo_pgsql, pgsql
+        coverage: none
+
+    - name: Install Dependencies
+      run: composer install --prefer-dist --no-ansi --no-interaction --no-progress
+
+    - name: Copy .env
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+    - name: Generate key
+      run: php artisan key:generate
+
+    - name: Run Migrations
+      env:
+        DB_CONNECTION: pgsql
+        DB_HOST: 127.0.0.1
+        DB_PORT: 5432
+        DB_DATABASE: simshop
+        DB_USERNAME: postgres
+        DB_PASSWORD: root
+      run: php artisan migrate --force
+
+    - name: Execute tests
+      env:
+        DB_CONNECTION: pgsql
+        DB_HOST: 127.0.0.1
+        DB_PORT: 5432
+        DB_DATABASE: simshop
+        DB_USERNAME: postgres
+        DB_PASSWORD: root
+      run: php artisan test
+# Deloy
+deploy:
+    runs-on: ubuntu-latest
+    needs: laravel-tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+     - name: Trigger Render Deploy Hook
+        run: |
+          curl -f "${{ secrets.RENDER_DEPLOY_HOOK }}"

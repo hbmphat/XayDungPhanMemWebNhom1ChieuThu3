@@ -1,27 +1,27 @@
-# 1. Pruner
+# 1. Pruner - Trích xuất packages cần thiết
 FROM node:24-slim AS pruner
 WORKDIR /app
+RUN npm install -g turbo
 COPY . .
-RUN npx turbo prune --scope=web-app --docker
+RUN turbo prune --scope=web-app --docker
 
-# 2. Deps
+# 2. Deps - Cài đặt dependencies
 FROM node:24-slim AS deps
 WORKDIR /app
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/package-lock.json ./package-lock.json
 RUN --mount=type=cache,target=/root/.npm npm ci
 
-# 3. Builder
+# 3. Builder - Build ứng dụng
 FROM node:24-slim AS builder
 WORKDIR /app
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=pruner /app/out/full/ .
 COPY --from=deps /app/node_modules ./node_modules
-
-WORKDIR /app/apps/web-app
-ENV NEXT_TELEMETRY_DISABLED=1
+COPY turbo.json turbo.json
+# Chạy build trực tiếp tại /app/apps/web-app
 RUN --mount=type=cache,target=/app/apps/web-app/.next/cache \
-    --mount=type=cache,target=/root/.turbo \
-    ../../node_modules/.bin/turbo run build --filter=web-app
+    cd apps/web-app && npm run build:docker
 
 # 4. Runner
 FROM node:24-slim AS runner
@@ -32,11 +32,14 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Tạo user để bảo mật
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
+
+# Copy kết quả từ standalone mode
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web-app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web-app/.next/static ./apps/web-app/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web-app/public ./apps/web-app/public
+
 USER nextjs
 
-COPY --from=builder /app/apps/web-app/.next/standalone ./
-COPY --from=builder /app/apps/web-app/public ./apps/web-app/public
-COPY --from=builder /app/apps/web-app/.next/static ./apps/web-app/.next/static
-
 EXPOSE 3000
+ENV PORT=3000
 CMD ["node", "apps/web-app/server.js"]

@@ -8,6 +8,8 @@ migrate-up:
 # Tạo lại toàn bộ database
 fresh:
 	php artisan migrate:fresh
+test:
+	php artisan test
 # -------------------------------------------------------------------------
 # Lệnh tổng hợp
 # Tạo full bộ cho API (model, migration, controller-api, create/update request, resource, collection)
