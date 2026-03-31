@@ -17,12 +17,14 @@ services:
     depends_on:
       web-app:
         condition: service_started
+      api:
+        condition: service_healthy
     restart: unless-stopped
 
   # 2. Database
   db-main:
     image: postgres:18.3-alpine
-    container_name: db-main
+    container_name: db-main-simshop
     env_file: ./.env
     environment:
       - POSTGRES_USER=${DB_USERNAME}
@@ -45,6 +47,8 @@ services:
     build:
       context: .
       dockerfile: apps/web-app/Dockerfile
+      args:
+        - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL}
     container_name: web-app
     expose:
       - "3000"
@@ -68,8 +72,31 @@ services:
       db-main:
         condition: service_healthy
     restart: always
+  # 4. Migration Service
+  api-migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: api-migrate
+    env_file:
+      - ./.env
+      - ./apps/api/.env
+    environment:
+      - DB_HOST=db-main
+    networks:
+      - app-network
+    volumes:
+      - ./apps/api:/var/www/html
+    # Chạy migration và dọn dẹp cache trước khi API chạy
+    command: >
+      sh -c "php artisan migrate --force && 
+             php artisan cache:clear && 
+             php artisan config:cache"
+    depends_on:
+      db-main:
+        condition: service_healthy
 
-  # 4. API (Laravel)
+  # 5. API (Laravel)
   api:
     build:
       context: .
@@ -85,9 +112,18 @@ services:
     networks:
       - app-network
     command: ["php-fpm"]
+    volumes:
+      - ./apps/api:/var/www/html
+    healthcheck:
+      test: ["CMD", "php-fpm", "-t"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     depends_on:
       db-main:
         condition: service_healthy
+      api-migrate:
+        condition: service_completed_successfully
     restart: always
 
 volumes:

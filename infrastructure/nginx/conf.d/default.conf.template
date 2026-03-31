@@ -11,10 +11,13 @@ server {
 
     # 2. API Route - Chuyển hướng tới Laravel
     location /api/ {
-        proxy_pass http://api:9000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        #FastCGI chỉ dùng tên service và port
+        fastcgi_pass api:9000;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        # Include file params mặc định của nginx
+        include fastcgi_params;
+        # Chỉ định file entry point của Laravel
+        fastcgi_param SCRIPT_FILENAME /var/www/html/public/index.php;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
     }
 }
