@@ -2,7 +2,9 @@ name: Laravel API CI/CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: ["main"]
 
 jobs:
   # Chạy test laravel
