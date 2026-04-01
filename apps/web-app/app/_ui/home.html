@@ -1,0 +1,874 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SIM Connect | Modern SIM Store &amp; 5G Packages</title>
+    <!-- BEGIN: Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- END: Tailwind CDN -->
+    <!-- BEGIN: Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- END: Lucide Icons -->
+    <!-- BEGIN: Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              telecom: {
+                blue: "#0055A4",
+                red: "#EF4135",
+                dark: "#1A1A1A",
+                light: "#F4F7FA",
+              },
+            },
+            screens: {
+              md: "768px",
+              lg: "1024px",
+              xl: "1280px",
+            },
+          },
+        },
+      };
+    </script>
+    <!-- END: Tailwind Configuration -->
+    <!-- BEGIN: Custom Typography Styles -->
+    <style data-purpose="typography">
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .mobile-menu-open {
+        overflow: hidden;
+      }
+    </style>
+    <!-- END: Custom Typography Styles -->
+  </head>
+  <body class="bg-telecom-light text-telecom-dark">
+    <!-- Component: Header -->
+    <header
+      class="sticky top-0 z-50 bg-white shadow-md"
+      data-purpose="main-navigation"
+    >
+      <div
+        class="container mx-auto px-4 h-20 flex items-center justify-between"
+      >
+        <!-- Brand Logo -->
+        <div
+          class="flex items-center gap-2 flex-shrink-0"
+          data-purpose="brand-logo"
+        >
+          <div
+            class="w-10 h-10 bg-telecom-blue rounded-lg flex items-center justify-center"
+          >
+            <span class="text-white font-bold text-xl">S</span>
+          </div>
+          <span
+            class="text-xl lg:text-2xl font-bold tracking-tight text-telecom-blue"
+            >SIM<span class="text-telecom-red">Connect</span></span
+          >
+        </div>
+        <!-- Desktop Navigation - Adjusted breakpoint to lg for tablet optimization -->
+        <nav
+          class="hidden lg:flex items-center gap-4 xl:gap-6 text-sm font-medium"
+        >
+          <a
+            class="flex items-center gap-2 hover:text-telecom-blue transition-colors"
+            href="#"
+          >
+            <i class="w-4 h-4" data-lucide="phone"></i> Buy SIM
+          </a>
+          <a
+            class="flex items-center gap-2 hover:text-telecom-blue transition-colors"
+            href="#"
+          >
+            <i class="w-4 h-4" data-lucide="package"></i> Packages
+          </a>
+          <a
+            class="flex items-center gap-2 hover:text-telecom-blue transition-colors"
+            href="#"
+          >
+            <i class="w-4 h-4" data-lucide="globe"></i> Network
+          </a>
+          <a
+            class="flex items-center gap-2 hover:text-telecom-blue transition-colors"
+            href="#"
+          >
+            <i class="w-4 h-4" data-lucide="life-buoy"></i> Support
+          </a>
+        </nav>
+        <!-- Utility Actions -->
+        <div class="flex items-center gap-2 md:gap-4">
+          <!-- Search Bar (Desktop - Adjusted to xl) -->
+          <div
+            class="hidden xl:flex items-center bg-gray-100 px-3 py-2 rounded-full"
+          >
+            <i class="w-4 h-4 text-gray-400 mr-2" data-lucide="search"></i>
+            <input
+              class="bg-transparent border-none focus:ring-0 text-sm w-32 xl:w-40 p-0"
+              placeholder="Search numbers..."
+              type="text"
+            />
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              class="p-3 md:p-2 hover:bg-gray-100 rounded-full relative"
+              title="Cart"
+            >
+              <i
+                class="w-6 h-6 md:w-5 md:h-5 text-gray-600"
+                data-lucide="shopping-cart"
+              ></i>
+              <span
+                class="absolute top-1 right-1 md:top-0 md:right-0 bg-telecom-red text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold"
+                >0</span
+              >
+            </button>
+            <button
+              class="hidden md:flex items-center gap-2 bg-telecom-blue text-white px-5 py-2.5 rounded-full font-semibold hover:bg-opacity-90 transition-all text-sm"
+            >
+              <i class="w-4 h-4" data-lucide="user"></i>
+              Sign In
+            </button>
+            <!-- Mobile Menu Toggle - visible on md and below -->
+            <button
+              class="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+              id="mobile-menu-toggle"
+            >
+              <i class="w-6 h-6" data-lucide="menu"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Navigation Menu -->
+      <div
+        class="hidden fixed inset-0 z-[60] bg-white pt-20 px-4 lg:hidden"
+        id="mobile-menu"
+      >
+        <button
+          class="absolute top-6 right-4 p-2 hover:bg-gray-100 rounded-lg"
+          id="mobile-menu-close"
+        >
+          <i class="w-6 h-6" data-lucide="x"></i>
+        </button>
+        <nav class="flex flex-col gap-6 text-lg font-semibold max-w-md mx-auto">
+          <a
+            class="flex items-center gap-4 py-3 border-b border-gray-100"
+            href="#"
+          >
+            <i class="w-6 h-6 text-telecom-blue" data-lucide="phone"></i> Buy
+            SIM
+          </a>
+          <a
+            class="flex items-center gap-4 py-3 border-b border-gray-100"
+            href="#"
+          >
+            <i class="w-6 h-6 text-telecom-blue" data-lucide="package"></i>
+            Packages
+          </a>
+          <a
+            class="flex items-center gap-4 py-3 border-b border-gray-100"
+            href="#"
+          >
+            <i class="w-6 h-6 text-telecom-blue" data-lucide="globe"></i>
+            Network Coverage
+          </a>
+          <a
+            class="flex items-center gap-4 py-3 border-b border-gray-100"
+            href="#"
+          >
+            <i class="w-6 h-6 text-telecom-blue" data-lucide="life-buoy"></i>
+            Support
+          </a>
+          <div class="mt-4">
+            <button
+              class="w-full flex items-center justify-center gap-2 bg-telecom-blue text-white py-4 rounded-xl font-bold text-base shadow-lg shadow-blue-100"
+            >
+              <i class="w-5 h-5" data-lucide="user"></i> Sign In
+            </button>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <!-- Component: HeroSection -->
+      <section
+        class="relative bg-telecom-dark text-white overflow-hidden py-16 md:py-24 lg:py-32"
+        data-purpose="hero-banner"
+      >
+        <div
+          class="absolute top-0 right-0 w-full lg:w-1/2 h-full bg-gradient-to-l from-telecom-blue/20 to-transparent pointer-events-none"
+        ></div>
+        <div
+          class="container mx-auto px-4 relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-16"
+        >
+          <div
+            class="w-full lg:w-1/2 text-center lg:text-left order-2 lg:order-1"
+          >
+            <span
+              class="inline-block bg-telecom-red px-4 py-1.5 rounded-full text-[10px] md:text-xs font-bold mb-6 tracking-widest uppercase"
+              >New 5G Era</span
+            >
+            <h1
+              class="text-3xl sm:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight"
+            >
+              Order Your <span class="text-telecom-blue">5G SIM</span> &amp;
+              Choose Your Lucky Number
+            </h1>
+            <p
+              class="text-gray-300 text-base md:text-lg mb-10 max-w-2xl mx-auto lg:mx-0"
+            >
+              Experience lightning-fast speeds and nationwide coverage. Pick a
+              unique number that defines you and start your journey today.
+            </p>
+            <div
+              class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+            >
+              <button
+                class="bg-telecom-blue hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold transition-all transform active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-blue-900/40"
+              >
+                <i class="w-5 h-5" data-lucide="shopping-cart"></i>
+                Order Your SIM Now
+              </button>
+              <button
+                class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2"
+              >
+                <i class="w-5 h-5" data-lucide="search"></i>
+                Browse Lucky Numbers
+              </button>
+            </div>
+          </div>
+          <div class="w-full lg:w-1/2 flex justify-center order-1 lg:order-2">
+            <!-- SIM Card Visual Mockup -->
+            <div
+              class="relative w-72 h-44 sm:w-80 sm:h-48 md:w-96 md:h-56 bg-gradient-to-br from-telecom-blue to-telecom-red rounded-2xl p-6 md:p-8 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500"
+            >
+              <div
+                class="absolute top-4 right-6 md:top-6 md:right-8 text-white font-bold italic text-base md:text-xl"
+              >
+                5G
+              </div>
+              <div class="mt-8 md:mt-12">
+                <div
+                  class="w-10 h-8 md:w-14 md:h-10 bg-yellow-400 rounded-md opacity-80 mb-6"
+                ></div>
+                <div
+                  class="text-xl md:text-2xl font-mono tracking-widest text-white"
+                >
+                  0988 777 XXXX
+                </div>
+              </div>
+              <div
+                class="absolute bottom-4 left-6 md:bottom-6 md:left-8 text-[10px] md:text-xs text-white/70 uppercase tracking-widest"
+              >
+                SIM Connect Network
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Component: NumberSearchSection -->
+      <section
+        class="py-12 -mt-10 md:-mt-14 relative z-20"
+        data-purpose="number-filter"
+      >
+        <div class="container mx-auto px-4">
+          <div
+            class="bg-white rounded-2xl shadow-xl p-6 md:p-10 border border-gray-100 max-w-5xl mx-auto"
+          >
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end"
+            >
+              <div class="lg:col-span-2">
+                <label class="block text-sm font-semibold mb-3 text-gray-700"
+                  >Search specific digits</label
+                >
+                <div class="relative">
+                  <i
+                    class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                    data-lucide="search"
+                  ></i>
+                  <input
+                    class="w-full pl-12 py-3.5 rounded-xl border-gray-200 focus:border-telecom-blue focus:ring-telecom-blue text-sm"
+                    placeholder="e.g. 777 or 9999"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold mb-3 text-gray-700"
+                  >Category</label
+                >
+                <select
+                  class="w-full rounded-xl border-gray-200 focus:border-telecom-blue focus:ring-telecom-blue text-sm py-3.5"
+                >
+                  <option>All Categories</option>
+                  <option>VIP Gold</option>
+                  <option>Lucky Numbers</option>
+                  <option>Birthday Numbers</option>
+                </select>
+              </div>
+              <div>
+                <button
+                  class="w-full bg-telecom-red text-white py-4 rounded-xl font-bold hover:bg-red-600 transition-colors shadow-lg shadow-red-200 flex items-center justify-center gap-2 active:scale-95"
+                >
+                  <i class="w-5 h-5" data-lucide="filter"></i>
+                  Find My Number
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Component: ProductListing -->
+      <section class="py-12 md:py-20" data-purpose="sim-card-grid">
+        <div class="container mx-auto px-4">
+          <div
+            class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6"
+          >
+            <div>
+              <h2 class="text-2xl md:text-4xl font-bold">
+                Available SIM Cards
+              </h2>
+              <p class="text-gray-500 mt-2 text-base">
+                Premium and standard numbers ready for activation.
+              </p>
+            </div>
+            <a
+              class="text-telecom-blue font-semibold hover:underline flex items-center gap-2 text-base py-2"
+              href="#"
+            >
+              View All Numbers <i class="w-4 h-4" data-lucide="arrow-right"></i>
+            </a>
+          </div>
+          <!-- Grid: Optimized for 2 columns on tablets (md and lg) and 4 on desktop (xl) -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8"
+          >
+            <!-- SIM Card Item -->
+            <div
+              class="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-xl transition-shadow flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex justify-between items-start mb-6">
+                  <span
+                    class="bg-yellow-100 text-yellow-700 text-[10px] font-bold px-3 py-1.5 rounded-full"
+                    >VIP GOLD</span
+                  >
+                  <span class="text-telecom-blue font-bold text-2xl"
+                    >$199.00</span
+                  >
+                </div>
+                <div class="text-center py-8">
+                  <p class="text-3xl font-mono font-bold tracking-tight">
+                    0988 123 456
+                  </p>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <button
+                  class="w-full bg-telecom-blue text-white py-3.5 rounded-xl text-base font-bold hover:bg-opacity-90 active:scale-95 transition-all"
+                >
+                  Buy Now
+                </button>
+                <button
+                  class="w-full border border-gray-200 text-gray-600 py-3.5 rounded-xl text-base font-semibold hover:bg-gray-50 flex items-center justify-center gap-2 active:scale-95 transition-all"
+                >
+                  <i class="w-5 h-5" data-lucide="shopping-cart"></i> Add to
+                  Cart
+                </button>
+              </div>
+            </div>
+            <!-- SIM Card Item -->
+            <div
+              class="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-xl transition-shadow flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex justify-between items-start mb-6">
+                  <span
+                    class="bg-blue-100 text-blue-700 text-[10px] font-bold px-3 py-1.5 rounded-full"
+                    >HOT DEAL</span
+                  >
+                  <span class="text-telecom-blue font-bold text-2xl"
+                    >$25.00</span
+                  >
+                </div>
+                <div class="text-center py-8">
+                  <p class="text-3xl font-mono font-bold tracking-tight">
+                    0912 888 777
+                  </p>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <button
+                  class="w-full bg-telecom-blue text-white py-3.5 rounded-xl text-base font-bold hover:bg-opacity-90 active:scale-95 transition-all"
+                >
+                  Buy Now
+                </button>
+                <button
+                  class="w-full border border-gray-200 text-gray-600 py-3.5 rounded-xl text-base font-semibold hover:bg-gray-50 flex items-center justify-center gap-2 active:scale-95 transition-all"
+                >
+                  <i class="w-5 h-5" data-lucide="shopping-cart"></i> Add to
+                  Cart
+                </button>
+              </div>
+            </div>
+            <!-- SIM Card Item -->
+            <div
+              class="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-xl transition-shadow flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex justify-between items-start mb-6">
+                  <span
+                    class="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1.5 rounded-full"
+                    >LUCKY 8</span
+                  >
+                  <span class="text-telecom-blue font-bold text-2xl"
+                    >$49.00</span
+                  >
+                </div>
+                <div class="text-center py-8">
+                  <p class="text-3xl font-mono font-bold tracking-tight">
+                    0934 888 888
+                  </p>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <button
+                  class="w-full bg-telecom-blue text-white py-3.5 rounded-xl text-base font-bold hover:bg-opacity-90 active:scale-95 transition-all"
+                >
+                  Buy Now
+                </button>
+                <button
+                  class="w-full border border-gray-200 text-gray-600 py-3.5 rounded-xl text-base font-semibold hover:bg-gray-50 flex items-center justify-center gap-2 active:scale-95 transition-all"
+                >
+                  <i class="w-5 h-5" data-lucide="shopping-cart"></i> Add to
+                  Cart
+                </button>
+              </div>
+            </div>
+            <!-- SIM Card Item -->
+            <div
+              class="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-xl transition-shadow flex flex-col justify-between"
+            >
+              <div>
+                <div class="flex justify-between items-start mb-6">
+                  <span
+                    class="bg-gray-100 text-gray-700 text-[10px] font-bold px-3 py-1.5 rounded-full"
+                    >STANDARD</span
+                  >
+                  <span class="text-telecom-blue font-bold text-2xl"
+                    >$10.00</span
+                  >
+                </div>
+                <div class="text-center py-8">
+                  <p class="text-3xl font-mono font-bold tracking-tight">
+                    0955 432 109
+                  </p>
+                </div>
+              </div>
+              <div class="space-y-4">
+                <button
+                  class="w-full bg-telecom-blue text-white py-3.5 rounded-xl text-base font-bold hover:bg-opacity-90 active:scale-95 transition-all"
+                >
+                  Buy Now
+                </button>
+                <button
+                  class="w-full border border-gray-200 text-gray-600 py-3.5 rounded-xl text-base font-semibold hover:bg-gray-50 flex items-center justify-center gap-2 active:scale-95 transition-all"
+                >
+                  <i class="w-5 h-5" data-lucide="shopping-cart"></i> Add to
+                  Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Component: DataPackagesSection -->
+      <section
+        class="py-16 md:py-24 bg-telecom-blue/5"
+        data-purpose="hot-packages"
+      >
+        <div class="container mx-auto px-4 text-center">
+          <h2 class="text-2xl md:text-4xl font-bold mb-4">
+            Hot 4G/5G Data Packages
+          </h2>
+          <p class="text-gray-600 mb-12 max-w-2xl mx-auto text-base">
+            Get the most out of your new SIM with our high-speed data plans
+            tailored for every need.
+          </p>
+          <!-- Grid: 2 columns on tablets, 3 on larger screens -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
+          >
+            <!-- Package Card -->
+            <div
+              class="bg-white rounded-2xl p-8 md:p-10 border border-gray-100 shadow-sm hover:border-telecom-blue transition-colors flex flex-col"
+            >
+              <div
+                class="text-telecom-blue text-4xl md:text-5xl font-extrabold mb-6"
+              >
+                2GB<span class="text-sm font-normal text-gray-500 italic"
+                  >/day</span
+                >
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Power Basic</h3>
+              <p class="text-base text-gray-500 mb-8">
+                Perfect for everyday browsing and social media.
+              </p>
+              <ul class="text-left space-y-5 mb-10 flex-grow">
+                <li
+                  class="flex items-center gap-3 text-sm md:text-base text-gray-700"
+                >
+                  <i
+                    class="w-5 h-5 text-green-500"
+                    data-lucide="check-circle-2"
+                  ></i>
+                  Unlimited Local Calls
+                </li>
+                <li
+                  class="flex items-center gap-3 text-sm md:text-base text-gray-700"
+                >
+                  <i
+                    class="w-5 h-5 text-green-500"
+                    data-lucide="check-circle-2"
+                  ></i>
+                  50 SMS / Month
+                </li>
+                <li
+                  class="flex items-center gap-3 text-sm md:text-base text-gray-700"
+                >
+                  <i
+                    class="w-5 h-5 text-green-500"
+                    data-lucide="check-circle-2"
+                  ></i>
+                  Free Music Streaming
+                </li>
+              </ul>
+              <button
+                class="w-full py-4 rounded-xl border-2 border-telecom-blue text-telecom-blue font-bold hover:bg-telecom-blue hover:text-white active:scale-95 transition-all text-base"
+              >
+                Choose Plan
+              </button>
+            </div>
+            <!-- Popular Package Card -->
+            <div
+              class="bg-white rounded-2xl p-8 md:p-10 border-2 border-telecom-red shadow-xl relative transform lg:scale-105 flex flex-col z-10"
+            >
+              <div
+                class="absolute -top-4 left-1/2 -translate-x-1/2 bg-telecom-red text-white text-[10px] md:text-xs font-bold px-6 py-1.5 rounded-full uppercase tracking-wider"
+              >
+                Most Popular
+              </div>
+              <div
+                class="text-telecom-red text-4xl md:text-5xl font-extrabold mb-6"
+              >
+                5GB<span class="text-sm font-normal text-gray-500 italic"
+                  >/day</span
+                >
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Extreme 5G</h3>
+              <p class="text-base text-gray-500 mb-8">
+                High-speed streaming and gaming without limits.
+              </p>
+              <ul class="text-left space-y-5 mb-10 flex-grow">
+                <li
+                  class="flex items-center gap-3 text-sm md:text-base text-gray-700"
+                >
+                  <i
+                    class="w-5 h-5 text-green-500"
+                    data-lucide="check-circle-2"
+                  ></i>
+                  Unlimited All Network Calls
+                </li>
+                <li
+                  class="flex items-center gap-3 text-sm md:text-base text-gray-700"
+                >
+                  <i
+                    class="w-5 h-5 text-green-500"
+                    data-lucide="check-circle-2"
+                  ></i>
+                  200 SMS / Month
+                </li>
+                <li
+                  class="flex items-center gap-3 text-sm md:text-base text-gray-700"
+                >
+                  <i
+                    class="w-5 h-5 text-green-500"
+                    data-lucide="check-circle-2"
+                  ></i>
+                  Premium Video Streaming
+                </li>
+              </ul>
+              <button
+                class="w-full py-4 rounded-xl bg-telecom-red text-white font-bold hover:bg-red-600 active:scale-95 transition-all text-base shadow-lg shadow-red-100"
+              >
+                Choose Plan
+              </button>
+            </div>
+            <!-- Package Card -->
+            <div
+              class="bg-white rounded-2xl p-8 md:p-10 border border-gray-100 shadow-sm hover:border-telecom-blue transition-colors flex flex-col md:col-span-2 lg:col-span-1"
+            >
+              <div
+                class="text-telecom-blue text-4xl md:text-5xl font-extrabold mb-6"
+              >
+                10GB<span class="text-sm font-normal text-gray-500 italic"
+                  >/day</span
+                >
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Elite Pro</h3>
+              <p class="text-base text-gray-500 mb-8">
+                The ultimate package for heavy data users.
+              </p>
+              <ul class="text-left space-y-5 mb-10 flex-grow">
+                <li
+                  class="flex items-center gap-3 text-sm md:text-base text-gray-700"
+                >
+                  <i
+                    class="w-5 h-5 text-green-500"
+                    data-lucide="check-circle-2"
+                  ></i>
+                  Priority 5G Network
+                </li>
+                <li
+                  class="flex items-center gap-3 text-sm md:text-base text-gray-700"
+                >
+                  <i
+                    class="w-5 h-5 text-green-500"
+                    data-lucide="check-circle-2"
+                  ></i>
+                  Unlimited International Calls
+                </li>
+                <li
+                  class="flex items-center gap-3 text-sm md:text-base text-gray-700"
+                >
+                  <i
+                    class="w-5 h-5 text-green-500"
+                    data-lucide="check-circle-2"
+                  ></i>
+                  1TB Cloud Storage
+                </li>
+              </ul>
+              <button
+                class="w-full py-4 rounded-xl border-2 border-telecom-blue text-telecom-blue font-bold hover:bg-telecom-blue hover:text-white active:scale-95 transition-all text-base"
+              >
+                Choose Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Component: WhyChooseUsSection -->
+      <section class="py-16 md:py-24 lg:py-32" data-purpose="benefits-section">
+        <div class="container mx-auto px-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
+            <div class="flex flex-col items-center text-center p-4">
+              <div
+                class="w-20 h-20 bg-blue-100 rounded-3xl flex items-center justify-center text-telecom-blue mb-8"
+              >
+                <i class="w-10 h-10" data-lucide="truck"></i>
+              </div>
+              <h4 class="text-2xl font-bold mb-4">Free Express Shipping</h4>
+              <p class="text-gray-500 max-w-xs text-base">
+                Your SIM card will be delivered to your doorstep within 24 hours
+                at no cost.
+              </p>
+            </div>
+            <div class="flex flex-col items-center text-center p-4">
+              <div
+                class="w-20 h-20 bg-red-100 rounded-3xl flex items-center justify-center text-telecom-red mb-8"
+              >
+                <i class="w-10 h-10" data-lucide="zap"></i>
+              </div>
+              <h4 class="text-2xl font-bold mb-4">Instant Activation</h4>
+              <p class="text-gray-500 max-w-xs text-base">
+                Simple digital KYC process. Get connected within minutes of
+                receiving your SIM.
+              </p>
+            </div>
+            <div class="flex flex-col items-center text-center p-4">
+              <div
+                class="w-20 h-20 bg-gray-100 rounded-3xl flex items-center justify-center text-gray-700 mb-8"
+              >
+                <i class="w-10 h-10" data-lucide="headset"></i>
+              </div>
+              <h4 class="text-2xl font-bold mb-4">24/7 Expert Support</h4>
+              <p class="text-gray-500 max-w-xs text-base">
+                Our dedicated team is always here to help you with any
+                connectivity issues.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- Component: Footer -->
+    <footer
+      class="bg-telecom-dark text-white pt-20 pb-10"
+      data-purpose="footer-section"
+    >
+      <div class="container mx-auto px-4">
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-16 text-center md:text-left"
+        >
+          <div class="flex flex-col items-center md:items-start">
+            <div
+              class="flex items-center gap-3 mb-8"
+              data-purpose="footer-logo"
+            >
+              <div
+                class="w-10 h-10 bg-telecom-blue rounded-lg flex items-center justify-center"
+              >
+                <span class="text-white font-bold text-xl">S</span>
+              </div>
+              <span class="text-2xl font-bold tracking-tight">SIM Connect</span>
+            </div>
+            <p class="text-gray-400 text-base leading-relaxed mb-8 max-w-xs">
+              Leading provider of premium SIM cards and lightning-fast 5G data
+              services. Empowering millions to stay connected.
+            </p>
+            <div class="flex gap-4">
+              <a
+                class="w-11 h-11 bg-white/10 rounded-full flex items-center justify-center hover:bg-telecom-blue transition-colors"
+                href="#"
+                ><i class="w-5 h-5" data-lucide="facebook"></i
+              ></a>
+              <a
+                class="w-11 h-11 bg-white/10 rounded-full flex items-center justify-center hover:bg-telecom-blue transition-colors"
+                href="#"
+                ><i class="w-5 h-5" data-lucide="twitter"></i
+              ></a>
+              <a
+                class="w-11 h-11 bg-white/10 rounded-full flex items-center justify-center hover:bg-telecom-blue transition-colors"
+                href="#"
+                ><i class="w-5 h-5" data-lucide="instagram"></i
+              ></a>
+            </div>
+          </div>
+          <div>
+            <h5 class="text-xl font-bold mb-8">Products</h5>
+            <ul class="space-y-4 text-gray-400 text-base">
+              <li>
+                <a
+                  class="hover:text-white transition-colors py-1 inline-block"
+                  href="#"
+                  >VIP Numbers</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors py-1 inline-block"
+                  href="#"
+                  >Golden Series</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors py-1 inline-block"
+                  href="#"
+                  >Data Only SIM</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors py-1 inline-block"
+                  href="#"
+                  >Tourist SIMs</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h5 class="text-xl font-bold mb-8">Support</h5>
+            <ul class="space-y-4 text-gray-400 text-base">
+              <li>
+                <a
+                  class="hover:text-white transition-colors py-1 inline-block"
+                  href="#"
+                  >Help Center</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors py-1 inline-block"
+                  href="#"
+                  >Activation Guide</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors py-1 inline-block"
+                  href="#"
+                  >Network Map</a
+                >
+              </li>
+              <li>
+                <a
+                  class="hover:text-white transition-colors py-1 inline-block"
+                  href="#"
+                  >Contact Us</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="flex flex-col items-center md:items-start">
+            <h5 class="text-xl font-bold mb-8">Newsletter</h5>
+            <p class="text-gray-400 text-base mb-6">
+              Get the latest offers and connectivity news.
+            </p>
+            <form class="flex flex-col gap-4 w-full max-w-xs md:max-w-none">
+              <input
+                class="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-base focus:ring-telecom-blue w-full"
+                placeholder="Your email address"
+                type="email"
+              />
+              <button
+                class="bg-telecom-blue py-3.5 rounded-xl font-bold hover:bg-opacity-90 active:scale-95 transition-all shadow-lg shadow-blue-900/40"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+        <div
+          class="border-t border-white/10 pt-10 flex flex-col lg:flex-row justify-between items-center gap-6 text-sm text-gray-500"
+        >
+          <p>© 2023 SIM Connect. All rights reserved.</p>
+          <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+            <a class="hover:text-white" href="#">Privacy Policy</a>
+            <a class="hover:text-white" href="#">Terms of Service</a>
+            <a class="hover:text-white" href="#">Cookies</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Mobile Menu Toggle Logic
+      const menuToggle = document.getElementById("mobile-menu-toggle");
+      const menuClose = document.getElementById("mobile-menu-close");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const body = document.body;
+
+      function toggleMenu() {
+        mobileMenu.classList.toggle("hidden");
+        body.classList.toggle("mobile-menu-open");
+      }
+
+      if (menuToggle && menuClose && mobileMenu) {
+        menuToggle.addEventListener("click", toggleMenu);
+        menuClose.addEventListener("click", toggleMenu);
+
+        // Close menu when a link is clicked
+        mobileMenu.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", toggleMenu);
+        });
+      }
+    </script>
+  </body>
+</html>

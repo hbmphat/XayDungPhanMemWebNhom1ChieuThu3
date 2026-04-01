@@ -11,8 +11,9 @@ npm-install:
 composer-install:
 	docker compose run --rm api composer install
 # (Dùng khi build nhanh nhờ cache)
+
 # Lệnh build hệ thống 
-build:
+build: clean-web
 	docker compose build
 
 # Lệnh build nginx
@@ -20,7 +21,7 @@ build-nginx:
 	docker compose build nginx
 
 # Lệnh build web-app
-build-web:
+build-web: clean-web
 	docker compose build web-app
 
 # Lệnh build api
@@ -30,19 +31,24 @@ build-api:
 # ----------------------------------------------------------------
 # (Dùng khi build lại từ đầu, bỏ qua cache-khi cache lỗi hoặc khi muốn đảm bảo build lại tất cả)
 # Lệnh build hệ thống không cache (dùng khi muốn đảm bảo build lại tất cả từ đầu)
-build-nc:
+build-nc: clean-web
 	docker compose build --no-cache
 # Lệnh build nginx không cache
 build-nginx-nc:
 	docker compose build nginx --no-cache
+
 # Lệnh build web-app không cache
-build-web-nc:
+build-web-nc: clean-web
 	docker compose build web-app --no-cache
 
 # Lệnh build api không cache
 build-api-nc:
 	docker compose build api --no-cache
 
+# Lệnh dọn rác web-app trước khi build
+clean-web:
+	powershell -Command "if (Test-Path 'apps/web-app/.next') { Remove-Item -Recurse -Force apps/web-app/.next }"
+	powershell -Command "if (Test-Path 'apps/web-app/.npm') { Remove-Item -Recurse -Force apps/web-app/.npm }"
 # ----------------------------------------------------------------
 
 # Lệnh khởi động hệ thống
@@ -52,7 +58,6 @@ up:
 # Lệnh dừng hệ thống
 down:
 	docker compose down
-
 
 # -----------------------------------------------------------------
 

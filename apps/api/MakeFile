@@ -1,0 +1,51 @@
+name ?=
+# Chạy server local
+serve:
+	php artisan serve
+# Chạy Migration
+migrate-up:
+	php artisan migrate
+# Tạo lại toàn bộ database
+fresh:
+	php artisan migrate:fresh
+test:
+	php artisan test
+# -------------------------------------------------------------------------
+# Lệnh tổng hợp
+# Tạo full bộ cho API (model, migration, controller-api, create/update request, resource, collection)
+api:
+	php artisan make:model $(name) -m
+	php artisan make:controller $(name)/$(name)Controller --api
+	make request-set name=$(name)
+	make resource-set name=$(name)
+	mkdir "app/Services/$(name)"
+	type nul > "app/Services/$(name)/$(name)Service.php"
+# Tạo cặp request store và update
+request-set:
+	php artisan make:request $(name)/Store$(name)Request
+	php artisan make:request $(name)/Update$(name)Request
+# Tạo cặp resource show và index
+resource-set:
+	php artisan make:resource $(name)/$(name)Resource
+	php artisan make:resource $(name)/$(name)Collection
+# -------------------------------------------------------------------------
+# Lệnh đơn lẻ ($name cần thư mục [name=Test/Test])
+# Tạo request
+request:
+	php artisan make:request $(name)Request
+# Tạo resource
+resource:
+	php artisan make:resource $(name)Resource
+# Tạo collection
+collection:
+	php artisan make:resource $(name)Collection
+# Tạo controller
+controller:
+	php artisan make:controller $(name)Controller --api
+# Tạo model
+model:
+	php artisan make:model $(name)
+# Tạo migration ($name không cần thư mục)
+migrate:
+	php artisan make:migration create_$(name)_table --create=$(name)
+# Tạo service (tạo thủ công, artisan no sp)

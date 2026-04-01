@@ -4,11 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "next build",
-    "start": "next start",
+    "clean": "rm -rf .next .npm out",
+    "build": "npm run clean && next build",
+    "build:docker": "next build",
+    "start": "node .next/standalone/server.js",
     "lint": "eslint"
   },
   "dependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "axios": "^1.13.6",
     "lucide-react": "^0.577.0",
     "next": "16.1.6",
     "react": "19.2.3",

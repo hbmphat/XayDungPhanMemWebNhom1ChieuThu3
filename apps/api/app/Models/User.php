@@ -4,46 +4,50 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasUuids;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // Trường được phép chỉnh sửa
     protected $fillable = [
-        'name',
+        'user_name',
+        'role',
+        'status',
+        'first_name',
+        'last_name',
+        'password',
         'email',
-        'password',
+        'date_of_birth',
+        'address',
+        'phone',
     ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    // Trường đính kèm vào json response
+    protected $appends = ['full_name'];
+    // Trường bị ẩn khỏi json response
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    // Ép kiểu
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'email_verified_at' => 'datetime',
+            'date_of_birth' => 'date:d/m/Y'
         ];
+    }
+    // Tạo trường full_name
+    protected function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn(mixed $value, array $attributes) =>
+            trim(($attributes['first_name'] ?? '') . ' ' . ($attributes['last_name'] ?? '')),
+        );
     }
 }

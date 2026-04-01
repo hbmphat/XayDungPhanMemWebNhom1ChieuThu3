@@ -1,24 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  // Cấu hình template: %s sẽ được thay thế bằng title của trang con
   title: {
-    template: "%s | HTH4438 Web App",
-    default: "Trang chủ | HTH4438 Web App",
+    template: "%s | STU Simshop",
+    default: "Trang chủ | STU Simshop",
   },
-  description: "Mô tả bla bla về ứng dụng web của tui",
+  description: "STU Simshop - Sim số đẹp, giá rẻ, giao hàng nhanh chóng",
 };
 
 export default function RootLayout({
@@ -28,9 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className="bg-slate-50 text-slate-900 antialiased h-full">
         {children}
       </body>
     </html>
