@@ -18,7 +18,7 @@ trait ApiResponser
             $result = array_merge([
                 'success' => true,
                 'message' => $message,
-            ], $data); // Merge để 'success' và 'message' nằm cùng cấp với pagination (nếu có)
+            ], $data); // Merge để 'success' và 'message' nằm cùng cấp với pagination
 
             return response()->json($result, $code);
         }
@@ -27,7 +27,7 @@ trait ApiResponser
             'success' => true,
             'message' => $message,
             'data'    => $data
-        ], $code);
+        ], $code, [], JSON_UNESCAPED_UNICODE);
     }
     protected function errorResponse($message, $code, $errors = null)
     {
@@ -36,6 +36,6 @@ trait ApiResponser
             'message' => $message,
             'data'    => null,
             'errors'  => $errors
-        ], $code);
+        ], $code, [], JSON_UNESCAPED_UNICODE);
     }
 }
