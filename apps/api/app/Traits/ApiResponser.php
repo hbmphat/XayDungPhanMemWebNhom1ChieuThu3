@@ -20,7 +20,7 @@ trait ApiResponser
                 'message' => $message,
             ], $data); // Merge để 'success' và 'message' nằm cùng cấp với pagination
 
-            return response()->json($result, $code);
+            return response()->json($result, $code, [], JSON_UNESCAPED_UNICODE);
         }
 
         return response()->json([
