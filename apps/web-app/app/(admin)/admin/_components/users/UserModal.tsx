@@ -20,13 +20,15 @@ interface UserModalProps {
   isLoading: boolean;
   currentUser: User | null;
   onSubmit: (data: UserInput) => Promise<void>;
+  errors: Record<string, string[]>;
 }
 export default function UserModal({
   isOpen,
   isLoading,
-  onClose,
-  onSubmit,
   currentUser,
+  errors = {},
+  onSubmit,
+  onClose,
 }: UserModalProps) {
   //  Trạng thái render hay không
   if (!isOpen) return null;
@@ -85,7 +87,8 @@ export default function UserModal({
               icon={UserCog}
               defaultValue={currentUser?.user_name}
               placeholder="user123"
-              disabled={isEditMode}
+              readOnly={isEditMode}
+              errors={errors.user_name}
             />
             <FormInput
               label="Email"
@@ -94,6 +97,7 @@ export default function UserModal({
               type="email"
               defaultValue={currentUser?.email}
               placeholder="user123@gmail.com"
+              errors={errors.email}
             />
           </div>
 
@@ -104,6 +108,7 @@ export default function UserModal({
               icon={UserIcon}
               defaultValue={currentUser?.first_name}
               placeholder="Nguyen"
+              errors={errors.first_name}
             />
             <FormInput
               label="Last Name"
@@ -111,6 +116,7 @@ export default function UserModal({
               icon={UserIcon}
               defaultValue={currentUser?.last_name}
               placeholder="Van A"
+              errors={errors.last_name}
             />
           </div>
 
@@ -124,6 +130,7 @@ export default function UserModal({
                 isEditMode ? "Leave blank to keep current" : "••••••••"
               }
               required={!isEditMode}
+              errors={errors.password}
             />
             <FormInput
               label="Date of Birth"
@@ -131,6 +138,7 @@ export default function UserModal({
               icon={Calendar}
               type="date"
               defaultValue={formatDateForInput(currentUser?.date_of_birth)}
+              errors={errors.date_of_birth}
             />
           </div>
 
@@ -141,6 +149,7 @@ export default function UserModal({
             type="tel"
             defaultValue={currentUser?.phone}
             placeholder="+84 123456789"
+            errors={errors.phone}
           />
 
           <FormInput
@@ -150,6 +159,7 @@ export default function UserModal({
             isTextArea
             defaultValue={currentUser?.address}
             placeholder="1a, District 1, HCM City"
+            errors={errors.address}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
