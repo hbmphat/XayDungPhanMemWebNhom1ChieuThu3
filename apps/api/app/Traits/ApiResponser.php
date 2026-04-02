@@ -20,14 +20,14 @@ trait ApiResponser
                 'message' => $message,
             ], $data); // Merge để 'success' và 'message' nằm cùng cấp với pagination
 
-            return response()->json($result, $code, [], JSON_UNESCAPED_UNICODE);
+            return response()->json($result, $code, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         }
 
         return response()->json([
             'success' => true,
             'message' => $message,
             'data'    => $data
-        ], $code, [], JSON_UNESCAPED_UNICODE);
+        ], $code, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
     protected function errorResponse($message, $code, $errors = null)
     {
@@ -36,6 +36,6 @@ trait ApiResponser
             'message' => $message,
             'data'    => null,
             'errors'  => $errors
-        ], $code, [], JSON_UNESCAPED_UNICODE);
+        ], $code, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 }
