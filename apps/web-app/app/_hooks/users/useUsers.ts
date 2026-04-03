@@ -5,7 +5,7 @@ import { User, UserInput } from '@app/_types/users/user-types';
 import { toast } from 'sonner';
 import { PaginationMeta } from '@app_types/api-response'
 import { useApi } from '@hooks/useApi';
-import { validateUser } from '@app/_shared/utils/validation';
+import { validateUserCreate, validateUserUpdate } from '@app/_shared/utils/validation/_index';
 export const useUsers = () => {
     // Define States & Hooks
     const [users, setUsers] = useState<User[]>([]);
@@ -25,7 +25,7 @@ export const useUsers = () => {
     }, [request]);
     // creatUser
     const onCreate = async (input: UserInput) => {
-        const validation = validateUser(input);
+        const validation = validateUserCreate(input);
         if (!validation.isValid) {
             setErrors(validation.errors);
             return false;
@@ -40,7 +40,7 @@ export const useUsers = () => {
     };
     // updateUser
     const onUpdate = async (id: string, input: UserInput) => {
-        const validation = validateUser(input);
+        const validation = validateUserUpdate(input);
         if (!validation.isValid) {
             setErrors(validation.errors);
             return false;

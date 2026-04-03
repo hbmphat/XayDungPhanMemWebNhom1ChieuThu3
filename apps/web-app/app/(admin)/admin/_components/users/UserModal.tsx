@@ -44,8 +44,10 @@ export default function UserModal({
 
     const payload = {
       ...data,
+      date_of_birth: data.date_of_birth?.toString().trim() || null,
       status: formData.get("status") === "on" ? "active" : "inactive",
     } as UserInput;
+    console.log("Check DOB value:", payload.date_of_birth);
     await onSubmit(payload);
   };
 
