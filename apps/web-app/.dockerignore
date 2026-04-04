@@ -1,33 +1,47 @@
-# Bỏ qua các file cài đặt từ root hoặc các service khác
+# --- Monorepo & Build Tooling ---
 node_modules
 .git
 .turbo
+
+# --- Next.js / Frontend Specifics ---
+# Không copy thư mục build cục bộ vì Docker sẽ tự build lại bên trong
 .next
 out
 dist
 build
-
-# File hệ thống và môi trường
-.env*
-!.env.example
-.DS_Store
 .npm/
 
-# Logs
+# --- Environment & Secrets ---
+.env*
+!.env.example
+.npmrc
+.yarnrc
+
+# --- Logs & Testing ---
 *.log
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
-
-# Testing
 coverage
 .nyc_output
 *.test.ts
 *.test.js
 __tests__
 
-# Tài liệu và các file không liên quan khi chạy production
+# --- Documentation & Meta ---
 README.md
+CONTRIBUTING.md
+docs/
 *.md
+
+# --- IDE & OS ---
+.DS_Store
 .vscode
 .idea
+.editorconfig
+
+# --- Docker & CI/CD ---
+Dockerfile
+.dockerignore
+docker-compose*
+.github

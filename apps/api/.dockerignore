@@ -1,32 +1,43 @@
-# Bỏ qua các file cài đặt từ root hoặc các service khác
+# --- Monorepo & Build Tooling ---
 node_modules
 .git
 .turbo
+.github
+.gitlab-ci.yml
 
-# Laravel Cache & Sessions
-/bootstrap/cache/*
-!/bootstrap/cache/.gitignore
-/storage/framework/cache/*
-/storage/framework/sessions/*
-/storage/framework/views/*
-/storage/logs/*
-!/storage/**/.gitignore
+# --- Laravel Specifics ---
+# Bỏ qua các file cache động, chỉ giữ lại file giữ cấu trúc (.gitignore)
+bootstrap/cache/*
+!bootstrap/cache/.gitignore
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+!storage/**/.gitignore
 
-# Dependencies
+# Loại bỏ toàn bộ dependencies local để stage vendor trong Docker tự cài
 vendor
 
-# Environment & Config
+# --- Testing & Development Artifacts ---
+tests
+.phpunit.cache
+_ide_helper*
+.php-cs-fixer*
+*.md
+
+# --- Environment & Sensitive Data ---
 .env*
 !.env.example
-.phpunit.cache
+auth.json
+composer.phar
 
-# IDE & OS
+# --- IDE & OS Stuff ---
 .DS_Store
 .vscode
 .idea
 .editorconfig
 
-# Docker & CI/CD
+# --- Docker ---
 Dockerfile
 docker-compose.yml
 .dockerignore

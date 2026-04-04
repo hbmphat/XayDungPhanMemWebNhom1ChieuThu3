@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev --turbo",
     "clean": "rm -rf .next .npm out",
-    "build": "npm run clean && next build",
-    "build:docker": "next build",
+    "build": "next build",
     "start": "node .next/standalone/server.js",
     "lint": "eslint"
   },
