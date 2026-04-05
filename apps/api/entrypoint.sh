@@ -7,7 +7,7 @@ php artisan config:cache
 php artisan route:cache
 
 # 2. Cache các thành phần khác
-echo "Caching Views and Events..."
+echo "Caching Events..."
 php artisan event:cache
 
 # 3. Chạy Migration nếu được yêu cầu
