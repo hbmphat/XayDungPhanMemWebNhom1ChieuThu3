@@ -15,28 +15,37 @@ export default function UserRow({
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="flex items-center gap-3">
           <span className="text-sm font-bold text-slate-900">
-            {user.user_name}
+            {user.user_name || "N/A"}
           </span>
         </div>
       </td>
       <td className="px-6 py-4 text-sm text-slate-700 font-medium">
-        {user.full_name}
+        {user.full_name?.trim() ? user.full_name : "Chưa cập nhật"}
       </td>
-      <td className="px-6 py-4 text-sm text-slate-600">{user.email}</td>
       <td className="px-6 py-4 text-sm text-slate-600">
-        {user.phone || "---"}
+        {user.date_of_birth
+          ? new Date(user.date_of_birth).toLocaleDateString("vi-VN")
+          : "Chưa cập nhật"}
+      </td>
+      <td className="px-6 py-4 text-sm text-slate-600">
+        {user.email ? user.email : "Chưa cập nhật"}
+      </td>
+      <td className="px-6 py-4 text-sm text-slate-600">
+        {user.phone ? user.phone : "Chưa cập nhật"}
       </td>
       <td className="px-6 py-4 text-sm text-slate-600 truncate max-w-37.5">
-        {user.address}
+        {user.address?.trim() ? user.address : "Chưa cập nhật"}
       </td>
       <td className="px-6 py-4">
         <div className="flex items-center gap-1.5">
           {user.role === "admin" ? (
-            <Shield size={14} className="text-indigo-500" />
+            <Shield size={16} className="text-indigo-500" />
           ) : (
-            <UserIcon size={14} className="text-slate-400" />
+            <UserIcon size={16} className="text-slate-400" />
           )}
-          <span className="text-xs font-semibold capitalize">{user.role}</span>
+          <span className="text-xs font-semibold capitalize">
+            {user.role || "Customer"}
+          </span>
         </div>
       </td>
       <td className="px-6 py-4">

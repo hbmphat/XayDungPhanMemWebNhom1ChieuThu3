@@ -18,6 +18,7 @@ export default function UserTable({
   const tableHeaders = [
     "User",
     "Fullname",
+    "Date of Birth",
     "Email",
     "Phone",
     "Address",

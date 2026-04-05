@@ -52,6 +52,8 @@ services:
     container_name: web-app
     expose:
       - "3000"
+    ports:
+      - "3000:3000"
     env_file:
       - ./.env
       - ./apps/web-app/.env
@@ -60,10 +62,9 @@ services:
     user: root
     healthcheck:
       test:
-        [
-          "CMD-SHELL",
-          "wget --no-verbose --tries=1 --spider http://localhost:3000 || exit 1",
-        ]
+        - "CMD-SHELL"
+        - |
+          node -e "require('http').get('http://localhost:3000', (r) => r.statusCode === 200 ? process.exit(0) : process.exit(1))"
       interval: 10s
       timeout: 5s
       retries: 3
@@ -109,16 +110,19 @@ services:
       - ./apps/api/.env
     environment:
       - DB_HOST=db-main
+    ports:
+      - "8000:10000"
     networks:
       - app-network
-    command: ["php-fpm"]
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
     volumes:
       - ./apps/api:/var/www/html
     healthcheck:
-      test: ["CMD", "php-fpm", "-t"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      test: ["CMD-SHELL", "curl -f http://localhost:10000/api/health || exit 1"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
     depends_on:
       db-main:
         condition: service_healthy

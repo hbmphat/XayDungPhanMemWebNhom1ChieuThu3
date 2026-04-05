@@ -14,8 +14,9 @@ export default function UserPage() {
     loading,
     meta,
     isModalOpen,
-    setIsModalOpen,
+    errors,
     currentUser,
+    setIsModalOpen,
     onFetch,
     handleOpenModal,
     handleFormSubmit,
@@ -48,6 +49,7 @@ export default function UserPage() {
           currentUser={currentUser}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleFormSubmit}
+          errors={errors}
         />
       )}
     </>

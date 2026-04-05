@@ -5,13 +5,14 @@ import { User, UserInput } from "@app/_types/users/user-types";
 // @app/_hooks/users/useUserManagement.ts
 export const useUserManagement = () => {
     //  Define States & Hooks
-    const { users, loading, meta, onFetch, onCreate, onDelete, onUpdate } = useUsers();
+    const { users, loading, meta, errors, onFetch, onCreate, onDelete, onUpdate, setErrors } = useUsers();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     //  OpenModal
     const handleOpenModal = (user: User | null = null) => {
         setCurrentUser(user);
         setIsModalOpen(true);
+        setErrors({});
     };
     const handleFormSubmit = async (data: UserInput) => {
         const success = currentUser
@@ -42,14 +43,16 @@ export const useUserManagement = () => {
         users,
         loading,
         meta,
+        errors,
         // Modal states
         isModalOpen,
-        setIsModalOpen,
         currentUser,
         // Actions
         onFetch,
+        setIsModalOpen,
         handleOpenModal,
         handleFormSubmit,
-        handleDelete
+        handleDelete,
+        setErrors
     };
 };

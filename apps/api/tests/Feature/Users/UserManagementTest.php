@@ -12,15 +12,18 @@ class UserManagementTest extends TestCase
     public function test_it_can_create_a_user_with_valid_data()
     {
         // Input
+        $email = 'test.user' . time() . '@example.com';
         $userData = [
             'user_name'     => 'test_user',
             'first_name'    => 'First',
             'last_name'     => 'Last',
-            'email'         => 'test.user@example.com',
-            'phone'         => '0123456789',
+            'email'         => $email,
+            'phone'         => '0334567890',
             'password'      => 'password123',
             'date_of_birth' => '1990-01-01',
             'address'       => 'Ho Chi Minh City',
+            'role' => 'customer',
+            'status'   => 'active',
         ];
 
         // Thực thi Request
@@ -50,14 +53,14 @@ class UserManagementTest extends TestCase
 
         // Test Content
         $response->assertJsonPath('success', true)
-            ->assertJsonPath('data.email', 'test.user@example.com')
+            ->assertJsonPath('data.email', $email)
             ->assertJsonPath('data.full_name', 'First Last');
 
         // Test Persistence (chỉ check các field quan trọng)
         $this->assertDatabaseHas('users', [
             'user_name' => 'test_user',
-            'email'     => 'test.user@example.com',
-            'phone'     => '0123456789'
+            'email'     => $email,
+            'phone'     => '0334567890'
         ]);
     }
 }

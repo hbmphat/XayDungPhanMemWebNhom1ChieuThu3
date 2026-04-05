@@ -23,15 +23,43 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_name' => 'required|string|max:255|unique:users',
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'date_of_birth' => 'required|date',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone' => 'required|string|max:255|unique:users',
-            'status' => 'nullable|string',
-            'address' => 'required|string|max:255',
-            'password' => 'required|string|min:8',
+            'user_name' => [
+                'required',
+                'string',
+                'min:4',
+                'max:50',
+                'unique:users,user_name'
+            ],
+            'first_name' => 'required|string|min:4|max:50',
+            'last_name'  => 'required|string|min:4|max:50',
+            'email'      => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users,email'
+            ],
+            'phone'      => [
+                'required',
+                'string',
+                'regex:/^(0|84)(3|5|7|8|9)[0-9]{8}$/',
+                'unique:users,phone'
+            ],
+            'password'   => 'required|string|min:8|max:50',
+            'address'    => 'required|string|min:2|max:100',
+            'date_of_birth' => 'required|date|before_or_equal:today',
+            'role'       => 'required|string|in:admin,customer',
+            'status'     => 'required|string|in:active,inactive',
+        ];
+    }
+    /**
+     * Tùy chỉnh thông báo lỗi
+     */
+    public function messages(): array
+    {
+        return [
+            'user_name.unique' => 'Tên đăng nhập đã tồn tại.',
+            'email.unique' => 'Email này đã được đăng ký.',
         ];
     }
 }

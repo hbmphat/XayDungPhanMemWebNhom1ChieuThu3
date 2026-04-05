@@ -30,30 +30,43 @@ class UpdateUserRequest extends FormRequest
         return [
             'user_name' => [
                 'sometimes',
+                'required',
                 'string',
-                'max:255',
-                Rule::unique('users')->ignore($userId)
+                'min:4',
+                'max:50',
+                Rule::unique('users')->ignore($userId),
             ],
-            'first_name' => 'sometimes|string|max:255',
-            'last_name' => 'sometimes|string|max:255',
-            'email' => [
+            'first_name' => 'sometimes|required|string|min:4|max:50',
+            'last_name'  => 'sometimes|required|string|min:4|max:50',
+            'email'      => [
                 'sometimes',
+                'required',
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($userId)
+                Rule::unique('users')->ignore($userId),
             ],
-            'password' => 'sometimes|nullable|string|min:8',
-            'date_of_birth' => 'sometimes|date',
-            'phone' => [
+            'phone'      => [
                 'sometimes',
+                'required',
                 'string',
-                'max:255',
-                Rule::unique('users')->ignore($userId)
+                'regex:/^(0|84)(3|5|7|8|9)[0-9]{8}$/',
+                Rule::unique('users')->ignore($userId),
             ],
-            'address' => 'sometimes|string|max:255',
-            'role' => 'sometimes|string|max:255',
-            'status' => 'sometimes|string|max:255',
+            'password'   => 'sometimes|nullable|string|min:8|max:50',
+            'address'    => 'sometimes|required|string|min:2|max:100',
+            'date_of_birth' => 'sometimes|required|date|before_or_equal:today',
+            'role'       => 'sometimes|required|string|in:admin,customer',
+            'status'     => 'sometimes|required|string|in:active,inactive',
+        ];
+    }
+    /**
+     * Tùy chỉnh thông báo lỗi
+     */
+    public function messages(): array
+    {
+        return [
+            'email.unique' => 'Email này đã được đăng ký.',
         ];
     }
 }

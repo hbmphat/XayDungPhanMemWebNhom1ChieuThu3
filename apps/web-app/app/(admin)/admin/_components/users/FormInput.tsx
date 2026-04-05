@@ -10,7 +10,8 @@ interface FormInputProps {
   isTextArea?: boolean;
   defaultValue?: string;
   required?: boolean;
-  disabled?: boolean;
+  errors?: string[];
+  readOnly?: boolean;
 }
 
 export default function FormInput({
@@ -23,11 +24,18 @@ export default function FormInput({
   isTextArea,
   defaultValue,
   required,
-  disabled,
+  errors,
+  readOnly,
 }: FormInputProps) {
+  // Kiểm tra xem có lỗi hay không để render UI
+  const hasError = errors && errors.length > 0;
   return (
     <div className="group flex flex-col gap-1.5">
-      <label className="block text-[0.7rem] font-bold uppercase tracking-wider text-on-surface-variant px-1">
+      <label
+        className={`block text-[0.7rem] font-bold uppercase tracking-wider px-1 transition-colors ${
+          hasError ? "text-error" : "text-on-surface-variant"
+        }`}
+      >
         {label}{" "}
         {optional && (
           <span className="text-[0.6rem] font-normal lowercase">
@@ -38,8 +46,9 @@ export default function FormInput({
 
       <div className="relative flex items-center">
         <Icon
-          className={`w-4 h-4 absolute left-4 z-10 text-on-surface-variant transition-colors 
-          group-focus-within:text-primary ${isTextArea ? "top-4" : ""}`}
+          className={`w-4 h-4 absolute left-4 z-10 transition-colors 
+              ${hasError ? "text-error" : "text-on-surface-variant group-focus-within:text-primary"} 
+              ${isTextArea ? "top-4" : ""}`}
         />
 
         {isTextArea ? (
@@ -47,10 +56,14 @@ export default function FormInput({
             name={name}
             placeholder={placeholder}
             defaultValue={defaultValue}
-            disabled={disabled}
             required={required}
+            readOnly={readOnly}
             rows={2}
-            className="form-input pl-11 resize-none h-auto"
+            className={`form-input pl-11 resize-none h-auto ${
+              hasError
+                ? "border-error bg-error-container/20 focus:border-error"
+                : ""
+            }`}
           />
         ) : (
           <input
@@ -58,12 +71,22 @@ export default function FormInput({
             name={name}
             placeholder={placeholder}
             defaultValue={defaultValue}
-            disabled={disabled}
             required={required}
-            className="form-input pl-11"
+            readOnly={readOnly}
+            className={`form-input pl-11 ${
+              hasError
+                ? "border-error bg-error-container/20 focus:border-error"
+                : ""
+            }`}
           />
         )}
       </div>
+      {/* Hiển thị thông báo lỗi */}
+      {hasError && (
+        <span className="text-[0.65rem] font-semibold text-error px-1 mt-1 animate-in fade-in slide-in-from-top-1">
+          {errors[0]}
+        </span>
+      )}
     </div>
   );
 }
