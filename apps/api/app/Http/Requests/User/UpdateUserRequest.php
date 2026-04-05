@@ -66,7 +66,7 @@ class UpdateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.unique' => 'Email này đã được đăng ký.',
+            'email.unique' => 'Email has already been taken.',
         ];
     }
 }

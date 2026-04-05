@@ -26,7 +26,8 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         $perPage = $this->getPerPage();
-        $users = $this->userService->getPaginatedUsers($perPage);
+        $filters = request()->only(['search', 'role', 'status']);
+        $users = $this->userService->getPaginatedUsers($perPage, $filters);
         return $this->successResponse(new UserCollection($users), 'Danh sách người dùng');
     }
 

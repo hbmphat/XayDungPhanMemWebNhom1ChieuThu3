@@ -58,8 +58,8 @@ class StoreUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_name.unique' => 'Tên đăng nhập đã tồn tại.',
-            'email.unique' => 'Email này đã được đăng ký.',
+            'user_name.unique' => 'Username has already been taken.',
+            'email.unique' => 'Email has already been taken.',
         ];
     }
 }

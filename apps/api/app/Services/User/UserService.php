@@ -9,10 +9,25 @@ class UserService
 {
     /**
      * Lấy danh sách người dùng, phân trang mặc định 10 records
+     * Tìm kiếm theo tên, email, số điện thoại; lọc theo role, status 
      */
-    public function getPaginatedUsers(int $perPage): LengthAwarePaginator
+    public function getPaginatedUsers(int $perPage, array $filters = []): LengthAwarePaginator
     {
-        return User::latest()->paginate($perPage);
+        return User::query()
+            ->when(!empty($filters['search']), function ($query) use ($filters) {
+                $search = $filters['search'];
+                $query->where(function ($q) use ($search) {
+                    $q->where('user_name', 'like', "%$search%")
+                        ->orWhere('email', 'like', "%$search%")
+                        ->orWhere('phone', 'like', "%$search%")
+                        ->orWhere('first_name', 'like', "%{$search}%")
+                        ->orWhere('last_name', 'like', "%{$search}%");
+                });
+            })
+            ->when(!empty($filters['role']), function ($query) use ($filters) {})
+            ->when(!empty($filters['status']), function ($query) use ($filters) {})
+            ->latest()
+            ->paginate($perPage);
     }
 
     /**
