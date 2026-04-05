@@ -10,6 +10,7 @@ use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Services\User\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -23,12 +24,12 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $perPage = $this->getPerPage();
-        $filters = request()->only(['search', 'role', 'status']);
+        $filters = $request->all();
         $users = $this->userService->getPaginatedUsers($perPage, $filters);
-        return $this->successResponse(new UserCollection($users), 'Danh sách người dùng');
+        return $this->successResponse(new UserCollection($users), 'User list');
     }
 
     /**
@@ -38,7 +39,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         $user = $this->userService->createUser($validated);
-        return $this->successResponse(new UserResource($user), 'Tạo thành công', 201);
+        return $this->successResponse(new UserResource($user), 'Created successfully', 201);
     }
 
     /**
@@ -47,7 +48,7 @@ class UserController extends Controller
     public function show(User $user): JsonResponse
     {
         $result = $this->userService->getUser($user);
-        return $this->successResponse(new UserResource($result), 'Thông tin người dùng');
+        return $this->successResponse(new UserResource($result), 'User information');
     }
 
     /**
@@ -57,7 +58,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         $user = $this->userService->updateUser($validated, $user);
-        return $this->successResponse(new UserResource($user), 'Cập nhật thành công');
+        return $this->successResponse(new UserResource($user), 'Updated successfully');
     }
 
     /**
@@ -71,6 +72,6 @@ class UserController extends Controller
         // }
 
         $this->userService->deleteUser($user);
-        return $this->successResponse(null, 'Xóa thành công');
+        return $this->successResponse(null, 'Deleted successfully');
     }
 }

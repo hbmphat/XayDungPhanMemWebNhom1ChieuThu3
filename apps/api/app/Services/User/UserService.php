@@ -24,8 +24,12 @@ class UserService
                         ->orWhere('last_name', 'like', "%{$search}%");
                 });
             })
-            ->when(!empty($filters['role']), function ($query) use ($filters) {})
-            ->when(!empty($filters['status']), function ($query) use ($filters) {})
+            ->when(isset($filters['role']) && $filters['role'] !== '', function ($q) use ($filters) {
+                $q->where('role', $filters['role']);
+            })
+            ->when(isset($filters['status']) && $filters['status'] !== '', function ($q) use ($filters) {
+                $q->where('status', $filters['status']);
+            })
             ->latest()
             ->paginate($perPage);
     }
