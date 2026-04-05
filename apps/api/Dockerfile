@@ -29,10 +29,10 @@ RUN { \
     echo 'opcache.enable_cli=1'; \
     } > /usr/local/etc/php/conf.d/opcache-optimized.ini
 
-# Copy source code và vendor vào image
+# Copy vendor và source code vào image
 WORKDIR /var/www/html
-COPY --chown=www-data:www-data apps/api/ .
 COPY --from=vendor --chown=www-data:www-data /app/vendor ./vendor
+COPY --chown=www-data:www-data apps/api/ .
 
 # Copy file .env.example để làm template
 COPY --chown=www-data:www-data apps/api/.env.example .env
@@ -53,4 +53,4 @@ EXPOSE 10000
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # Chạy ứng dụng bằng built-in server của Laravel
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=${PORT:-10000}"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=10000"]
