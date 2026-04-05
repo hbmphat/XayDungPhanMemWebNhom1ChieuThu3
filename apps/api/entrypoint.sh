@@ -3,11 +3,11 @@ set -e
 
 # 1. Tối ưu hóa hệ thống
 echo "Optimizing Configuration and Routes..."
-php artisan optimize
+php artisan config:cache
+php artisan route:cache
 
 # 2. Cache các thành phần khác
 echo "Caching Views and Events..."
-php artisan view:cache
 php artisan event:cache
 
 # 3. Chạy Migration nếu được yêu cầu
