@@ -3,6 +3,7 @@ set -e
 
 # 1. Tối ưu hóa hệ thống
 echo "Optimizing Configuration and Routes..."
+php artisan package:discover --ansi
 php artisan config:cache
 php artisan route:cache
 
