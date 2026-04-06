@@ -5,9 +5,20 @@ import { User, UserInput } from "@app/_types/users/user-types";
 // @app/_hooks/users/useUserManagement.ts
 export const useUserManagement = () => {
     //  Define States & Hooks
-    const { users, loading, meta, errors, onFetch, onCreate, onDelete, onUpdate, setErrors } = useUsers();
+    const { users, loading, meta, errors, onFetch, onCreate, onDelete, onUpdate, setErrors, getFieldError } = useUsers();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [roleFilter, setRoleFilter] = useState("");
+    // FetchUsers
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            onFetch(1, searchTerm, roleFilter);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm, roleFilter, onFetch]);
+
     //  OpenModal
     const handleOpenModal = (user: User | null = null) => {
         setCurrentUser(user);
@@ -23,10 +34,7 @@ export const useUserManagement = () => {
             onFetch(currentUser ? (meta?.current_page ?? 1) : 1);
         }
     };
-    // FetchUsers
-    useEffect(() => {
-        onFetch(1);
-    }, []);
+
 
 
     //  DeleteUser
@@ -44,6 +52,8 @@ export const useUserManagement = () => {
         loading,
         meta,
         errors,
+        searchTerm,
+        roleFilter,
         // Modal states
         isModalOpen,
         currentUser,
@@ -53,6 +63,9 @@ export const useUserManagement = () => {
         handleOpenModal,
         handleFormSubmit,
         handleDelete,
-        setErrors
+        setErrors,
+        setSearchTerm,
+        setRoleFilter,
+        getFieldError
     };
 };

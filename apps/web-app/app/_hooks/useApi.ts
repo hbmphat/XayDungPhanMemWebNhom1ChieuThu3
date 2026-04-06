@@ -12,17 +12,26 @@ export function useApi<T>() {
         setErrors(null);
         try {
             const response = await apiCall();
-            setData(response.data);
-            return { success: true, data: response.data };
+            const result = response;
+            setData(result);
+            return { success: true, data: result };
         } catch (err: any) {
             if (err.response?.status === 422) {
                 setErrors(err.response.data.errors);
             }
-            return { success: false, error: err.message };
+            else if (err.errors) {
+                setErrors(err.errors);
+            }
+            return {
+                success: false,
+                error: err.response?.data?.message || err.message || 'Validation Error'
+            };
         } finally {
             setLoading(false);
         }
     }, []);
-
-    return { data, loading, errors, request, setErrors };
+    const getFieldError = useCallback((field: string) => {
+        return errors?.[field]?.[0] || '';
+    }, [errors]);
+    return { data, loading, errors, request, setErrors, setData, setLoading, getFieldError };
 }

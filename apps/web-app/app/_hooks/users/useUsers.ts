@@ -8,21 +8,24 @@ import { useApi } from '@hooks/useApi';
 import { validateUserCreate, validateUserUpdate } from '@app/_shared/utils/validation/_index';
 export const useUsers = () => {
     // Define States & Hooks
-    const [users, setUsers] = useState<User[]>([]);
     const [meta, setMeta] = useState<PaginationMeta | null>(null);
-    const { loading, errors, request, setErrors } = useApi<User[]>();
+    const {
+        data: usersData,
+        loading,
+        errors,
+        request,
+        setErrors,
+        getFieldError
+    } = useApi<User[]>();
 
     // Fetch Users
-    const onFetch = useCallback(async (page: number) => {
-        const res = await userService.getAll(page);
-        if (res.success) {
-            setUsers(res.data || []);
-            setMeta(res.meta || null);
-        } else {
-            setUsers([]);
-            setMeta(null);
+    const onFetch = useCallback(async (page: number, search?: string, role?: string) => {
+        const res = await request(() => userService.getAll(page, search, role));
+        if (res.success && res.data) {
+            setMeta(res.data.meta || null);
         }
     }, [request]);
+
     // creatUser
     const onCreate = async (input: UserInput) => {
         const validation = validateUserCreate(input);
@@ -30,13 +33,14 @@ export const useUsers = () => {
             setErrors(validation.errors);
             return false;
         }
-        const res = await userService.create(input);
+
+        const res = await request(() => userService.create(input));
         if (res.success) {
-            toast.success(res.message || "Success");
+            toast.success("User created successfully");
             return true;
         }
+        toast.error(res.error);
         return false;
-
     };
     // updateUser
     const onUpdate = async (id: string, input: UserInput) => {
@@ -45,20 +49,19 @@ export const useUsers = () => {
             setErrors(validation.errors);
             return false;
         }
-        const res = await userService.update(id, input);
+
+        const res = await request(() => userService.update(id, input));
         if (res.success) {
-            toast.success(res.message || "Success");
+            toast.success("User updated successfully");
             return true;
         }
         return false;
     };
-
-    // deleteUser
     const onDelete = async (id: string) => {
-        if (!confirm('Bạn có chắc chắn muốn xóa?')) return;
-        const res = await userService.delete(id);
+        const res = await request(() => userService.delete(id));
         if (res.success) {
-            toast.success(res.message || "Success");
+            toast.success("Xóa thành công");
+            await onFetch(1); // Refresh lại danh sách
             return true;
         }
         return false;
@@ -66,11 +69,12 @@ export const useUsers = () => {
 
     return {
         // Data states
-        users,
+        users: (usersData as any)?.data || (Array.isArray(usersData) ? usersData : []),
         loading,
         meta,
         errors: errors || {},
         // Actions
+        getFieldError,
         onFetch,
         onCreate,
         onUpdate,

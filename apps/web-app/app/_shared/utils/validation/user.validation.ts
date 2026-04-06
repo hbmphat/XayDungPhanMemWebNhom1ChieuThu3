@@ -17,7 +17,7 @@ const commonRules: Partial<Record<keyof UserInput, ValidationRuleFn[]>> = {
 };
 // Hàm gộp rules chung và riêng
 const combine = (field: keyof UserInput, extraRules: ValidationRuleFn[]) => {
-    return [...(commonRules[field] || []), ...extraRules];
+    return [...extraRules, ...(commonRules[field] || [])];
 };
 export const validateUserCreate = (data: UserInput) => {
     // Schema validation cho create
@@ -37,7 +37,9 @@ export const validateUserCreate = (data: UserInput) => {
     return validateRunner(schema, data);
 };
 export const validateUserUpdate = (data: UserInput) => {
-    // Update chỉ check định dạng nếu trường đó CÓ GIÁ TRỊ
-    // validateRunner sẽ bỏ qua việc check khi data[field] là undefined
-    return validateRunner(commonRules, data);
+    const updateSchema: Partial<Record<keyof UserInput, ValidationRuleFn[]>> = {
+        ...commonRules,
+        password: [Rules.minLength(8), Rules.maxLength(50)],
+    };
+    return validateRunner(updateSchema, data);
 };

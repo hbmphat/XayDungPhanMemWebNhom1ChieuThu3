@@ -20,15 +20,15 @@ interface UserModalProps {
   isLoading: boolean;
   currentUser: User | null;
   onSubmit: (data: UserInput) => Promise<void>;
-  errors: Record<string, string[]>;
+  getFieldError: (field: string) => string | undefined;
 }
 export default function UserModal({
   isOpen,
   isLoading,
   currentUser,
-  errors = {},
   onSubmit,
   onClose,
+  getFieldError,
 }: UserModalProps) {
   //  Trạng thái render hay không
   if (!isOpen) return null;
@@ -39,6 +39,7 @@ export default function UserModal({
   // Xú lý nút submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoading) return;
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
 
@@ -90,7 +91,7 @@ export default function UserModal({
               defaultValue={currentUser?.user_name}
               placeholder="user123"
               readOnly={isEditMode}
-              errors={errors.user_name}
+              error={getFieldError("user_name")}
             />
             <FormInput
               label="Email"
@@ -99,7 +100,7 @@ export default function UserModal({
               type="email"
               defaultValue={currentUser?.email}
               placeholder="user123@gmail.com"
-              errors={errors.email}
+              error={getFieldError("email")}
             />
           </div>
 
@@ -110,7 +111,7 @@ export default function UserModal({
               icon={UserIcon}
               defaultValue={currentUser?.first_name}
               placeholder="Nguyen"
-              errors={errors.first_name}
+              error={getFieldError("first_name")}
             />
             <FormInput
               label="Last Name"
@@ -118,7 +119,7 @@ export default function UserModal({
               icon={UserIcon}
               defaultValue={currentUser?.last_name}
               placeholder="Van A"
-              errors={errors.last_name}
+              error={getFieldError("last_name")}
             />
           </div>
 
@@ -132,7 +133,7 @@ export default function UserModal({
                 isEditMode ? "Leave blank to keep current" : "••••••••"
               }
               required={!isEditMode}
-              errors={errors.password}
+              error={getFieldError("password")}
             />
             <FormInput
               label="Date of Birth"
@@ -140,7 +141,7 @@ export default function UserModal({
               icon={Calendar}
               type="date"
               defaultValue={formatDateForInput(currentUser?.date_of_birth)}
-              errors={errors.date_of_birth}
+              error={getFieldError("date_of_birth")}
             />
           </div>
 
@@ -151,7 +152,7 @@ export default function UserModal({
             type="tel"
             defaultValue={currentUser?.phone}
             placeholder="+84 123456789"
-            errors={errors.phone}
+            error={getFieldError("phone")}
           />
 
           <FormInput
@@ -161,7 +162,7 @@ export default function UserModal({
             isTextArea
             defaultValue={currentUser?.address}
             placeholder="1a, District 1, HCM City"
-            errors={errors.address}
+            error={getFieldError("address")}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -204,20 +205,26 @@ export default function UserModal({
             <button
               type="button"
               onClick={onClose}
-              className="btn-secondary flex-1"
+              disabled={isLoading}
+              className={`btn-primary flex-[1.5] ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
               Cancel
             </button>
             <button
               disabled={isLoading}
               type="submit"
-              className="btn-primary flex-[1.5]"
+              className={`btn-primary flex-[1.5] ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
             >
               {isLoading ? (
-                <div className="flex items-center gap-2">
-                  {/* Loader SVG giữ nguyên */}
+                <span className="flex items-center gap-2">
+                  <svg
+                    className="animate-spin h-4 w-4 text-white"
+                    viewBox="0 0 24 24"
+                  >
+                    ...
+                  </svg>
                   {isEditMode ? "Updating..." : "Creating..."}
-                </div>
+                </span>
               ) : (
                 <>
                   {isEditMode ? (
