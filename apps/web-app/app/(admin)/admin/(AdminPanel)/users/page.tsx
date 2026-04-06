@@ -7,7 +7,6 @@ import {
   UserModal,
 } from "@admin/(AdminPanel)/_features/users/components";
 import { useUserManagement } from "@app/(admin)/admin/(AdminPanel)/_features/users/hooks/useUserManagement";
-
 export default function UserPage() {
   const {
     users,
