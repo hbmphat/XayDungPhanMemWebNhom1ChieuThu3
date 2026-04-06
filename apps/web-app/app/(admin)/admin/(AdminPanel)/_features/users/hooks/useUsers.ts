@@ -5,7 +5,7 @@ import { User, UserInput } from '@app/(admin)/admin/(AdminPanel)/_features/users
 import { toast } from 'sonner';
 import { PaginationMeta } from '@app_types/api-response'
 import { useApi } from '@app/_shared/hooks/useApi';
-import { validateUserCreate, validateUserUpdate } from '@app/_shared/utils/validation/_index';
+import { validateUserCreate, validateUserUpdate } from '@admin/(AdminPanel)/_features/users/utils/user.validation';
 export const useUsers = () => {
     // Define States & Hooks
     const [meta, setMeta] = useState<PaginationMeta | null>(null);

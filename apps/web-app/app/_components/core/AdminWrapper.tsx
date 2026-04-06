@@ -1,5 +1,5 @@
 "use client";
-import Sidebar from "@app/_component/core/Sidebar";
+import { Sidebar } from "@components/core";
 import { SidebarProvider } from "@app/_shared/contexts/SidebarContext";
 
 export default function AdminWrapper({
