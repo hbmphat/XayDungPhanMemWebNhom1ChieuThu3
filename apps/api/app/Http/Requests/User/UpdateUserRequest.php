@@ -56,8 +56,8 @@ class UpdateUserRequest extends FormRequest
             'password'   => 'sometimes|nullable|string|min:8|max:50',
             'address'    => 'sometimes|required|string|min:2|max:100',
             'date_of_birth' => 'sometimes|required|date|before_or_equal:today',
-            'role'       => 'sometimes|required|string|in:inventory_manager,moderator,customer,collaborator',
-            'status'     => 'sometimes|required|string|in:inactive,blocked,pending,pending_kyc,suspended,banned',
+            'role'       => 'sometimes|required|string|in:admin,inventory_manager,moderator,customer,collaborator',
+            'status'     => 'sometimes|required|string|in:active,inactive,blocked,pending,pending_kyc,suspended,banned',
         ];
     }
     /**
@@ -67,6 +67,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'email.unique' => 'Email has already been taken.',
+            'phone.unique' => 'Phone number has already been taken.'
         ];
     }
 }

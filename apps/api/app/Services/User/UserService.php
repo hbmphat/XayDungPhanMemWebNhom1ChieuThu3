@@ -4,6 +4,7 @@ namespace App\Services\User;
 
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class UserService
 {
@@ -17,12 +18,12 @@ class UserService
             ->when(!empty($filters['search']), function ($query) use ($filters) {
                 $search = '%' . mb_strtolower(trim($filters['search'])) . '%';
                 $query->where(function ($q) use ($search) {
-                    $q->where('user_name', 'ILIKE', '%' . $search . '%')
-                        ->orWhere('email', 'ILIKE', "%$search%")
-                        ->orWhere('phone', 'ILIKE', "%$search%")
-                        ->orWhere('first_name', 'ILIKE', "%{$search}%")
-                        ->orWhere('last_name', 'ILIKE', "%{$search}%")
-                        ->orWhere('address', 'ILIKE', "%{$search}%");
+                    $q->where(DB::raw('LOWER(user_name)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(email)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(phone)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(address)'), 'LIKE', $search);
                 });
             })
             ->when(isset($filters['role']) && $filters['role'] !== '', function ($q) use ($filters) {
@@ -40,8 +41,7 @@ class UserService
      */
     public function createUser(array $data): User
     {
-        $user = User::create($data);
-        return $user->refresh();
+        return User::create($data)->refresh();
     }
 
     /**
@@ -50,8 +50,8 @@ class UserService
     public function getUser(User $user): User
     {
         return $user;
-        // return $user->load('extraInfo');
     }
+
     /**
      * Cập nhật user
      */
@@ -63,6 +63,7 @@ class UserService
         $user->update($data);
         return $user;
     }
+
     /**
      * Xóa user
      */

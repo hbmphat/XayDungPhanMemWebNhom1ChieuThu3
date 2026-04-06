@@ -8,6 +8,7 @@ use Tests\TestCase;
 
 class UserManagementTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_it_can_create_a_user_with_valid_data()
     {
         // 1. Giả lập Admin thực hiện request
@@ -98,12 +99,15 @@ class UserManagementTest extends TestCase
             'last_name'  => 'Updated',
             'user_name'  => 'user_' . uniqid(),
             'email'      => 'email' . uniqid() . '@example.com',
-            'role'       => 'admin',
-            'status'     => 'active',
+            'role'       => 'customer',
+            'status'     => 'pending',
         ]);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('users', ['id' => $user->id, 'first_name' => 'NewName']);
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'first_name' => 'NewName'
+        ]);
     }
 
     public function test_it_can_delete_a_user()
