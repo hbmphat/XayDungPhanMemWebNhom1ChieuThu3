@@ -48,8 +48,8 @@ class StoreUserRequest extends FormRequest
             'password'   => 'required|string|min:8|max:50',
             'address'    => 'required|string|min:2|max:100',
             'date_of_birth' => 'required|date|before_or_equal:today',
-            'role'       => 'required|string|in:admin,customer',
-            'status'     => 'required|string|in:active,inactive',
+            'status'       => 'required|string|in:active,inactive,blocked,pending,pending_kyc,suspended,banned',
+            'role'     => 'required|string|in:admin,inventory_manager,moderator,customer,collaborator',
         ];
     }
     /**
@@ -58,8 +58,8 @@ class StoreUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_name.unique' => 'Tên đăng nhập đã tồn tại.',
-            'email.unique' => 'Email này đã được đăng ký.',
+            'user_name.unique' => 'Username has already been taken.',
+            'email.unique' => 'Email has already been taken.',
         ];
     }
 }

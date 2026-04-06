@@ -12,7 +12,6 @@ export default function Pagination({ meta, onPageChange }: PaginationProps) {
 
   // Tạo mảng trang để render
   const pages = Array.from({ length: last_page }, (_, i) => i + 1);
-
   return (
     <div className="bg-white px-6 py-4 border-t border-slate-200 flex items-center justify-between">
       {/* Mobile view */}

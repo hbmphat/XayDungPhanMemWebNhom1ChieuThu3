@@ -1,6 +1,20 @@
-import { Download, Filter, Search } from "lucide-react";
-
-export default function SearchFilter() {
+import { Download, Filter, Search, X } from "lucide-react";
+interface SearchFilterProps {
+  searchTerm: string;
+  roleFilter: string;
+  statusFilter: string;
+  onSearchChange: (value: string) => void;
+  onRoleChange: (value: string) => void;
+  onStatusChange: (value: string) => void;
+}
+export default function SearchFilter({
+  searchTerm,
+  roleFilter,
+  statusFilter,
+  onStatusChange,
+  onSearchChange,
+  onRoleChange,
+}: SearchFilterProps) {
   return (
     <div className="p-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -9,20 +23,51 @@ export default function SearchFilter() {
             <Search className="h-5 w-5 text-slate-400"></Search>
           </span>
           <input
-            className="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-lg leading-5 bg-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Search by name, email or role..."
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="block w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg leading-5 bg-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            placeholder="Search by name, email..."
             type="text"
           />
+          {searchTerm && (
+            <button
+              onClick={() => onSearchChange("")}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <X className="h-4 w-4 text-slate-400 hover:text-slate-600" />
+            </button>
+          )}
         </div>
         <div className="flex items-center gap-3">
-          <button className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50">
-            <Filter className="w-4 h-4 mr-2"></Filter>
-            Filters
-          </button>
-          <button className="inline-flex items-center px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50">
-            <Download className="w-4 h-4 mr-2"></Download>
-            Export
-          </button>
+          <div className="relative flex items-center">
+            <Filter className="absolute left-3 w-4 h-4 text-slate-400" />
+            <select
+              value={roleFilter}
+              onChange={(e) => onRoleChange(e.target.value)}
+              className="pl-9 pr-8 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer"
+            >
+              <option value="">All Roles</option>
+              <option value="admin">Admin</option>
+              <option value="inventory_manager">Inventory Manager</option>
+              <option value="moderator">Moderator</option>
+              <option value="collaborator">Collaborator</option>
+              <option value="customer">Customer</option>
+            </select>
+          </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => onStatusChange(e.target.value)}
+            className="pl-9 pr-8 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer"
+          >
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending (Email)</option>
+            <option value="inactive">Inactive</option>
+            <option value="pending_kyc">Pending KYC</option>
+            <option value="suspended">Suspended</option>
+            <option value="banned">Banned</option>
+            <option value="blocked">Blocked</option>
+          </select>
         </div>
       </div>
     </div>

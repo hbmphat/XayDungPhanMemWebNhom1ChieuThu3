@@ -2,14 +2,16 @@
 export const Rules = {
     required: () => (value: any) => {
         const isValid = value !== undefined && value !== null && value.toString().trim() !== "";
-        return isValid || "Trường này không được để trống.";
+        return isValid || "This field is required.";
     },
 
     minLength: (min: number) => (value: string) => {
-        return (value && value.length >= min) || `Phải có ít nhất ${min} ký tự.`;
+        if (!value) return true;
+        return value.length >= min || `Must be at least ${min} characters.`;
     },
     maxLength: (max: number) => (value: string) => {
-        return (value && value.length <= max) || `Tối đa ${max} ký tự.`;
+        if (!value) return true;
+        return value.length <= max || `Maximum ${max} characters allowed.`;
     },
 
     regex: (pattern: RegExp, message: string) => (value: string) => {
@@ -18,7 +20,11 @@ export const Rules = {
 
     notFutureDate: () => (value: string) => {
         if (!value) return true;
-        return (new Date(value) <= new Date()) || "Ngày không được lớn hơn hiện tại.";
+        const inputDate = new Date(value);
+        inputDate.setHours(0, 0, 0, 0);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return (inputDate <= today) || "Date cannot be in the future.";
     }
 };
 // Kiểu cho một hàm Rule
@@ -29,18 +35,17 @@ export const validateRunner = <T>(schema: Partial<Record<keyof T, ValidationRule
 
     Object.entries(schema).forEach(([field, rules]) => {
         const value = data[field as keyof T];
+        const ruleList = rules as ValidationRuleFn[];
 
-        if (value !== undefined) {
-            (rules as ValidationRuleFn[]).forEach((ruleFn) => {
-                const result = ruleFn(value);
-                if (result !== true) {
-                    if (!errors[field]) errors[field] = [];
-                    if (!errors[field].includes(result)) {
-                        errors[field].push(result);
-                    }
+        ruleList.forEach((ruleFn) => {
+            const result = ruleFn(value);
+            if (result !== true) {
+                if (!errors[field]) errors[field] = [];
+                if (!errors[field].includes(result)) {
+                    errors[field].push(result);
                 }
-            });
-        }
+            }
+        });
     });
 
     return {

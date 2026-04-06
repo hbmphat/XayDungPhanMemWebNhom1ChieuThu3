@@ -1,28 +1,38 @@
-# Thư mục phụ thuộc & Build cache
-**/node_modules
-.next
-.turbo
-.npm
-out
-dist
-build
+# Dependency & Build Artifacts
+**/node_modules/
+**/vendor/
+.next/
+.turbo/
+.npm/
+out/
+dist/
+build/
 
-# Cấu hình & Môi trường
+# PHP/Laravel Specific
+apps/api/storage/framework/cache/data/*
+apps/api/storage/framework/sessions/*
+apps/api/storage/framework/views/*.php
+apps/api/storage/logs/*.log
+apps/api/bootstrap/cache/*.php
+apps/api/tests/
+
+# Environment & Config
 .env*
 !.env.example
-.git
+.git/
 .gitignore
 .dockerignore
+auth.json
 
-# Log, Test & Tools
-npm-debug.log
+# Logs & Tests
+npm-debug.log*
+yarn-error.log*
 yarn-lock.json
 pnpm-lock.yaml
-coverage
-*.test.ts
-*.test.js
-__tests__
+coverage/
+*.test.*
+__tests__/
 
-# Hệ điều hành
+# OS Files
 .DS_Store
 Thumbs.db

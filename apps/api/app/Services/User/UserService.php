@@ -4,15 +4,36 @@ namespace App\Services\User;
 
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class UserService
 {
     /**
      * Lấy danh sách người dùng, phân trang mặc định 10 records
+     * Tìm kiếm theo tên, email, số điện thoại; lọc theo role, status 
      */
-    public function getPaginatedUsers(int $perPage): LengthAwarePaginator
+    public function getPaginatedUsers(int $perPage, array $filters = []): LengthAwarePaginator
     {
-        return User::latest()->paginate($perPage);
+        return User::query()
+            ->when(!empty($filters['search']), function ($query) use ($filters) {
+                $search = '%' . mb_strtolower(trim($filters['search'])) . '%';
+                $query->where(function ($q) use ($search) {
+                    $q->where(DB::raw('LOWER(user_name)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(email)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(phone)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', $search)
+                        ->orWhere(DB::raw('LOWER(address)'), 'LIKE', $search);
+                });
+            })
+            ->when(isset($filters['role']) && $filters['role'] !== '', function ($q) use ($filters) {
+                $q->where('role', $filters['role']);
+            })
+            ->when(isset($filters['status']) && $filters['status'] !== '', function ($q) use ($filters) {
+                $q->where('status', $filters['status']);
+            })
+            ->latest()
+            ->paginate($perPage);
     }
 
     /**
@@ -20,8 +41,7 @@ class UserService
      */
     public function createUser(array $data): User
     {
-        $user = User::create($data);
-        return $user->refresh();
+        return User::create($data)->refresh();
     }
 
     /**
@@ -30,8 +50,8 @@ class UserService
     public function getUser(User $user): User
     {
         return $user;
-        // return $user->load('extraInfo');
     }
+
     /**
      * Cập nhật user
      */
@@ -43,6 +63,7 @@ class UserService
         $user->update($data);
         return $user;
     }
+
     /**
      * Xóa user
      */

@@ -6,7 +6,7 @@ import {
   UserHeader,
   UserModal,
 } from "@admin/_components/users/_index";
-import { useUserManagement } from "@app/_hooks/users/userUserManegemet";
+import { useUserManagement } from "@app/_hooks/users/useUserManagement";
 
 export default function UserPage() {
   const {
@@ -14,13 +14,19 @@ export default function UserPage() {
     loading,
     meta,
     isModalOpen,
-    errors,
     currentUser,
+    searchTerm,
+    roleFilter,
+    statusFilter,
     setIsModalOpen,
     onFetch,
     handleOpenModal,
     handleFormSubmit,
     handleDelete,
+    getFieldError,
+    setSearchTerm,
+    setRoleFilter,
+    setStatusFilter,
   } = useUserManagement();
 
   return (
@@ -30,15 +36,24 @@ export default function UserPage() {
         onAddClick={() => handleOpenModal()}
       />
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <SearchFilter />
+        <SearchFilter
+          searchTerm={searchTerm}
+          roleFilter={roleFilter}
+          statusFilter={statusFilter}
+          onSearchChange={setSearchTerm}
+          onRoleChange={setRoleFilter}
+          onStatusChange={setStatusFilter}
+        />
         <UserTable
           users={users}
           isLoading={loading}
           onDelete={handleDelete}
           onEdit={handleOpenModal}
         />
-        {meta && (
+        {meta ? (
           <Pagination meta={meta} onPageChange={(page) => onFetch(page)} />
+        ) : (
+          <div className="p-4 animate-pulse bg-slate-100 rounded-lg mx-6 mb-4 h-12" />
         )}
       </main>
       {isModalOpen && (
@@ -49,7 +64,7 @@ export default function UserPage() {
           currentUser={currentUser}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleFormSubmit}
-          errors={errors}
+          getFieldError={getFieldError}
         />
       )}
     </>

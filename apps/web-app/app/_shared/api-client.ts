@@ -14,7 +14,9 @@ apiClient.interceptors.response.use(
     (error: AxiosError) => {
         const status = error.response?.status;
         const data: any = error.response?.data;
-
+        if (status === 422) {
+            return Promise.reject(data);
+        }
         switch (status) {
             case 401:
                 localStorage.removeItem('access_token');

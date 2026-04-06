@@ -10,7 +10,7 @@ interface FormInputProps {
   isTextArea?: boolean;
   defaultValue?: string;
   required?: boolean;
-  errors?: string[];
+  error?: string;
   readOnly?: boolean;
 }
 
@@ -24,11 +24,11 @@ export default function FormInput({
   isTextArea,
   defaultValue,
   required,
-  errors,
+  error,
   readOnly,
 }: FormInputProps) {
   // Kiểm tra xem có lỗi hay không để render UI
-  const hasError = errors && errors.length > 0;
+  const hasError = !!error;
   return (
     <div className="group flex flex-col gap-1.5">
       <label
@@ -84,7 +84,7 @@ export default function FormInput({
       {/* Hiển thị thông báo lỗi */}
       {hasError && (
         <span className="text-[0.65rem] font-semibold text-error px-1 mt-1 animate-in fade-in slide-in-from-top-1">
-          {errors[0]}
+          {error}
         </span>
       )}
     </div>

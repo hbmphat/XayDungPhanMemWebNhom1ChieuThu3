@@ -25,12 +25,26 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'id' => Str::uuid(),
+            'user_name' => fake()->unique()->userName(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'phone' => '0' . fake()->numberBetween(320000000, 999999999), // Giả lập số VN
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'address' => fake()->address(),
+            'date_of_birth' => fake()->dateTimeBetween('-40 years', '-18 years')->format('Y-m-d'),
+            'password' => 'password',
+            'role' => fake()->randomElement(['inventory_manager', 'moderator', 'customer', 'collaborator']),
+            'status' => fake()->randomElement(['active', 'inactive', 'blocked', 'pending', 'pending_kyc', 'suspended', 'banned']),
             'remember_token' => Str::random(10),
         ];
+    }
+    public function admin(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'role' => 'admin',
+            'status' => 'active',
+        ]);
     }
 
     /**
@@ -38,7 +52,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

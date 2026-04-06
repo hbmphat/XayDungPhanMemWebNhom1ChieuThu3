@@ -3,8 +3,15 @@ import { User, UserInput } from '@app/_types/users/user-types';
 import { PaginatedResponse, SingleResponse } from '@app/_types/api-response';
 
 export const userService = {
-    getAll: (page: number = 1): Promise<PaginatedResponse<User>> =>
-        apiClient.get(`/users?page=${page}`),
+    getAll: (page: number = 1, search?: string, role?: string, status?: string): Promise<PaginatedResponse<User>> =>
+        apiClient.get('/users', {
+            params: {
+                page,
+                search,
+                role,
+                status
+            }
+        }),
 
     getById: (id: string): Promise<SingleResponse<User>> =>
         apiClient.get(`/users/${id}`),
