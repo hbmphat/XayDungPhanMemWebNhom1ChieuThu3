@@ -15,13 +15,13 @@ class UserService
     {
         return User::query()
             ->when(!empty($filters['search']), function ($query) use ($filters) {
-                $search = $filters['search'];
+                $search = '%' . mb_strtolower(trim($filters['search'])) . '%';
                 $query->where(function ($q) use ($search) {
-                    $q->where('user_name', 'like', "%$search%")
-                        ->orWhere('email', 'like', "%$search%")
-                        ->orWhere('phone', 'like', "%$search%")
-                        ->orWhere('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%");
+                    $q->where('user_name', 'ILIKE', '%' . $search . '%')
+                        ->orWhere('email', 'ILIKE', "%$search%")
+                        ->orWhere('phone', 'ILIKE', "%$search%")
+                        ->orWhere('first_name', 'ILIKE', "%{$search}%")
+                        ->orWhere('last_name', 'ILIKE', "%{$search}%");
                 });
             })
             ->when(isset($filters['role']) && $filters['role'] !== '', function ($q) use ($filters) {
