@@ -17,6 +17,7 @@ export default function UserPage() {
     currentUser,
     searchTerm,
     roleFilter,
+    statusFilter,
     setIsModalOpen,
     onFetch,
     handleOpenModal,
@@ -25,6 +26,7 @@ export default function UserPage() {
     getFieldError,
     setSearchTerm,
     setRoleFilter,
+    setStatusFilter,
   } = useUserManagement();
 
   return (
@@ -37,8 +39,10 @@ export default function UserPage() {
         <SearchFilter
           searchTerm={searchTerm}
           roleFilter={roleFilter}
+          statusFilter={statusFilter}
           onSearchChange={setSearchTerm}
           onRoleChange={setRoleFilter}
+          onStatusChange={setStatusFilter}
         />
         <UserTable
           users={users}

@@ -19,8 +19,8 @@ export const useUsers = () => {
     } = useApi<User[]>();
 
     // Fetch Users
-    const onFetch = useCallback(async (page: number, search?: string, role?: string) => {
-        const res = await request(() => userService.getAll(page, search, role));
+    const onFetch = useCallback(async (page: number, search?: string, role?: string, status?: string) => {
+        const res = await request(() => userService.getAll(page, search, role, status));
         if (res.success && res.data) {
             setMeta(res.data.meta || null);
         }

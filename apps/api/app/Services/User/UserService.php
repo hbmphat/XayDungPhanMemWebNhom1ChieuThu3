@@ -21,7 +21,8 @@ class UserService
                         ->orWhere('email', 'ILIKE', "%$search%")
                         ->orWhere('phone', 'ILIKE', "%$search%")
                         ->orWhere('first_name', 'ILIKE', "%{$search}%")
-                        ->orWhere('last_name', 'ILIKE', "%{$search}%");
+                        ->orWhere('last_name', 'ILIKE', "%{$search}%")
+                        ->orWhere('address', 'ILIKE', "%{$search}%");
                 });
             })
             ->when(isset($filters['role']) && $filters['role'] !== '', function ($q) use ($filters) {

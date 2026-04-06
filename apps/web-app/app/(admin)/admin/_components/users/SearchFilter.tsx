@@ -1,13 +1,17 @@
 import { Download, Filter, Search, X } from "lucide-react";
 interface SearchFilterProps {
   searchTerm: string;
-  onSearchChange: (value: string) => void;
   roleFilter: string;
+  statusFilter: string;
+  onSearchChange: (value: string) => void;
   onRoleChange: (value: string) => void;
+  onStatusChange: (value: string) => void;
 }
 export default function SearchFilter({
   searchTerm,
   roleFilter,
+  statusFilter,
+  onStatusChange,
   onSearchChange,
   onRoleChange,
 }: SearchFilterProps) {
@@ -43,10 +47,27 @@ export default function SearchFilter({
               className="pl-9 pr-8 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer"
             >
               <option value="">All Roles</option>
-              <option value="admin">System Admin</option>
+              <option value="admin">Admin</option>
+              <option value="inventory_manager">Inventory Manager</option>
+              <option value="moderator">Moderator</option>
+              <option value="collaborator">Collaborator</option>
               <option value="customer">Customer</option>
             </select>
           </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => onStatusChange(e.target.value)}
+            className="pl-9 pr-8 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer"
+          >
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending (Email)</option>
+            <option value="inactive">Inactive</option>
+            <option value="pending_kyc">Pending KYC</option>
+            <option value="suspended">Suspended</option>
+            <option value="banned">Banned</option>
+            <option value="blocked">Blocked</option>
+          </select>
         </div>
       </div>
     </div>

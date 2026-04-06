@@ -10,14 +10,15 @@ export const useUserManagement = () => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [roleFilter, setRoleFilter] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
     // FetchUsers
     useEffect(() => {
         const timer = setTimeout(() => {
-            onFetch(1, searchTerm, roleFilter);
+            onFetch(1, searchTerm, roleFilter, statusFilter);
         }, 500);
 
         return () => clearTimeout(timer);
-    }, [searchTerm, roleFilter, onFetch]);
+    }, [searchTerm, roleFilter, statusFilter, onFetch]);
 
     //  OpenModal
     const handleOpenModal = (user: User | null = null) => {
@@ -54,6 +55,7 @@ export const useUserManagement = () => {
         errors,
         searchTerm,
         roleFilter,
+        statusFilter,
         // Modal states
         isModalOpen,
         currentUser,
@@ -64,8 +66,9 @@ export const useUserManagement = () => {
         handleFormSubmit,
         handleDelete,
         setErrors,
+        getFieldError,
         setSearchTerm,
         setRoleFilter,
-        getFieldError
+        setStatusFilter
     };
 };

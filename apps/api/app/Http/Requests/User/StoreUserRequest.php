@@ -48,8 +48,8 @@ class StoreUserRequest extends FormRequest
             'password'   => 'required|string|min:8|max:50',
             'address'    => 'required|string|min:2|max:100',
             'date_of_birth' => 'required|date|before_or_equal:today',
-            'role'       => 'required|string|in:admin,customer',
-            'status'     => 'required|string|in:active,inactive',
+            'status'       => 'required|string|in:active,inactive,blocked,pending,pending_kyc,suspended,banned',
+            'role'     => 'required|string|in:admin,inventory_manager,moderator,customer,collaborator',
         ];
     }
     /**

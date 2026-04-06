@@ -34,8 +34,8 @@ class UserFactory extends Factory
             'address' => fake()->address(),
             'date_of_birth' => fake()->dateTimeBetween('-40 years', '-18 years')->format('Y-m-d'),
             'password' => 'password',
-            'role' => fake()->randomElement(['admin', 'customer']),
-            'status' => fake()->randomElement(['active', 'inactive', 'blocked']),
+            'role' => fake()->randomElement(['inventory_manager', 'moderator', 'customer', 'collaborator']),
+            'status' => fake()->randomElement(['active', 'inactive', 'blocked', 'pending', 'pending_kyc', 'suspended', 'banned']),
             'remember_token' => Str::random(10),
         ];
     }
