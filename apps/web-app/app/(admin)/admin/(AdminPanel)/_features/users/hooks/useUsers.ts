@@ -1,10 +1,10 @@
 "use client";
 import { useCallback, useState } from 'react';
-import { userService } from '@services/users/userService';
-import { User, UserInput } from '@app/_types/users/user-types';
+import { userService } from '@app/(admin)/admin/(AdminPanel)/_features/users/api/userService';
+import { User, UserInput } from '@app/(admin)/admin/(AdminPanel)/_features/users/types/user-types';
 import { toast } from 'sonner';
 import { PaginationMeta } from '@app_types/api-response'
-import { useApi } from '@hooks/useApi';
+import { useApi } from '@app/_shared/hooks/useApi';
 import { validateUserCreate, validateUserUpdate } from '@app/_shared/utils/validation/_index';
 export const useUsers = () => {
     // Define States & Hooks

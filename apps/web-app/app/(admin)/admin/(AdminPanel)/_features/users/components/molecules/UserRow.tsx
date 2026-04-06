@@ -1,4 +1,4 @@
-import { User } from "@app/_types/users/user-types";
+import { User } from "@app/(admin)/admin/(AdminPanel)/_features/users/types/user-types";
 import {
   Edit2,
   Trash2,

@@ -7,7 +7,7 @@ import {
   Users,
   Smartphone,
 } from "lucide-react";
-import SidebarLink from "@admin/_components/_shared/SidebarLink";
+import SidebarLink from "@app/_component/core/SidebarLink";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@shared/contexts/SidebarContext"; // Import hook từ shared
 

@@ -26,6 +26,7 @@
       "@app_types/*": ["./app/_types/*"],
       "@admin/*": ["./app/(admin)/admin/*"],
       "@home/*": ["./app/(home)/*"],
+      "@components/*": ["./app/_components/*"],
     }
   },
   "include": [

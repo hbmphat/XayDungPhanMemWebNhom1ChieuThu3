@@ -1,5 +1,5 @@
 import apiClient from '@app/_shared/api-client'; // Đường dẫn tới file bạn vừa tạo
-import { User, UserInput } from '@app/_types/users/user-types';
+import { User, UserInput } from '@app/(admin)/admin/(AdminPanel)/_features/users/types/user-types';
 import { PaginatedResponse, SingleResponse } from '@app/_types/api-response';
 
 export const userService = {
