@@ -1,4 +1,4 @@
-import { UserInput } from "@admin/(AdminPanel)/_features/users/types/user-types";
+import { UserInput } from "@admin.features/users/types/user-types";
 import { Rules, validateRunner, ValidationRuleFn } from "@shared/utils/validation/rules";
 // Regex patterns
 const REGEX = {
