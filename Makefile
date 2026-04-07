@@ -47,8 +47,10 @@ build-api-nc:
 
 # Lệnh dọn rác web-app trước khi build
 clean-web:
-	powershell -Command "if (Test-Path 'apps/web-app/.next') { Remove-Item -Recurse -Force apps/web-app/.next }"
-	powershell -Command "if (Test-Path 'apps/web-app/.npm') { Remove-Item -Recurse -Force apps/web-app/.npm }"
+	@echo "Cleaning Next.js build and cache..."
+	@-cmd /c "if exist apps\web-app\.next rmdir /s /q apps\web-app\.next"
+	@-cmd /c "if exist apps\web-app\.npm rmdir /s /q apps\web-app\.npm"
+	@echo "Clean completed!"
 # ----------------------------------------------------------------
 
 # Lệnh khởi động hệ thống

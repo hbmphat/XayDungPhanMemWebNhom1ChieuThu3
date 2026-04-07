@@ -1,4 +1,4 @@
-import { Download, Filter, Search, X } from "lucide-react";
+import { Filter, Search, X } from "lucide-react";
 interface SearchFilterProps {
   searchTerm: string;
   roleFilter: string;

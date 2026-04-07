@@ -1,6 +1,6 @@
 "use client";
-import UserRow from "./UserRow";
-import { User } from "@app/_types/users/user-types";
+import UserRow from "../molecules/UserRow";
+import { User } from "@app/(admin)/admin/(AdminPanel)/_features/users/types/user-types";
 
 interface UserTableProps {
   users: User[];

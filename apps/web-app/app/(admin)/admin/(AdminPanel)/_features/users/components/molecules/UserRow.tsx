@@ -1,4 +1,4 @@
-import { User } from "@app/_types/users/user-types";
+import { User } from "@app/(admin)/admin/(AdminPanel)/_features/users/types/user-types";
 import {
   Edit2,
   Trash2,
@@ -6,8 +6,13 @@ import {
   User as UserIcon,
   HardHat,
   BadgeCheck,
+  LucideIcon,
 } from "lucide-react";
-
+interface RoleStyle {
+  icon: LucideIcon;
+  color: string;
+  label: string;
+}
 export default function UserRow({
   user,
   onDelete,
@@ -18,10 +23,7 @@ export default function UserRow({
   onEdit: (user: User) => void;
 }) {
   // 1. Mapping cho Roles (Icon và Màu sắc)
-  const roleConfig: Record<
-    string,
-    { icon: any; color: string; label: string }
-  > = {
+  const roleConfig: Record<string, RoleStyle> = {
     admin: {
       icon: Shield,
       color: "text-indigo-600 bg-indigo-50 border-indigo-100",

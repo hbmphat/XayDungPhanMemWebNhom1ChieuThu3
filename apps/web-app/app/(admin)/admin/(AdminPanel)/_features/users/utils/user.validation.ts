@@ -1,5 +1,5 @@
-import { UserInput } from "@app/_types/users/user-types";
-import { Rules, validateRunner, ValidationRuleFn } from "./rules";
+import { UserInput } from "@admin.features/users/types/user-types";
+import { Rules, validateRunner, ValidationRuleFn } from "@shared/utils/validation/rules";
 // Regex patterns
 const REGEX = {
     EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,

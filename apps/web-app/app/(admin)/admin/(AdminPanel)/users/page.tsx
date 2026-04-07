@@ -5,9 +5,8 @@ import {
   Pagination,
   UserHeader,
   UserModal,
-} from "@admin/_components/users/_index";
-import { useUserManagement } from "@app/_hooks/users/useUserManagement";
-
+} from "@admin.features/users/components";
+import { useUserManagement } from "@admin.features/users/hooks/useUserManagement";
 export default function UserPage() {
   const {
     users,

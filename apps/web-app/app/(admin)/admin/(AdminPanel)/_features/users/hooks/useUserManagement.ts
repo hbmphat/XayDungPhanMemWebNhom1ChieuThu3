@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUsers } from "./useUsers";
-import { User, UserInput } from "@app/_types/users/user-types";
+import { User, UserInput } from "@admin.features/users/types/user-types";
 
 // @app/_hooks/users/useUserManagement.ts
 export const useUserManagement = () => {

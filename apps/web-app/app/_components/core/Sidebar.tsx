@@ -7,9 +7,10 @@ import {
   Users,
   Smartphone,
 } from "lucide-react";
-import SidebarLink from "@admin/_components/_shared/SidebarLink";
+import { SidebarLink } from "@components/core";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "@shared/contexts/SidebarContext"; // Import hook từ shared
+import Image from "next/image";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -66,10 +67,12 @@ export default function Sidebar() {
       <div className="p-4 border-t border-slate-800">
         <div className="flex items-center gap-3 px-3 py-2">
           <div className="w-8 h-8 rounded-full bg-slate-700 overflow-hidden">
-            <img
+            <Image
               alt="Admin Avatar"
               src="https://ui-avatars.com/api/?name=Admin+STU"
-              className="object-cover"
+              width={40}
+              height={40}
+              className="object-cover rounded-full"
             />
           </div>
           <div className="flex-1 min-w-0">

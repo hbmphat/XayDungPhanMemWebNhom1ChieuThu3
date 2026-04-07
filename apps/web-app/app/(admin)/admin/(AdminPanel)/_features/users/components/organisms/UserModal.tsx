@@ -12,8 +12,11 @@ import {
   UserPlus,
   X,
 } from "lucide-react";
-import { User, UserInput } from "@app/_types/users/user-types";
-import FormInput from "./FormInput";
+import {
+  User,
+  UserInput,
+} from "@app/(admin)/admin/(AdminPanel)/_features/users/types/user-types";
+import FormInput from "../atoms/FormInput";
 interface UserModalProps {
   isOpen: boolean;
   onClose: () => void;

@@ -6,6 +6,17 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: "../../",
   },
+  images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ui-avatars.com',
+        pathname: '/api/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
