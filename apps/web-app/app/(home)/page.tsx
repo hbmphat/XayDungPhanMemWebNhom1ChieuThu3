@@ -1,5 +1,5 @@
 "use client";
-import { Search, ShoppingCart, User, Phone, MessageCircle } from "lucide-react";
+import { Search, ShoppingCart, Phone } from "lucide-react";
 // Dữ liệu giả lập
 const sims = [
   {

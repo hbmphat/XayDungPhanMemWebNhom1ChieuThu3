@@ -24,7 +24,7 @@
       "@services/*": ["./app/_services/*"],
       "@shared/*": ["./app/_shared/*"],
       "@app_types/*": ["./app/_types/*"],
-      "@admin/*": ["./app/(admin)/admin/*"],
+      "@admin.features/*": ["./app/(admin)/admin/(AdminPanel)/_features/*"],
       "@home/*": ["./app/(home)/*"],
       "@components/*": ["./app/_components/*"],
     }

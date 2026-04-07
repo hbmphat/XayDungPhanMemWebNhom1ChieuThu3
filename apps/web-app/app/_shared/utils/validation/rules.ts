@@ -1,6 +1,5 @@
-// Định nghĩa các quy tắc validation
 export const Rules = {
-    required: () => (value: any) => {
+    required: () => (value: unknown) => {
         const isValid = value !== undefined && value !== null && value.toString().trim() !== "";
         return isValid || "This field is required.";
     },
@@ -27,9 +26,7 @@ export const Rules = {
         return (inputDate <= today) || "Date cannot be in the future.";
     }
 };
-// Kiểu cho một hàm Rule
-export type ValidationRuleFn = (value: any) => true | string;
-// Hàm chạy validation
+export type ValidationRuleFn = (value: unknown) => true | string;
 export const validateRunner = <T>(schema: Partial<Record<keyof T, ValidationRuleFn[]>>, data: T) => {
     const errors: Record<string, string[]> = {};
 

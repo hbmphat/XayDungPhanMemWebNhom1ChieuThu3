@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import axios, { AxiosError } from "axios";
 
 export function useApi<T>() {
     const [data, setData] = useState<T | null>(null);
@@ -6,32 +7,40 @@ export function useApi<T>() {
     const [errors, setErrors] = useState<Record<string, string[]> | null>(null);
 
     const request = useCallback(async (
-        apiCall: () => Promise<any>
-    ) => {
+        apiCall: () => Promise<T>
+    ): Promise<{ success: boolean; data?: T; error?: string }> => {
         setLoading(true);
         setErrors(null);
         try {
-            const response = await apiCall();
-            const result = response;
+            const result = await apiCall();
             setData(result);
             return { success: true, data: result };
-        } catch (err: any) {
-            if (err.response?.status === 422) {
-                setErrors(err.response.data.errors);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const axiosError = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
+
+                if (axiosError.response?.status === 422 && axiosError.response.data.errors) {
+                    setErrors(axiosError.response.data.errors);
+                }
+
+                return {
+                    success: false,
+                    error: axiosError.response?.data?.message || axiosError.message || 'Validation Error'
+                };
             }
-            else if (err.errors) {
-                setErrors(err.errors);
-            }
+            const genericError = err as Error;
             return {
                 success: false,
-                error: err.response?.data?.message || err.message || 'Validation Error'
+                error: genericError.message || 'An unexpected error occurred'
             };
         } finally {
             setLoading(false);
         }
     }, []);
+
     const getFieldError = useCallback((field: string) => {
         return errors?.[field]?.[0] || '';
     }, [errors]);
+
     return { data, loading, errors, request, setErrors, setData, setLoading, getFieldError };
 }
