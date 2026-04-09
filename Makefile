@@ -2,12 +2,20 @@
 
 # Setup toàn bộ hệ thống (Chỉ chạy lần đầu, khi có thay đổi lớn hoặc hệ thống bị lỗi lớn)
 # Thay đổi gồm: dockerfile, database, seeders, dependencies...
+setup-local:
+	npm install
+	cd apps/api && composer install
+	cd apps/web-app && npm install
+	@-cmd /c "if not exist .env copy .env.example .env"
+	@-cmd /c "if not exist apps\api\.env copy apps\api\.env.example apps\api\.env"
+	@-cmd /c "if not exist apps\web-app\.env copy apps\web-app\.env.example apps\web-app\.env"
+	@echo "Setup local completed."
 setup:
 	docker compose build
-	docker compose run --rm api composer install
+	docker compose run --rm --entrypoint sh api -c "composer install"
 	docker compose run --rm web-app npm install
 	docker compose run --rm api php artisan migrate --seed
-	@echo "Setup completed!"
+	@echo "Setup runtime completed."
 
 # Build lại toàn bộ hệ thống (Có dọn dẹp cache Next.js)
 build: clean-web
@@ -22,7 +30,7 @@ clean-web:
 	@echo "Cleaning Next.js build and cache..."
 	@-cmd /c "if exist apps\web-app\.next rmdir /s /q apps\web-app\.next"
 	@-cmd /c "if exist apps\web-app\.npm rmdir /s /q apps\web-app\.npm"
-	@echo "Clean completed!"
+	@echo "Clean completed."
 
 # --- RUNTIME COMMANDS ---
 
