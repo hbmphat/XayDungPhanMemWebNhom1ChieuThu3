@@ -1,84 +1,68 @@
-# Setup toàn bộ hệ thống lần đầu tiên
+# --- SYSTEM COMMANDS ---
+
+# Setup toàn bộ hệ thống (Chỉ chạy lần đầu, khi có thay đổi lớn hoặc hệ thống bị lỗi lớn)
+# Thay đổi gồm: dockerfile, database, seeders, dependencies...
 setup:
 	docker compose build
-	npm install
 	docker compose run --rm api composer install
 	docker compose run --rm web-app npm install
-# Cài đặt npm cho web-app
-npm-install:
-	docker compose run --rm web-app npm install
-# Cài đặt composer cho api
-composer-install:
-	docker compose run --rm api composer install
-# (Dùng khi build nhanh nhờ cache)
+	docker compose run --rm api php artisan migrate --seed
+	@echo "Setup completed!"
 
-# Lệnh build hệ thống 
+# Build lại toàn bộ hệ thống (Có dọn dẹp cache Next.js)
 build: clean-web
 	docker compose build
 
-# Lệnh build nginx
-build-nginx:
-	docker compose build nginx
-
-# Lệnh build web-app
-build-web: clean-web
-	docker compose build web-app
-
-# Lệnh build api
-build-api:
-	docker compose build api
-
-# ----------------------------------------------------------------
-# (Dùng khi build lại từ đầu, bỏ qua cache-khi cache lỗi hoặc khi muốn đảm bảo build lại tất cả)
-# Lệnh build hệ thống không cache (dùng khi muốn đảm bảo build lại tất cả từ đầu)
-build-nc: clean-web
+# Build sạch từ đầu (Không dùng cache Docker)
+rebuild: clean-web
 	docker compose build --no-cache
-# Lệnh build nginx không cache
-build-nginx-nc:
-	docker compose build nginx --no-cache
 
-# Lệnh build web-app không cache
-build-web-nc: clean-web
-	docker compose build web-app --no-cache
-
-# Lệnh build api không cache
-build-api-nc:
-	docker compose build api --no-cache
-
-# Lệnh dọn rác web-app trước khi build
+# Dọn dẹp các thư mục rác của Next.js
 clean-web:
 	@echo "Cleaning Next.js build and cache..."
 	@-cmd /c "if exist apps\web-app\.next rmdir /s /q apps\web-app\.next"
 	@-cmd /c "if exist apps\web-app\.npm rmdir /s /q apps\web-app\.npm"
 	@echo "Clean completed!"
-# ----------------------------------------------------------------
 
-# Lệnh khởi động hệ thống
+# --- RUNTIME COMMANDS ---
+
+# Khởi động hệ thống ở chế độ background
 up:
 	docker compose up -d
 
-# Lệnh dừng hệ thống
+# Dừng và xóa containers
 down:
 	docker compose down
 
-# -----------------------------------------------------------------
+# Khởi động lại hệ thống
+restart:
+	docker compose restart
 
-# Lệnh xem log hệ thống
-log:
-	docker compose logs
+# --- LOGS COMMANDS ---
 
-# Lệnh xem log nginx
-log-nginx:
-	docker compose logs nginx
-	
-# Lệnh xem log db
-log-db:
-	docker compose logs db-main
+# Xem log tất cả các services
+logs:
+	docker compose logs -f
 
-# Lệnh xem log web-app
-log-web:
-	docker compose logs web-app
-
-# Lệnh xem log api
+# Xem log riêng lẻ từng service
 log-api:
-	docker compose logs api
+	docker compose logs -f api
+
+log-web:
+	docker compose logs -f web-app
+
+log-nginx:
+	docker compose logs -f nginx
+
+log-db:
+	docker compose logs -f db-main
+
+# --- HELPER COMMANDS ---
+
+# Truy cập vào terminal của API (để chạy artisan, tinker...)
+sh-api:
+	docker compose exec api sh
+
+# Truy cập vào terminal của Web-app
+sh-web:
+	docker compose exec web-app sh
