@@ -26,6 +26,7 @@ Dự án được triển khai với các thành phần chính nhằm tối ưu 
 * **Docker Desktop**
 * **Make** (GNU Make)
 * **Git**
+* **Composer for laravel**
 
 ### Quick Setup
 Thực hiện các bước sau để dựng môi trường phát triển cục bộ:
@@ -34,11 +35,9 @@ Thực hiện các bước sau để dựng môi trường phát triển cục b
    ```bash
     git clone https://github.com/hbmphat/XayDungPhanMemWebNhom1ChieuThu3.git
 
-2.  **Setup Environment:**
-    Copy file cấu hình mẫu sang file thực tế cho cả FE và BE:
+2.  **Setup Local Environment:**
     ```bash
-    cp apps/api/.env.example apps/api/.env
-    cp apps/web-app/.env.example apps/web-app/.env
+    make setup-local
     ```
 
 3.  **Auto Initialize:**
