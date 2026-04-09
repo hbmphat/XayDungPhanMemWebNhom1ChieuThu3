@@ -64,9 +64,3 @@ log-nginx:
 
 log-db:
 	docker compose logs -f db-main
-
-# --- VALIDATION COMMANDS ---
-# Kiểm tra lệnh liên quan đến API có đang đứng đúng thư mục hay không (có file artisan hay không)
-ifeq (,$(wildcard artisan))
-$(error ERROR: This command must be run from the 'apps/api'!)
-endif
