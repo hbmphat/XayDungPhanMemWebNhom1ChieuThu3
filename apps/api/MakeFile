@@ -1,51 +1,53 @@
+# Biến nhận tham số
 name ?=
-# Chạy server local
+
+# --- Development Commands ---
+# Dùng khi dev ngoài Docker, debug nhanh
+
+# Chạy server Laravel
 serve:
 	php artisan serve
-# Chạy Migration
-migrate-up:
+
+# Đồng bộ Database
+migrate:
 	php artisan migrate
-# Tạo lại toàn bộ database
+
+# Làm mới toàn bộ dữ liệu (Cẩn thận khi chạy lệnh này)
 fresh:
-	php artisan migrate:fresh
-test:
-	php artisan test
-# -------------------------------------------------------------------------
-# Lệnh tổng hợp
-# Tạo full bộ cho API (model, migration, controller-api, create/update request, resource, collection)
+	php artisan migrate:fresh --seed
+
+# --- GENERATOR COMMANDS ---
+
+# Lệnh tổng hợp: tạo full bộ khung API
+# Cách dùng: make api name=ModelName
 api:
+	@echo "Init module: $(name)..."
 	php artisan make:model $(name) -m
 	php artisan make:controller $(name)/$(name)Controller --api
-	make request-set name=$(name)
-	make resource-set name=$(name)
-	mkdir "app/Services/$(name)"
-	type nul > "app/Services/$(name)/$(name)Service.php"
-# Tạo cặp request store và update
+	@make request-set name=$(name)
+	@make resource-set name=$(name)
+	@if not exist "app\Services\$(name)" mkdir "app\Services\$(name)"
+	@if not exist "app\Services\$(name)\$(name)Service.php" ( \
+		echo ^<?php > "app\Services\$(name)\$(name)Service.php" && \
+		echo. >> "app\Services\$(name)\$(name)Service.php" && \
+		echo namespace App\Services\$(name); >> "app\Services\$(name)\$(name)Service.php" && \
+		echo. >> "app\Services\$(name)\$(name)Service.php" && \
+		echo class $(name)Service >> "app\Services\$(name)\$(name)Service.php" && \
+		echo { >> "app\Services\$(name)\$(name)Service.php" && \
+		echo     // Logic for $(name) here >> "app\Services\$(name)\$(name)Service.php" && \
+		echo } >> "app\Services\$(name)\$(name)Service.php" \
+	)
+	@echo Done. Check at app/Services/$(name) and Route.
+
+# --- SUB-COMMANDS ---
+
 request-set:
 	php artisan make:request $(name)/Store$(name)Request
 	php artisan make:request $(name)/Update$(name)Request
-# Tạo cặp resource show và index
+
 resource-set:
 	php artisan make:resource $(name)/$(name)Resource
 	php artisan make:resource $(name)/$(name)Collection
-# -------------------------------------------------------------------------
-# Lệnh đơn lẻ ($name cần thư mục [name=Test/Test])
-# Tạo request
-request:
-	php artisan make:request $(name)Request
-# Tạo resource
-resource:
-	php artisan make:resource $(name)Resource
-# Tạo collection
-collection:
-	php artisan make:resource $(name)Collection
-# Tạo controller
-controller:
-	php artisan make:controller $(name)Controller --api
-# Tạo model
-model:
-	php artisan make:model $(name)
-# Tạo migration ($name không cần thư mục)
-migrate:
-	php artisan make:migration create_$(name)_table --create=$(name)
-# Tạo service (tạo thủ công, artisan no sp)
+
+test:
+	php artisan test
