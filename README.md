@@ -39,8 +39,11 @@ Thực hiện các bước sau để dựng môi trường phát triển cục b
     ```bash
     make setup-local
     ```
-
-3.  **Auto Initialize:**
+3. **Config envaironment variables**
+    ```text
+    Thêm giá trị cho các biến trong các file .env
+    ```
+4.  **Auto Initialize:**
     ```bash
     make setup
     ```
