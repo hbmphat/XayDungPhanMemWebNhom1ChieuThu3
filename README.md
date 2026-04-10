@@ -1,4 +1,4 @@
-# SIM Shop Management System - Industry 4.0
+# SIM Shop Management System
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?style=flat&logo=laravel)](https://laravel.com/)
@@ -22,11 +22,14 @@ Dự án được triển khai với các thành phần chính nhằm tối ưu 
 
 ## 2. Getting Started
 
-### Prerequisites
+### Prerequisites for Development
+* **Node**
+* **PHP**
+* **Composer**
+* **Laravel**
 * **Docker Desktop**
-* **Make** (GNU Make)
+* **Make (GNU Make)**
 * **Git**
-* **Composer for laravel**
 
 ### Quick Setup
 Thực hiện các bước sau để dựng môi trường phát triển cục bộ:
@@ -41,14 +44,16 @@ Thực hiện các bước sau để dựng môi trường phát triển cục b
     ```
 3. **Config envaironment variables**
     ```text
-    Thêm giá trị cho các biến trong các file .env
+    Cập nhật giá trị cho các biến trong các file .env
     ```
-4.  **Auto Initialize:**
+4.  **Setup database:**
     ```bash
-    make setup
+    make db-init
     ```
-    *Lệnh này sẽ tự động: Build Image, Up Containers, Install Dependencies, Migrate & Seed Database.*
-
+5. **1st setup docker**
+    ```bash
+    make setup-docker
+    ```
 ---
 
 ## 3. Development Workflow
@@ -57,7 +62,7 @@ Thực hiện các bước sau để dựng môi trường phát triển cục b
 Dự án áp dụng quy trình phân nhánh nghiêm ngặt:
 * `main`: Nhánh production, chỉ chứa mã nguồn đã qua kiểm thử.
 * `develop`: Nhánh tích hợp chính cho các tính năng mới.
-* `feat/`, `fix/`, `ref/`: Nhánh làm việc cá nhân, luôn checkout từ `develop`.
+* `feat/`: Nhánh làm việc cá nhân, luôn checkout từ `develop`.
 
 ### Conventional Commits
 Mọi commit phải tuân thủ cấu trúc: `prefix(scope): mo-ta`
@@ -68,18 +73,4 @@ Mọi commit phải tuân thủ cấu trúc: `prefix(scope): mo-ta`
 * **chore**: Cập nhật công việc phụ (Dependencies, Build config).
 
 ---
-
 ## 4. Project Structure
-
-```text
-.
-├── apps/
-│   ├── api/                # Backend Service (Laravel 11)
-│   │   ├── app/Services/   # Lớp xử lý nghiệp vụ chính
-│   │   └── app/Http/       # Controllers, Requests & Resources
-│   └── web-app/            # Frontend Service (Next.js 15)
-│       ├── app/_features/  # Components chia theo chức năng
-│       └── app/_shared/    # Hooks, Utils & API Client dùng chung
-├── docker/                 # Cấu hình Nginx & Dockerfile cho từng dịch vụ
-├── Makefile                # Các lệnh tự động hóa (Automation scripts)
-└── README.md

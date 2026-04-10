@@ -1,7 +1,6 @@
-# --- SYSTEM COMMANDS ---
+# --- DEVELOPMENT COMMANDS ---
 
-# Setup toàn bộ hệ thống (Chỉ chạy lần đầu, khi có thay đổi lớn hoặc hệ thống bị lỗi lớn)
-# Thay đổi gồm: dockerfile, database, seeders, dependencies...
+# Setup môi trường development
 setup-local:
 	npm install
 	cd apps/api && composer install
@@ -9,15 +8,26 @@ setup-local:
 	@-cmd /c "if not exist .env copy .env.example .env"
 	@-cmd /c "if not exist apps\api\.env copy apps\api\.env.example apps\api\.env"
 	@-cmd /c "if not exist apps\web-app\.env copy apps\web-app\.env.example apps\web-app\.env"
+	cd apps/api && php artisan key:generate
 	@echo "Setup local completed."
-setup:
+# Khởi tạo database
+db-init:
+	cd apps/api && php artisan migrate --seed
+	@echo "Database initialized."
+# Reset database (Xóa sạch và tạo lại)
+db-reset:
+	cd apps/api && php artisan migrate:fresh --seed
+	@echo "Database reset completed."
+
+# --- BUILD COMMANDS ---
+# Thiết lập môi trường Docker
+setup-docker:
 	docker compose build
 	docker compose run --rm --entrypoint sh api -c "composer install"
 	docker compose run --rm  --entrypoint sh web-app -c "cd apps/web-app && npm install"
 	docker compose run --rm api php artisan migrate --seed
-	@echo "Setup runtime completed."
-
-# Build lại toàn bộ hệ thống (Có dọn dẹp cache Next.js)
+	@echo "Setup docker completed."
+# Build lại toàn bộ hệ thống
 build: clean-web
 	docker compose build
 
