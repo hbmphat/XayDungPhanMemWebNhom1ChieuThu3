@@ -29,7 +29,12 @@
     "packages/*"
   ],
   "lint-staged": {
-    "apps/web-app/**/*.{ts,tsx}": "npx turbo run lint --filter=web-app --",
-    "apps/api/**/*.php": "npx turbo run lint --filter=api --"
+    "apps/web-app/**/*.{ts,tsx}": [
+      "eslint --fix --config apps/web-app/eslint.config.js",
+      "npx vitest related --run --root apps/web-app"
+    ],
+    "apps/api/**/*.php": [
+      "php ./apps/api/vendor/bin/phpunit -c ./apps/api/phpunit.xml"
+    ]
   }
 }
