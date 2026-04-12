@@ -8,7 +8,7 @@ use Tests\Traits\AuthenticateUser;
 
 abstract class TestCase extends BaseTestCase
 {
-    use RefreshDatabase, AuthenticateUser;
+    use AuthenticateUser, RefreshDatabase;
 
     /**
      * Thiết lập môi trường test, tự động thêm header Accept: application/json để test API
@@ -20,6 +20,7 @@ abstract class TestCase extends BaseTestCase
             'Accept' => 'application/json',
         ]);
     }
+
     /**
      * Kiểm tra cấu trúc Response chuẩn của dự án.
      */
@@ -29,7 +30,7 @@ abstract class TestCase extends BaseTestCase
             ->assertJsonStructure([
                 'success',
                 'message',
-                'data'
+                'data',
             ]);
     }
 }

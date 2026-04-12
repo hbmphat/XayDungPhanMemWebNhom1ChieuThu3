@@ -14,7 +14,11 @@
     "lint-staged": "^16.4.0",
     "prettier": "^3.7.4",
     "turbo": "^2.8.16",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vite": "^6.0.0"
+  },
+  "overrides": {
+    "vite": "$vite"
   },
   "engines": {
     "node": ">=18"
@@ -26,7 +30,11 @@
   ],
   "lint-staged": {
     "apps/web-app/**/*.{ts,tsx}": [
-      "npm --prefix apps/web-app run lint"
+      "eslint --fix --config apps/web-app/eslint.config.js",
+      "npx vitest related --run --root apps/web-app"
+    ],
+    "apps/api/**/*.php": [
+      "php ./apps/api/vendor/bin/phpunit -c ./apps/api/phpunit.xml"
     ]
   }
 }
