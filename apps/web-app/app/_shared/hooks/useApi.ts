@@ -10,6 +10,7 @@ export function useApi<T>() {
         apiCall: () => Promise<T>
     ): Promise<{ success: boolean; data?: T; error?: string }> => {
         setLoading(true);
+        setData(null);
         setErrors(null);
         try {
             const result = await apiCall();
@@ -20,7 +21,7 @@ export function useApi<T>() {
                 const axiosError = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>;
 
                 if (axiosError.response?.status === 422 && axiosError.response.data.errors) {
-                    setErrors(axiosError.response.data.errors);
+                    setErrors(axiosError.response?.data?.errors);
                 }
 
                 return {
