@@ -7,7 +7,7 @@ export default defineConfig({
     test: {
         environment: 'jsdom',
         globals: true,
-        // setupFiles: ['./vitest.setup.ts'],
+        setupFiles: ['./vitest.setup.ts'],
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html', 'lcov'],
@@ -19,6 +19,20 @@ export default defineConfig({
                 '**/*.d.ts',
                 '**/*.spec.ts',
                 '**/*.spec.tsx',
+                '**/*.layout.tsx',
+                '**/*.types.ts',
+                '**/index.ts',
+                // Page và Layout (Thường không test Unit)
+                '**/app/**/layout.tsx',
+                '**/app/**/page.tsx',
+                '**/app/**/loading.tsx',
+                '**/app/**/error.tsx',
+                // Loại trừ các file cấu hình và types
+                'app/(admin)/admin/(AdminPanel)/_features/users/types/**',
+                'app/_types/**',
+                'app/_shared/api-client.ts',
+                'app/_shared/contexts/**',
+                'app/_components/core/**',
             ],
             thresholds: {
                 lines: 80,
