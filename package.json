@@ -30,11 +30,11 @@
   ],
   "lint-staged": {
     "apps/web-app/**/*.{ts,tsx}": [
-      "eslint --fix",
-      "vitest related --run"
+      "eslint --fix --config apps/web-app/eslint.config.js",
+      "npx vitest related --run --root apps/web-app"
     ],
     "apps/api/**/*.php": [
-      "php ./apps/api/vendor/bin/phpunit"
+      "php ./apps/api/vendor/bin/phpunit -c ./apps/api/phpunit.xml"
     ]
   }
 }
