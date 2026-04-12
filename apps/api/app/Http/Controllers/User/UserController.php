@@ -14,13 +14,13 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-
     protected $userService;
 
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -29,6 +29,7 @@ class UserController extends Controller
         $perPage = $this->getPerPage();
         $filters = $request->all();
         $users = $this->userService->getPaginatedUsers($perPage, $filters);
+
         return $this->successResponse(new UserCollection($users), 'User list');
     }
 
@@ -39,6 +40,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         $user = $this->userService->createUser($validated);
+
         return $this->successResponse(new UserResource($user), 'Created successfully', 201);
     }
 
@@ -48,6 +50,7 @@ class UserController extends Controller
     public function show(User $user): JsonResponse
     {
         $result = $this->userService->getUser($user);
+
         return $this->successResponse(new UserResource($result), 'User information');
     }
 
@@ -58,6 +61,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         $user = $this->userService->updateUser($validated, $user);
+
         return $this->successResponse(new UserResource($user), 'Updated successfully');
     }
 
@@ -72,6 +76,7 @@ class UserController extends Controller
         // }
 
         $this->userService->deleteUser($user);
+
         return $this->successResponse(null, 'Deleted successfully');
     }
 }

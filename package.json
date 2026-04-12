@@ -14,7 +14,11 @@
     "lint-staged": "^16.4.0",
     "prettier": "^3.7.4",
     "turbo": "^2.8.16",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vite": "^6.0.0"
+  },
+  "overrides": {
+    "vite": "$vite"
   },
   "engines": {
     "node": ">=18"
@@ -25,8 +29,7 @@
     "packages/*"
   ],
   "lint-staged": {
-    "apps/web-app/**/*.{ts,tsx}": [
-      "npm --prefix apps/web-app run lint"
-    ]
+    "apps/web-app/**/*.{ts,tsx}": "npx turbo run lint --filter=web-app --",
+    "apps/api/**/*.php": "npx turbo run lint --filter=api --"
   }
 }

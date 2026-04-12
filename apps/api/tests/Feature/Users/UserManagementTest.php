@@ -9,23 +9,24 @@ use Tests\TestCase;
 class UserManagementTest extends TestCase
 {
     use RefreshDatabase;
+
     public function test_it_can_create_a_user_with_valid_data()
     {
         // 1. Giả lập Admin thực hiện request
         $this->actingAsAdmin();
 
-        $email = 'test.user' . time() . '@example.com';
+        $email = 'test.user'.time().'@example.com';
         $userData = [
-            'user_name'     => 'test_user',
-            'first_name'    => 'First',
-            'last_name'     => 'Last',
-            'email'         => $email,
-            'phone'         => '0334567890',
-            'password'      => 'password123',
+            'user_name' => 'test_user',
+            'first_name' => 'First',
+            'last_name' => 'Last',
+            'email' => $email,
+            'phone' => '0334567890',
+            'password' => 'password123',
             'date_of_birth' => '1990-01-01',
-            'address'       => 'Ho Chi Minh City',
-            'role'          => 'customer',
-            'status'        => 'active',
+            'address' => 'Ho Chi Minh City',
+            'role' => 'customer',
+            'status' => 'active',
         ];
 
         // 2. Thực thi Request
@@ -40,9 +41,10 @@ class UserManagementTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'user_name' => 'test_user',
-            'email'     => $email
+            'email' => $email,
         ]);
     }
+
     public function test_it_fails_to_create_user_with_duplicate_email()
     {
         $this->actingAsAdmin();
@@ -51,13 +53,14 @@ class UserManagementTest extends TestCase
 
         $response = $this->postJson('/api/users', [
             'user_name' => 'new_user',
-            'email'     => 'duplicate@example.com',
-            'password'  => 'password123'
+            'email' => 'duplicate@example.com',
+            'password' => 'password123',
         ]);
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['email']);
     }
+
     public function test_it_can_filter_users_by_role()
     {
         $this->actingAsAdmin();
@@ -75,6 +78,7 @@ class UserManagementTest extends TestCase
             $this->assertEquals('admin', $user['role']);
         }
     }
+
     public function test_it_can_search_users_by_name()
     {
         $this->actingAsAdmin();
@@ -88,6 +92,7 @@ class UserManagementTest extends TestCase
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.user_name', 'tim_kiem_toi');
     }
+
     public function test_it_can_update_user_info()
     {
         $this->actingAsAdmin();
@@ -96,17 +101,17 @@ class UserManagementTest extends TestCase
 
         $response = $this->putJson("/api/users/{$user->id}", [
             'first_name' => 'NewName',
-            'last_name'  => 'Updated',
-            'user_name'  => 'user_' . uniqid(),
-            'email'      => 'email' . uniqid() . '@example.com',
-            'role'       => 'customer',
-            'status'     => 'pending',
+            'last_name' => 'Updated',
+            'user_name' => 'user_'.uniqid(),
+            'email' => 'email'.uniqid().'@example.com',
+            'role' => 'customer',
+            'status' => 'pending',
         ]);
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'first_name' => 'NewName'
+            'first_name' => 'NewName',
         ]);
     }
 
