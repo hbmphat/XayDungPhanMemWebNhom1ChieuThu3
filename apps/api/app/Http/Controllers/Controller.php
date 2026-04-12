@@ -12,17 +12,21 @@ use Illuminate\Support\Facades\Auth;
 abstract class Controller
 {
     use ApiResponser, AuthorizesRequests, ValidatesRequests;
+
     // Số record mặc định trên mỗi trang
     protected int $perPage = 10;
+
     /**
      * Lấy số lượng bản ghi trên mỗi trang từ Request hoặc dùng mặc định
      */
     protected function getPerPage(): int
     {
         $perPage = request()->input('per_page', $this->perPage);
+
         // Giới hạn số record tối đa
         return (int) min($perPage, 50);
     }
+
     /**
      * Lấy User hiện tại đang đăng nhập (kèm Type-hinting)
      */
@@ -30,8 +34,9 @@ abstract class Controller
     {
         return Auth::user();
     }
+
     /**
-     * Hàm trả về lỗi 403 nhanh 
+     * Hàm trả về lỗi 403 nhanh
      */
     protected function unauthorized($message = 'Không có quyền truy cập'): JsonResponse
     {

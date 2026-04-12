@@ -10,13 +10,13 @@ class UserService
 {
     /**
      * Lấy danh sách người dùng, phân trang mặc định 10 records
-     * Tìm kiếm theo tên, email, số điện thoại; lọc theo role, status 
+     * Tìm kiếm theo tên, email, số điện thoại; lọc theo role, status
      */
     public function getPaginatedUsers(int $perPage, array $filters = []): LengthAwarePaginator
     {
         return User::query()
-            ->when(!empty($filters['search']), function ($query) use ($filters) {
-                $search = '%' . mb_strtolower(trim($filters['search'])) . '%';
+            ->when(! empty($filters['search']), function ($query) use ($filters) {
+                $search = '%'.mb_strtolower(trim($filters['search'])).'%';
                 $query->where(function ($q) use ($search) {
                     $q->where(DB::raw('LOWER(user_name)'), 'LIKE', $search)
                         ->orWhere(DB::raw('LOWER(email)'), 'LIKE', $search)
@@ -61,6 +61,7 @@ class UserService
             unset($data['password']);
         }
         $user->update($data);
+
         return $user;
     }
 
