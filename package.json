@@ -34,6 +34,9 @@
       "npx vitest related --run --root apps/web-app"
     ],
     "apps/api/**/*.php": [
+      "php ./apps/api/vendor/bin/pint"
+    ],
+    "apps/api/tests/**/*.php": [
       "php ./apps/api/vendor/bin/phpunit -c ./apps/api/phpunit.xml"
     ]
   }

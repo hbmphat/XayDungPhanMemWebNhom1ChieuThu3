@@ -34,7 +34,13 @@ setup-docker: clean-web
 # Build sạch từ đầu (Không dùng cache Docker)
 rebuild: clean-web
 	docker compose build --no-cache
-
+	
+# Dọn thư mục rác của Next.js
+clean-web:
+	@echo "Cleaning Next.js build and cache..."
+	@-cmd /c "if exist apps\web-app\.next rmdir /s /q apps\web-app\.next"
+	@-cmd /c "if exist apps\web-app\.npm rmdir /s /q apps\web-app\.npm"
+	@echo "Clean completed."
 
 # --- RUNTIME COMMANDS ---
 

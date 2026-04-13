@@ -25,16 +25,16 @@ class UserFactory extends Factory
     {
         return [
             'id' => Str::uuid(),
-            'user_name' => fake()->unique()->userName(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone' => '0'.fake()->numberBetween(320000000, 999999999), // Giả lập số VN
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'address' => fake()->address(),
-            'date_of_birth' => fake()->dateTimeBetween('-40 years', '-18 years')->format('Y-m-d'),
+            'user_name' => $this->faker->unique()->userName(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'phone' => '0'.$this->faker->numberBetween(320000000, 999999999),
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'address' => $this->faker->address(),
+            'date_of_birth' => $this->faker->dateTimeBetween('-40 years', '-18 years')->format('Y-m-d'),
             'password' => 'password',
-            'role' => fake()->randomElement(['inventory_manager', 'moderator', 'customer', 'collaborator']),
-            'status' => fake()->randomElement(['active', 'inactive', 'blocked', 'pending', 'pending_kyc', 'suspended', 'banned']),
+            'role' => $this->faker->randomElement(['inventory_manager', 'moderator', 'customer', 'collaborator']),
+            'status' => $this->faker->randomElement(['active', 'inactive', 'blocked', 'pending', 'pending_kyc', 'suspended', 'banned']),
             'remember_token' => Str::random(10),
         ];
     }
