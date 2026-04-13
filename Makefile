@@ -19,18 +19,12 @@ db-reset:
 	cd apps/api && php artisan migrate:fresh --seed
 	@echo "Database reset completed."
 
-# --- BUILD COMMANDS ---
+# --- DOCKER COMMANDS ---
 # Thiết lập môi trường Docker
-setup-docker:
+setup-docker: clean-web
 	docker compose build
-	docker compose run --rm --entrypoint sh api -c "composer install"
-	docker compose run --rm  --entrypoint sh web-app -c "cd apps/web-app && npm install"
-	docker compose run --rm api php artisan migrate --seed
 	@echo "Setup docker completed."
-# Build lại toàn bộ hệ thống
-build: clean-web
-	docker compose build
-
+	
 # Build sạch từ đầu (Không dùng cache Docker)
 rebuild: clean-web
 	docker compose build --no-cache
@@ -51,7 +45,9 @@ up:
 # Dừng và xóa containers
 down:
 	docker compose down
-
+# 	Dừng và xóa containers cùng với volumes (dữ liệu)
+down-v:
+	docker compose down -v
 # Khởi động lại hệ thống
 restart:
 	docker compose restart

@@ -25,7 +25,8 @@ interface SimModalProps {
   getFieldError: (field: string) => string | undefined;
 }
 
-const formatPriceForInput = (value?: number) => (typeof value === "number" ? String(value) : "");
+const formatPriceForInput = (value?: number) =>
+  typeof value === "number" ? String(value) : "";
 
 export default function SimModal({
   isOpen,
@@ -68,7 +69,9 @@ export default function SimModal({
               {isEditMode ? `Edit SIM: ${currentSim.sim_number}` : "New SIM"}
             </h2>
             <p className="text-sm text-slate-500 mt-1">
-              {isEditMode ? "Update SIM information and provider." : "Create a new SIM record with provider mapping."}
+              {isEditMode
+                ? "Update SIM information and provider."
+                : "Create a new SIM record with provider mapping."}
             </p>
           </div>
           <button
@@ -80,7 +83,10 @@ export default function SimModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-8 pb-8 space-y-5 overflow-y-auto custom-scrollbar">
+        <form
+          onSubmit={handleSubmit}
+          className="px-8 pb-8 space-y-5 overflow-y-auto custom-scrollbar"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <FormInput
               label="SIM Number"
@@ -118,10 +124,14 @@ export default function SimModal({
               </label>
               <div
                 className={`relative flex items-center bg-slate-50 rounded-xl border-b-2 transition-all px-3.5 ${
-                  getFieldError("provider_id") ? "border-red-500 bg-red-50" : "border-slate-200 focus-within:border-indigo-600"
+                  getFieldError("provider_id")
+                    ? "border-red-500 bg-red-50"
+                    : "border-slate-200 focus-within:border-indigo-600"
                 }`}
               >
-                <Text className={`w-5 h-5 mr-3 ${getFieldError("provider_id") ? "text-red-500" : "text-indigo-500"}`} />
+                <Text
+                  className={`w-5 h-5 mr-3 ${getFieldError("provider_id") ? "text-red-500" : "text-indigo-500"}`}
+                />
                 <select
                   name="provider_id"
                   defaultValue={currentSim?.provider_id || ""}
@@ -129,7 +139,10 @@ export default function SimModal({
                 >
                   <option value="">Choose provider</option>
                   {providers.map((provider) => (
-                    <option key={provider.provider_id} value={provider.provider_id}>
+                    <option
+                      key={provider.provider_id}
+                      value={provider.provider_id}
+                    >
                       {provider.name}
                     </option>
                   ))}
@@ -137,7 +150,9 @@ export default function SimModal({
                 <ChevronDown className="w-4 h-4 ml-2 text-slate-400" />
               </div>
               {getFieldError("provider_id") && (
-                <span className="text-[11px] font-semibold text-red-500 px-1">{getFieldError("provider_id")}</span>
+                <span className="text-[11px] font-semibold text-red-500 px-1">
+                  {getFieldError("provider_id")}
+                </span>
               )}
             </div>
           </div>
@@ -157,7 +172,9 @@ export default function SimModal({
             <div className="flex flex-col gap-1.5">
               <div
                 className={`relative flex items-center bg-slate-50 rounded-xl border-b-2 transition-all px-3.5 ${
-                  getFieldError("is_active") ? "border-red-500 bg-red-50" : "border-slate-200 focus-within:border-indigo-600"
+                  getFieldError("is_active")
+                    ? "border-red-500 bg-red-50"
+                    : "border-slate-200 focus-within:border-indigo-600"
                 }`}
               >
                 {currentSim?.is_active ? (
@@ -167,8 +184,12 @@ export default function SimModal({
                 )}
                 <div className="w-full py-3 flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-medium text-slate-900">Is Active</p>
-                    <p className="text-xs text-slate-500">Enable this SIM in the storefront.</p>
+                    <p className="text-sm font-medium text-slate-900">
+                      Is Active
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      Enable this SIM in the storefront.
+                    </p>
                   </div>
                   <label className="inline-flex items-center cursor-pointer">
                     <input
@@ -177,7 +198,7 @@ export default function SimModal({
                       defaultChecked={currentSim?.is_active ?? true}
                       className="sr-only peer"
                     />
-                    <div className="relative w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600" />
+                    <div className="relative w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:inset-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600" />
                   </label>
                 </div>
               </div>
@@ -187,7 +208,9 @@ export default function SimModal({
               <CheckCircle2 className="w-5 h-5 text-emerald-500" />
               <div>
                 <p className="text-sm font-medium text-slate-900">Metadata</p>
-                <p className="text-xs text-slate-500">Created and updated timestamps will be set automatically.</p>
+                <p className="text-xs text-slate-500">
+                  Created and updated timestamps will be set automatically.
+                </p>
               </div>
             </div>
           </div>
@@ -208,8 +231,20 @@ export default function SimModal({
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" strokeDasharray="60" strokeDashoffset="20" />
+                  <svg
+                    className="animate-spin h-4 w-4 text-white"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                      strokeDasharray="60"
+                      strokeDashoffset="20"
+                    />
                   </svg>
                   {isEditMode ? "Updating..." : "Creating..."}
                 </span>
