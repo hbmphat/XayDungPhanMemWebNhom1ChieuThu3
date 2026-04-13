@@ -18,7 +18,7 @@ if [ "$RUN_MIGRATIONS" = "true" ]; then
     # Đợi DB sẵn sàng
     sleep 5
 
-    php artisan migrate:fresh --force --seed
+    php artisan migrate:fresh --force
 fi
 
 # 4. Tối ưu hóa hiệu năng (Chỉ nên chạy ở Production)
