@@ -16,20 +16,22 @@ class UserService
     {
         return User::query()
             ->when(!empty($filters['search']), function ($query) use ($filters) {
+                // Postgres hỗ trợ ILIKE (không phân biệt hoa thường), nhưng dùng LOWER() LIKE ? vẫn rất chuẩn
                 $search = '%' . mb_strtolower(trim($filters['search'])) . '%';
                 $query->where(function ($q) use ($search) {
-                    $q->where(DB::raw('LOWER(user_name)'), 'LIKE', $search)
-                        ->orWhere(DB::raw('LOWER(email)'), 'LIKE', $search)
-                        ->orWhere(DB::raw('LOWER(phone)'), 'LIKE', $search)
-                        ->orWhere(DB::raw('LOWER(first_name)'), 'LIKE', $search)
-                        ->orWhere(DB::raw('LOWER(last_name)'), 'LIKE', $search)
-                        ->orWhere(DB::raw('LOWER(address)'), 'LIKE', $search);
+                    $q->whereRaw('LOWER(user_name) LIKE ?', [$search])
+                        ->orWhereRaw('LOWER(email) LIKE ?', [$search])
+                        ->orWhereRaw('LOWER(phone) LIKE ?', [$search])
+                        ->orWhereRaw('LOWER(first_name) LIKE ?', [$search])
+                        ->orWhereRaw('LOWER(last_name) LIKE ?', [$search])
+                        ->orWhereRaw('LOWER(address) LIKE ?', [$search]);
                 });
             })
-            ->when(isset($filters['role']) && $filters['role'] !== '', function ($q) use ($filters) {
+            // Thêm check khác 'all', 'null', 'undefined' để đề phòng Frontend gửi rác xuống
+            ->when(!empty($filters['role']) && !in_array($filters['role'], ['all', 'undefined', 'null']), function ($q) use ($filters) {
                 $q->where('role', $filters['role']);
             })
-            ->when(isset($filters['status']) && $filters['status'] !== '', function ($q) use ($filters) {
+            ->when(!empty($filters['status']) && !in_array($filters['status'], ['all', 'undefined', 'null']), function ($q) use ($filters) {
                 $q->where('status', $filters['status']);
             })
             ->latest()
