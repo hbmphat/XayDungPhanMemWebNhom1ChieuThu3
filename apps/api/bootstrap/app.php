@@ -31,9 +31,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->append(HandleCors::class);
 
-        $middleware->alias([
-            'permission' => \App\Http\Middleware\CheckPermission::class,
-        ]);
+        // $middleware->alias([
+        //     'permission' => \App\Http\Middleware\CheckPermission::class,
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $responder = new class
