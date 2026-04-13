@@ -27,7 +27,6 @@ if [ "$APP_ENV" = "production" ]; then
     php artisan config:cache
     php artisan route:cache
     php artisan event:cache
-    php artisan view:cache
 else
     echo "Running in $APP_ENV mode. Skipping optimization cache..."
 fi
