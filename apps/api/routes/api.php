@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Provider\ProviderController;
+use App\Http\Controllers\Sim\SimController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Permission\RolePermissionController;
@@ -11,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health', function () {
     return response()->json(['status' => 'ok'], 200);
 });
+Route::apiResource('users', UserController::class);
+Route::apiResource('providers', ProviderController::class);
+Route::apiResource('sims', SimController::class);
 
 
 Route::prefix('auth')->group(function () {
