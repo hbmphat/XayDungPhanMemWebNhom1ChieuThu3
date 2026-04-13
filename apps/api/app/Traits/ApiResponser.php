@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 
 trait ApiResponser
@@ -9,7 +10,7 @@ trait ApiResponser
     protected function successResponse($data, $message = null, $code = Response::HTTP_OK)
     {
         // Nếu $data là một Resource hoặc Collection, chuyển nó thành array/json
-        if ($data instanceof \Illuminate\Http\Resources\Json\JsonResource) {
+        if ($data instanceof JsonResource) {
             $data = $data->response()->getData(true);
         }
 
@@ -26,16 +27,17 @@ trait ApiResponser
         return response()->json([
             'success' => true,
             'message' => $message,
-            'data'    => $data
+            'data' => $data,
         ], $code, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
+
     protected function errorResponse($message, $code, $errors = null)
     {
         return response()->json([
             'success' => false,
             'message' => $message,
-            'data'    => null,
-            'errors'  => $errors
+            'data' => null,
+            'errors' => $errors,
         ], $code, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 }

@@ -27,7 +27,8 @@
       "@admin.features/*": ["./app/(admin)/admin/(AdminPanel)/_features/*"],
       "@home/*": ["./app/(home)/*"],
       "@components/*": ["./app/_components/*"],
-    }
+    },
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"],
   },
   "include": [
     "next-env.d.ts",
