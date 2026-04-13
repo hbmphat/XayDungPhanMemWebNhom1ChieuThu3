@@ -8,16 +8,14 @@ import { useApi } from '@app/_shared/hooks/useApi';
 import { validateUserCreate, validateUserUpdate } from '@admin.features/users/utils/user.validation';
 
 export const useUsers = () => {
-    // 1. Hook dành cho việc lấy danh sách (Fetch List)
-    // T kiểu PaginatedResponse<User> giúp truy cập được data.data và data.meta
+    // Hook cho Fetch data
     const {
         data: responseData,
         loading: fetchLoading,
         request: fetchRequest,
     } = useApi<PaginatedResponse<User>>();
 
-    // 2. Hook dành cho các hành động (Actions: Create/Update/Delete)
-    // Tách biệt để không làm mất dữ liệu danh sách khi đang xử lý Form
+    // Hook cho Actions
     const {
         loading: actionLoading,
         errors: actionErrors,
@@ -65,7 +63,7 @@ export const useUsers = () => {
         const res = await actionRequest(() => userService.update(id, input));
         if (res.success) {
             toast.success("User updated successfully");
-            await onFetch(); // Refresh lại trang hiện tại
+            await onFetch();
             return true;
         }
         toast.error(res.error || "Lỗi khi cập nhật");
@@ -86,12 +84,10 @@ export const useUsers = () => {
 
     return {
         // Data states
-        // responseData lúc này là PaginatedResponse<User>, nên .data sẽ là User[]
         users: responseData?.data || [],
         loading: fetchLoading || actionLoading,
         meta: responseData?.meta || meta,
         errors: actionErrors || {},
-
         // Actions
         getFieldError,
         onFetch,
