@@ -1,23 +1,28 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+<<<<<<< HEAD
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Permission\RolePermissionController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Role\UserRoleController;
+=======
+>>>>>>> feat/be-auth
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Test health check endpoint
 Route::get('/health', function () {
     return response()->json(['status' => 'ok'], 200);
 });
 
+<<<<<<< HEAD
 /*
 |--------------------------------------------------------------------------
 | Auth routes
 |--------------------------------------------------------------------------
 */
+=======
+>>>>>>> feat/be-auth
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
@@ -28,6 +33,7 @@ Route::prefix('auth')->group(function () {
     });
 });
 
+<<<<<<< HEAD
 /*
 |--------------------------------------------------------------------------
 | Protected routes
@@ -61,3 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
         ]);
     })->middleware('permission:admin.access');
 });
+=======
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('users', UserController::class);
+});
+>>>>>>> feat/be-auth
