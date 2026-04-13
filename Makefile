@@ -25,30 +25,12 @@ db-reset:
 	cd apps/api && php artisan migrate:fresh --seed
 	@echo "Database reset completed."
 
-# --- BUILD COMMANDS ---
+# --- DOCKER COMMANDS ---
 # Thiết lập môi trường Docker
-setup-docker:
+setup-docker: clean-web
 	docker compose build
-	docker compose run --rm --entrypoint sh api -c "composer install"
-	docker compose run --rm  --entrypoint sh web-app -c "cd apps/web-app && npm install"
-	docker compose run --rm api php artisan migrate --seed
 	@echo "Setup docker completed."
-# Dọn cache của Turbo
-clean-turbo:
-	@echo "Cleaning Turbo cache..."
-	-taskkill /F /IM turbo.exe 2>nul || exit 0
-	@-cmd /c "if exist .turbo rmdir /s /q .turbo"
-	@echo "Clean completed."
-# Dọn thư mục rác của Next.js
-clean-web:
-	@echo "Cleaning Next.js build and cache..."
-	@-cmd /c "if exist apps\web-app\.next rmdir /s /q apps\web-app\.next"
-	@-cmd /c "if exist apps\web-app\.npm rmdir /s /q apps\web-app\.npm"
-	@echo "Clean completed."
-# Build toàn bộ hệ thống
-build: clean-web
-	docker compose build
-
+	
 # Build sạch từ đầu (Không dùng cache Docker)
 rebuild: clean-web
 	docker compose build --no-cache
@@ -63,7 +45,9 @@ up:
 # Dừng và xóa containers
 down:
 	docker compose down
-
+# 	Dừng và xóa containers cùng với volumes (dữ liệu)
+down-v:
+	docker compose down -v
 # Khởi động lại hệ thống
 restart:
 	docker compose restart

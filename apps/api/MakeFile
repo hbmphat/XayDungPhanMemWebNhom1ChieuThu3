@@ -15,7 +15,12 @@ migrate:
 # Làm mới toàn bộ dữ liệu (Cẩn thận khi chạy lệnh này)
 fresh:
 	php artisan migrate:fresh --seed
-
+clear:
+	php artisan config:clear
+	php artisan route:clear
+	php artisan event:clear
+	php artisan view:clear
+	php artisan cache:clear
 # --- GENERATOR COMMANDS ---
 
 # Lệnh tổng hợp: tạo full bộ khung API
