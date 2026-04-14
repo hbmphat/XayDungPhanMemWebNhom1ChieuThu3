@@ -85,7 +85,7 @@ jobs:
             context: .
             file: ./apps/api/Dockerfile
             push: true
-            tags: hth4438/api:latest
+            tags: hth4438/api:test
   # Deploy
   deploy:
       runs-on: ubuntu-latest
