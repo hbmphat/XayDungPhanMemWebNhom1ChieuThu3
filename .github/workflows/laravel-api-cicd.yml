@@ -19,11 +19,11 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: root
-          POSTGRES_DB: simshop
+          POSTGRES_DB: sim_shop
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres -d simshop"
+          --health-cmd "pg_isready -U postgres -d sim_shop"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 5
@@ -52,7 +52,7 @@ jobs:
         DB_CONNECTION: pgsql
         DB_HOST: 127.0.0.1
         DB_PORT: 5432
-        DB_DATABASE: simshop
+        DB_DATABASE: sim_shop
         DB_USERNAME: postgres
         DB_PASSWORD: root
       run: php artisan migrate --force
@@ -62,7 +62,7 @@ jobs:
         DB_CONNECTION: pgsql
         DB_HOST: 127.0.0.1
         DB_PORT: 5432
-        DB_DATABASE: simshop
+        DB_DATABASE: sim_shop
         DB_USERNAME: postgres
         DB_PASSWORD: root
       run: php artisan test
