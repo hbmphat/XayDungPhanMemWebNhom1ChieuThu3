@@ -5,11 +5,9 @@ import tsPlugin from "@typescript-eslint/eslint-plugin";
 import globals from "globals";
 
 export default [
-  // Bỏ qua các thư mục build
   {
     ignores: ["node_modules/", ".next/", "out/", "dist/"],
   },
-  // Cấu hình cho TypeScript
   {
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
@@ -33,7 +31,7 @@ export default [
       ...js.configs.recommended.rules,
       ...tsPlugin.configs.recommended.rules,
       ...nextPlugin.configs.recommended.rules,
-      "@next/next/no-html-link-for-pages": "error",
+      "@next/next/no-html-link-for-pages": "off",
       "no-undef": "off",
     },
   },

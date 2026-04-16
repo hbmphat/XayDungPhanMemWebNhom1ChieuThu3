@@ -40,28 +40,47 @@ export default function Sidebar() {
 
       {/* Navigation Links */}
       <nav className="flex-1 px-4 py-4 space-y-1">
-        <SidebarLink
-          href="/admin/dashboard"
-          icon={<LayoutDashboard size={20} />}
-          label="Dashboard"
-          active={pathname === "/admin/dashboard"}
-          onClick={close}
-        />
-        <SidebarLink
-          href="/admin/users"
-          icon={<Users size={20} />}
-          label="Người dùng"
-          active={pathname.startsWith("/admin/users")}
-          onClick={close}
-        />
-        <SidebarLink
-          href="/admin/sims"
-          icon={<Smartphone size={20} />}
-          label="Quản lý Sim"
-          active={pathname.startsWith("/admin/sims")}
-          onClick={close}
-        />
-      </nav>
+  <SidebarLink
+    href="/admin/dashboard"
+    icon={<LayoutDashboard size={20} />}
+    label="Dashboard"
+    active={pathname === "/admin/dashboard"}
+    onClick={close}
+  />
+
+  <SidebarLink
+    href="/admin/users"
+    icon={<Users size={20} />}
+    label="Người dùng"
+    active={pathname.startsWith("/admin/users")}
+    onClick={close}
+  />
+
+  <SidebarLink
+    href="/admin/sims"
+    icon={<Smartphone size={20} />}
+    label="Quản lý Sim"
+    active={pathname.startsWith("/admin/sims")}
+    onClick={close}
+  />
+
+  {/* 👇 THÊM MỚI */}
+  <SidebarLink
+    href="/admin/roles"
+    icon={<ShieldCheck size={20} />}
+    label="Role"
+    active={pathname.startsWith("/admin/roles")}
+    onClick={close}
+  />
+
+  <SidebarLink
+    href="/admin/permissions"
+    icon={<ShieldCheck size={20} />}
+    label="Permission"
+    active={pathname.startsWith("/admin/permissions")}
+    onClick={close}
+  />
+</nav>
 
       {/* Admin Profile Footer */}
       <div className="p-4 border-t border-slate-800">
