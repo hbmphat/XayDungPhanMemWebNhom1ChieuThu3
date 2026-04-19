@@ -3,16 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import apiClient from "@app/_shared/api-client";
 
-type Permission = {
-  id: string;
-  name: string;
-};
-
-type Role = {
-  id: string;
-  name: string;
-  permissions?: Permission[];
-};
+type Permission = { id: string; name: string; };
+type Role = { id: string; name: string; permissions?: Permission[]; };
 
 export default function RolePage() {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -25,42 +17,25 @@ export default function RolePage() {
   const [editName, setEditName] = useState("");
 
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const [selectedPermissionIds, setSelectedPermissionIds] = useState<string[]>(
-    []
-  );
+  const [selectedPermissionIds, setSelectedPermissionIds] = useState<string[]>([]);
 
   const fetchRoles = async () => {
     try {
-      const res = (await apiClient.get("/roles")) as {
-        data: { data: Role[] } | Role[];
-      };
-
-      const list = Array.isArray(res.data) ? res.data : res.data?.data || [];
+      const res = await apiClient.get("/roles") as any;
+      const list = Array.isArray(res.data) ? res.data : (res.data as any)?.data || [];
       setRoles(list);
-    } catch (error: unknown) {
-      console.error("Lỗi lấy role:", error);
-      setRoles([]);
-    }
+    } catch (error) { console.error("Lỗi lấy role:", error); }
   };
 
   const fetchPermissions = async () => {
     try {
-      const res = (await apiClient.get("/permissions")) as {
-        data: { data: Permission[] } | Permission[];
-      };
-
-      const list = Array.isArray(res.data) ? res.data : res.data?.data || [];
+      const res = await apiClient.get("/permissions") as any;
+      const list = Array.isArray(res.data) ? res.data : (res.data as any)?.data || [];
       setPermissions(list);
-    } catch (error: unknown) {
-      console.error("Lỗi lấy permission:", error);
-      setPermissions([]);
-    }
+    } catch (error) { console.error("Lỗi lấy permission:", error); }
   };
 
-  useEffect(() => {
-    fetchRoles();
-    fetchPermissions();
-  }, []);
+  useEffect(() => { fetchRoles(); fetchPermissions(); }, []);
 
   const filteredRoles = useMemo(() => {
     const q = keyword.trim().toLowerCase();
@@ -69,37 +44,21 @@ export default function RolePage() {
   }, [roles, keyword]);
 
   const handleCreate = async () => {
-    if (!name.trim()) {
-      alert("Vui lòng nhập tên role");
-      return;
-    }
-
+    if (!name.trim()) return;
     try {
       setLoading(true);
       await apiClient.post("/roles", { name: name.trim() });
       setName("");
       await fetchRoles();
-    } catch (error: unknown) {
-      console.error("Lỗi tạo role:", error);
-      alert("Thêm role thất bại");
-    } finally {
-      setLoading(false);
-    }
+    } catch (error) { alert("Thêm role thất bại"); } finally { setLoading(false); }
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Bạn có chắc muốn xóa role này không?")) return;
-
+    if (!confirm("Xóa role này nhé Quân?")) return;
     try {
-      setLoading(true);
       await apiClient.delete(`/roles/${id}`);
       await fetchRoles();
-    } catch (error: unknown) {
-      console.error("Lỗi xóa role:", error);
-      alert("Xóa role thất bại");
-    } finally {
-      setLoading(false);
-    }
+    } catch (error) { alert("Xóa thất bại"); }
   };
 
   const openEdit = (role: Role) => {
@@ -107,32 +66,14 @@ export default function RolePage() {
     setEditName(role.name);
   };
 
-  const closeEdit = () => {
-    setEditingRole(null);
-    setEditName("");
-  };
-
   const handleUpdate = async () => {
-    if (!editingRole) return;
-
-    if (!editName.trim()) {
-      alert("Vui lòng nhập tên role");
-      return;
-    }
-
+    if (!editingRole || !editName.trim()) return;
     try {
       setLoading(true);
-      await apiClient.put(`/roles/${editingRole.id}`, {
-        name: editName.trim(),
-      });
-      closeEdit();
+      await apiClient.put(`/roles/${editingRole.id}`, { name: editName.trim() });
+      setEditingRole(null);
       await fetchRoles();
-    } catch (error: unknown) {
-      console.error("Lỗi sửa role:", error);
-      alert("Sửa role thất bại");
-    } finally {
-      setLoading(false);
-    }
+    } catch (error) { alert("Cập nhật thất bại"); } finally { setLoading(false); }
   };
 
   const openAssign = (role: Role) => {
@@ -140,258 +81,110 @@ export default function RolePage() {
     setSelectedPermissionIds(role.permissions?.map((p) => p.id) || []);
   };
 
-  const closeAssign = () => {
-    setSelectedRole(null);
-    setSelectedPermissionIds([]);
-  };
-
-  const togglePermission = (id: string) => {
-    setSelectedPermissionIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
-  };
-
   const handleAssign = async () => {
     if (!selectedRole) return;
-
     try {
       setLoading(true);
       await apiClient.post(`/roles/${selectedRole.id}/permissions`, {
         permission_ids: selectedPermissionIds,
       });
-      closeAssign();
+      setSelectedRole(null);
       await fetchRoles();
-    } catch (error: unknown) {
-      console.error("Lỗi gán permission:", error);
-      alert("Gán permission thất bại");
-    } finally {
-      setLoading(false);
-    }
+    } catch (error) { alert("Gán quyền thất bại"); } finally { setLoading(false); }
   };
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen">
-      <div className="mb-6 flex justify-between items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Quản lý Role</h1>
-          <p className="text-sm text-slate-500">
-            Thêm / sửa / xóa / gán permission cho role
-          </p>
-        </div>
+    <div className="p-6 bg-slate-50 min-h-screen" suppressHydrationWarning>
+      <h1 className="text-2xl font-bold text-slate-800 mb-5">Quản lý Vai trò (Role)</h1>
 
-        <div className="bg-white px-4 py-3 rounded-2xl shadow-sm border border-slate-200 min-w-[120px] text-center">
-          <div className="text-xs text-slate-500">Tổng</div>
-          <div className="text-2xl font-bold text-purple-600">
-            {roles.length}
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-5">
-        <div className="flex flex-col lg:flex-row gap-3">
+      {/* INPUT THÊM MỚI & TÌM KIẾM */}
+      <div className="bg-white p-5 rounded-2xl shadow-sm border mb-5 space-y-4">
+        <div className="flex gap-3">
           <input
+            suppressHydrationWarning
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Nhập tên role..."
-            className="flex-1 border border-slate-300 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-purple-400"
+            placeholder="Nhập tên role mới..."
+            className="flex-1 border p-3 rounded-xl outline-none focus:ring-2 focus:ring-purple-400"
           />
-
-          <button
-            onClick={handleCreate}
-            disabled={loading}
-            className="bg-purple-600 text-white px-5 py-3 rounded-xl hover:bg-purple-700 disabled:opacity-60"
-          >
-            {loading ? "Đang xử lý..." : "Thêm"}
-          </button>
+          <button onClick={handleCreate} disabled={loading} className="bg-purple-600 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-purple-700 transition">Thêm</button>
         </div>
-
-        <div className="mt-3">
-          <input
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="Tìm role..."
-            className="w-full border border-slate-300 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-purple-200"
-          />
-        </div>
+        <input
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          placeholder="🔍 Tìm nhanh vai trò..."
+          className="w-full bg-slate-50 border p-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-200"
+        />
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="px-5 py-4 border-b bg-slate-50 flex items-center justify-between">
-          <div>
-            <h2 className="text-base font-semibold text-slate-800">
-              Danh sách role
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Hiển thị {filteredRoles.length} / {roles.length} role
-            </p>
-          </div>
-        </div>
-
-        {filteredRoles.length === 0 ? (
-          <div className="p-8 text-center text-slate-500">
-            Không có role phù hợp
-          </div>
-        ) : (
-          <div className="divide-y divide-slate-200">
-            {filteredRoles.map((role, index) => (
-              <div
-                key={role.id}
-                className="px-5 py-4 hover:bg-slate-50 transition"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-sm font-semibold">
-                      {index + 1}
-                    </div>
-
-                    <div>
-                      <div className="text-sm font-semibold text-slate-800">
-                        {role.name}
-                      </div>
-                      <div className="text-xs text-slate-500 mt-1">
-                        Role #{role.id}
-                      </div>
-
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {role.permissions && role.permissions.length > 0 ? (
-                          role.permissions.map((p) => (
-                            <span
-                              key={p.id}
-                              className="bg-blue-50 text-blue-700 border border-blue-100 px-2.5 py-1 rounded-full text-xs font-medium"
-                            >
-                              {p.name}
-                            </span>
-                          ))
-                        ) : (
-                          <span className="text-xs text-slate-400">
-                            Chưa có permission
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2 shrink-0">
-                    <button
-                      onClick={() => openAssign(role)}
-                      className="rounded-lg border border-emerald-200 px-3 py-2 text-sm font-medium text-emerald-600 hover:bg-emerald-50"
-                    >
-                      Gán quyền
-                    </button>
-
-                    <button
-                      onClick={() => openEdit(role)}
-                      className="rounded-lg border border-blue-200 px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50"
-                    >
-                      Sửa
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(role.id)}
-                      className="rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
-                    >
-                      Xóa
-                    </button>
+      {/* DANH SÁCH ROLE */}
+      <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
+        <div className="divide-y divide-slate-100">
+          {filteredRoles.length === 0 ? (
+            <div className="p-10 text-center text-slate-400">Chưa có vai trò nào.</div>
+          ) : (
+            filteredRoles.map((role) => (
+              <div key={role.id} className="p-5 hover:bg-slate-50 transition flex justify-between items-center gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-slate-700 truncate">{role.name}</div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {role.permissions?.map(p => (
+                      <span key={p.id} className="bg-blue-50 text-blue-600 px-2 py-1 rounded-md text-[10px] font-bold border border-blue-100 max-w-[150px] truncate">
+                        {p.name}
+                      </span>
+                    ))}
                   </div>
                 </div>
+                <div className="flex gap-2 shrink-0">
+                  <button onClick={() => openAssign(role)} className="text-emerald-600 text-xs font-bold border border-emerald-100 px-3 py-2 rounded-lg hover:bg-emerald-50">Gán quyền</button>
+                  <button onClick={() => openEdit(role)} className="text-blue-600 text-xs font-bold border border-blue-100 px-3 py-2 rounded-lg hover:bg-blue-50">Sửa</button>
+                  <button onClick={() => handleDelete(role.id)} className="text-red-500 text-xs font-bold border border-red-100 px-3 py-2 rounded-lg hover:bg-red-50">Xóa</button>
+                </div>
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
       </div>
 
+      {/* MODAL SỬA TÊN ROLE */}
       {editingRole && (
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-2xl w-[420px] shadow-lg border border-slate-200">
-            <h2 className="text-lg font-bold text-slate-800 mb-2">Sửa Role</h2>
-            <p className="text-sm text-slate-500 mb-4">
-              Cập nhật tên role trong hệ thống
-            </p>
-
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl">
+            <h2 className="text-lg font-bold mb-4">Sửa vai trò</h2>
             <input
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              className="w-full border border-slate-300 px-4 py-3 rounded-xl mb-4 outline-none focus:ring-2 focus:ring-purple-300"
-              placeholder="Nhập tên role..."
+              className="w-full border p-3 rounded-xl mb-6 outline-none focus:ring-2 focus:ring-blue-400"
             />
-
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={closeEdit}
-                className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleUpdate}
-                className="bg-purple-600 text-white px-4 py-2 rounded-xl hover:bg-purple-700"
-              >
-                Lưu
-              </button>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setEditingRole(null)} className="px-4 py-2 text-slate-500">Hủy</button>
+              <button onClick={handleUpdate} className="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold">Lưu</button>
             </div>
           </div>
         </div>
       )}
 
+      {/* MODAL GÁN QUYỀN (FIX LỖI NHẢY CHỮ) */}
       {selectedRole && (
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-2xl w-[620px] max-h-[85vh] overflow-auto shadow-lg border border-slate-200">
-            <h2 className="text-lg font-bold text-slate-800 mb-2">
-              Gán Permission
-            </h2>
-            <p className="text-sm text-slate-500 mb-4">
-              Role:{" "}
-              <span className="font-medium text-slate-700">
-                {selectedRole.name}
-              </span>
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {permissions.map((p) => {
-                const checked = selectedPermissionIds.includes(p.id);
-
-                return (
-                  <label
-                    key={p.id}
-                    className={`flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer transition ${
-                      checked
-                        ? "border-purple-400 bg-purple-50"
-                        : "border-slate-200 hover:bg-slate-50"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => togglePermission(p.id)}
-                      className="w-4 h-4"
-                    />
-
-                    <div>
-                      <div className="text-sm font-medium text-slate-800">
-                        {p.name}
-                      </div>
-                      <div className="text-xs text-slate-500">
-                        Permission #{p.id}
-                      </div>
-                    </div>
-                  </label>
-                );
-              })}
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-6 rounded-2xl w-full max-w-lg shadow-2xl flex flex-col max-h-[90vh]">
+            <h2 className="text-lg font-bold mb-4 shrink-0">Gán quyền cho: {selectedRole.name}</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto p-1 mb-6 pr-2">
+              {permissions.map(p => (
+                <label key={p.id} className="flex items-center gap-3 border rounded-xl px-4 py-3 cursor-pointer hover:bg-slate-50 transition min-w-0">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 shrink-0"
+                    checked={selectedPermissionIds.includes(p.id)}
+                    onChange={() => setSelectedPermissionIds(prev => prev.includes(p.id) ? prev.filter(x => x !== p.id) : [...prev, p.id])}
+                  />
+                  <span className="text-sm text-slate-700 truncate" title={p.name}>{p.name}</span>
+                </label>
+              ))}
             </div>
-
-            <div className="flex justify-end mt-5 gap-2">
-              <button
-                onClick={closeAssign}
-                className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50"
-              >
-                Hủy
-              </button>
-              <button
-                onClick={handleAssign}
-                className="bg-purple-600 text-white px-4 py-2 rounded-xl hover:bg-purple-700"
-              >
-                Lưu quyền
-              </button>
+            <div className="flex justify-end gap-3 shrink-0 pt-4 border-t">
+              <button onClick={() => setSelectedRole(null)} className="px-4 py-2 text-slate-500 font-bold">Hủy</button>
+              <button onClick={handleAssign} className="bg-purple-600 text-white px-8 py-2 rounded-xl font-bold shadow-lg">Lưu quyền</button>
             </div>
           </div>
         </div>

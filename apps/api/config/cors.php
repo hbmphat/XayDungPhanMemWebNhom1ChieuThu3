@@ -3,7 +3,10 @@
 return [
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
     'allowed_methods' => ['*'],
-    'allowed_origins' => [env('FRONTEND_URL', '*')],
+    
+    // Sửa dòng này để chấp nhận mọi nguồn gửi tới khi đang Dev
+    'allowed_origins' => ['*'], 
+
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],

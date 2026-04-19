@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import apiClient from "@app/_shared/api-client";
 
 type Permission = {
@@ -10,27 +10,20 @@ type Permission = {
 
 export default function PermissionPage() {
   const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [keyword, setKeyword] = useState(""); // State cho thanh tìm kiếm
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [editingPermission, setEditingPermission] =
-    useState<Permission | null>(null);
+  const [editingPermission, setEditingPermission] = useState<Permission | null>(null);
   const [editName, setEditName] = useState("");
 
   const fetchPermissions = async () => {
     try {
-      const res = (await apiClient.get("/permissions")) as {
-        data: { data: Permission[] } | Permission[];
-      };
-
-      const list = Array.isArray(res.data)
-        ? res.data
-        : res.data?.data || [];
-
+      const res = await apiClient.get("/permissions") as any;
+      const list = Array.isArray(res.data) ? res.data : (res.data as any)?.data || [];
       setPermissions(list);
-    } catch (error: unknown) {
-      console.error("Lỗi lấy permission:", error);
-      setPermissions([]);
+    } catch (error) {
+      console.error("Lỗi lấy danh sách:", error);
     }
   };
 
@@ -38,41 +31,35 @@ export default function PermissionPage() {
     fetchPermissions();
   }, []);
 
+  // LOGIC TÌM KIẾM: Tự động lọc khi Quân gõ từ khóa
+  const filteredPermissions = useMemo(() => {
+    const q = keyword.trim().toLowerCase();
+    if (!q) return permissions;
+    return permissions.filter((p) => p.name.toLowerCase().includes(q));
+  }, [permissions, keyword]);
+
   const handleCreate = async () => {
     if (!name.trim()) return;
-
     try {
       setLoading(true);
       await apiClient.post("/permissions", { name: name.trim() });
       setName("");
       await fetchPermissions();
-    } catch (error: unknown) {
-      console.error("Lỗi thêm permission:", error);
-
-      const message =
-        error instanceof Error ? error.message : "Lỗi không xác định";
-
-      if (message.includes("Unique violation")) {
-        alert("Permission đã tồn tại");
-      } else {
-        alert("Thêm permission thất bại");
-      }
+    } catch (error) {
+      alert("Thêm thất bại!");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    const ok = window.confirm("Bạn có chắc muốn xóa permission?");
-    if (!ok) return;
-
+    if (!window.confirm("Quân chắc chắn muốn xóa quyền này chứ?")) return;
     try {
       setLoading(true);
       await apiClient.delete(`/permissions/${id}`);
       await fetchPermissions();
-    } catch (error: unknown) {
-      console.error("Lỗi xóa permission:", error);
-      alert("Xóa thất bại");
+    } catch (error) {
+      alert("Xóa thất bại!");
     } finally {
       setLoading(false);
     }
@@ -83,155 +70,117 @@ export default function PermissionPage() {
     setEditName(p.name);
   };
 
-  const closeEdit = () => {
-    setEditingPermission(null);
-    setEditName("");
-  };
-
   const handleUpdate = async () => {
-    if (!editingPermission) return;
-
-    if (!editName.trim()) {
-      alert("Tên không được để trống");
-      return;
-    }
-
+    if (!editingPermission || !editName.trim()) return;
     try {
       setLoading(true);
-      await apiClient.put(`/permissions/${editingPermission.id}`, {
-        name: editName.trim(),
-      });
-
-      closeEdit();
+      await apiClient.put(`/permissions/${editingPermission.id}`, { name: editName.trim() });
+      setEditingPermission(null);
       await fetchPermissions();
-    } catch (error: unknown) {
-      console.error("Lỗi sửa permission:", error);
-
-      const message =
-        error instanceof Error ? error.message : "Lỗi không xác định";
-
-      if (message.includes("Unique violation")) {
-        alert("Tên đã tồn tại");
-      } else {
-        alert("Sửa thất bại");
-      }
+    } catch (error) {
+      alert("Cập nhật thất bại!");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen">
-      {/* HEADER */}
+    <div className="p-6 bg-slate-50 min-h-screen" suppressHydrationWarning>
       <div className="mb-5 flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">
-            Quản lý Permission
-          </h1>
-          <p className="text-sm text-slate-500">
-            Thêm, sửa, xóa permission hệ thống
-          </p>
+          <h1 className="text-2xl font-bold text-slate-800">Quản lý Permission</h1>
+          <p className="text-sm text-slate-500">Thêm, sửa, xóa, tìm kiếm permission hệ thống</p>
         </div>
-
-        <div className="bg-white px-4 py-3 rounded-xl shadow border text-center">
-          <div className="text-xs text-slate-500">Tổng</div>
-          <div className="text-xl font-bold text-purple-600">
-            {permissions.length}
-          </div>
+        <div className="bg-white px-4 py-2 rounded-xl shadow border text-purple-600 font-bold text-center">
+          <div className="text-[10px] uppercase text-slate-400">Tổng số</div>
+          {permissions.length}
         </div>
       </div>
 
-      {/* CREATE */}
-      <div className="bg-white p-4 rounded-xl shadow border mb-5">
+      {/* BOX THÊM MỚI & TÌM KIẾM */}
+      <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-5 space-y-4">
         <div className="flex gap-3">
           <input
+            suppressHydrationWarning
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Nhập tên permission..."
-            className="flex-1 border px-3 py-2 rounded-lg focus:ring-2 focus:ring-purple-400 outline-none"
+            placeholder="Nhập tên permission mới..."
+            className="flex-1 border border-slate-300 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-purple-400 transition-all"
           />
-
           <button
             onClick={handleCreate}
             disabled={loading}
-            className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-60"
+            className="bg-purple-600 text-white px-8 py-3 rounded-xl hover:bg-purple-700 disabled:opacity-50 font-semibold shadow-md active:scale-95 transition"
           >
             {loading ? "..." : "Thêm"}
           </button>
         </div>
-      </div>
 
-      {/* LIST */}
-      <div className="bg-white rounded-xl shadow border overflow-hidden">
-        <div className="px-4 py-3 border-b bg-slate-50 font-medium">
-          Danh sách permission
+        {/* THANH TÌM KIẾM ĐÃ QUAY TRỞ LẠI */}
+        <div className="relative">
+          <input
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="🔍 Tìm nhanh permission (ví dụ: 'bao cao')..."
+            className="w-full bg-slate-50 border border-slate-200 px-10 py-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-200 transition-all"
+          />
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></span>
         </div>
-
-        {permissions.length === 0 ? (
-          <div className="p-6 text-slate-500 text-sm">
-            Chưa có permission
-          </div>
-        ) : (
-          <div>
-            {permissions.map((p, index) => (
-              <div
-                key={p.id}
-                className="flex justify-between items-center px-4 py-3 border-b last:border-none hover:bg-slate-50"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 bg-purple-100 text-purple-600 flex items-center justify-center rounded-md text-xs font-bold">
-                    {index + 1}
-                  </div>
-                  <span>{p.name}</span>
-                </div>
-
-                <div className="flex gap-3 text-sm">
-                  <button
-                    onClick={() => openEdit(p)}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Sửa
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(p.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Xóa
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
-      {/* MODAL EDIT */}
-      {editingPermission && (
-        <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
-          <div className="bg-white p-5 rounded-xl w-[350px] shadow-lg">
-            <h2 className="font-bold mb-3">Sửa Permission</h2>
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="px-5 py-4 bg-slate-50 border-b flex justify-between items-center">
+          <span className="text-sm font-bold text-slate-700">Danh sách quyền hạn</span>
+          <span className="text-xs text-slate-500">Đang lọc: {filteredPermissions.length} kết quả</span>
+        </div>
+        <table className="w-full text-left border-collapse">
+          <thead className="bg-slate-50 border-b">
+            <tr>
+              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">STT</th>
+              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Tên Permission</th>
+              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">Hành động</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {filteredPermissions.length === 0 ? (
+              <tr>
+                <td colSpan={3} className="p-10 text-center text-slate-400">
+                  <div className="text-lg">😕</div>
+                  Không tìm thấy quyền nào phù hợp Quân ơi...
+                </td>
+              </tr>
+            ) : (
+              filteredPermissions.map((p, index) => (
+                <tr key={p.id} className="hover:bg-slate-50 transition group">
+                  <td className="px-6 py-4 text-sm text-slate-400">{index + 1}</td>
+                  <td className="px-6 py-4 text-sm font-semibold text-slate-700 group-hover:text-purple-600 transition">
+                    {p.name}
+                  </td>
+                  <td className="px-6 py-4 text-right flex justify-end gap-5">
+                    <button onClick={() => openEdit(p)} className="text-blue-500 hover:text-blue-700 text-sm font-bold transition">Sửa</button>
+                    <button onClick={() => handleDelete(p.id)} className="text-red-400 hover:text-red-600 text-sm font-bold transition">Xóa</button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
+      {/* MODAL SỬA */}
+      {editingPermission && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-8 rounded-3xl w-full max-w-md shadow-2xl border border-slate-200 animate-in zoom-in-95 duration-200">
+            <h2 className="text-xl font-black mb-1 text-slate-800">Cập nhật quyền</h2>
+            <p className="text-sm text-slate-500 mb-6">Thay đổi tên cho permission #{editingPermission.id}</p>
             <input
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              className="w-full border px-3 py-2 rounded mb-4"
+              className="w-full border border-slate-300 p-4 rounded-2xl mb-8 outline-none focus:ring-4 focus:ring-blue-100 transition-all font-medium"
             />
-
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={closeEdit}
-                className="px-3 py-2 border rounded"
-              >
-                Hủy
-              </button>
-
-              <button
-                onClick={handleUpdate}
-                className="px-3 py-2 bg-purple-600 text-white rounded"
-              >
-                Lưu
-              </button>
+            <div className="flex gap-3">
+              <button onClick={() => setEditingPermission(null)} className="flex-1 px-4 py-3 border border-slate-200 rounded-2xl text-slate-600 font-bold hover:bg-slate-50 transition">Hủy</button>
+              <button onClick={handleUpdate} className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-2xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition active:scale-95">Lưu lại ngay</button>
             </div>
           </div>
         </div>
