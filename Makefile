@@ -10,6 +10,12 @@ setup-local:
 	@-cmd /c "if not exist apps\web-app\.env copy apps\web-app\.env.example apps\web-app\.env"
 	cd apps/api && php artisan key:generate
 	@echo "Setup local completed."
+# Chạy lint cho toàn bộ monorepo
+lint:
+	npx turbo run lint
+# Chạy test cho toàn bộ monorepo
+test:
+	npx turbo run test
 # Khởi tạo database
 db-init:
 	cd apps/api && php artisan migrate --seed
@@ -19,28 +25,16 @@ db-reset:
 	cd apps/api && php artisan migrate:fresh --seed
 	@echo "Database reset completed."
 
-# --- BUILD COMMANDS ---
+# --- DOCKER COMMANDS ---
 # Thiết lập môi trường Docker
-setup-docker:
+setup-docker: clean-web
 	docker compose build
-	docker compose run --rm --entrypoint sh api -c "composer install"
-	docker compose run --rm  --entrypoint sh web-app -c "cd apps/web-app && npm install"
-	docker compose run --rm api php artisan migrate --seed
 	@echo "Setup docker completed."
-# Build lại toàn bộ hệ thống
-build: clean-web
-	docker compose build
-
+	
 # Build sạch từ đầu (Không dùng cache Docker)
 rebuild: clean-web
 	docker compose build --no-cache
 
-# Dọn dẹp các thư mục rác của Next.js
-clean-web:
-	@echo "Cleaning Next.js build and cache..."
-	@-cmd /c "if exist apps\web-app\.next rmdir /s /q apps\web-app\.next"
-	@-cmd /c "if exist apps\web-app\.npm rmdir /s /q apps\web-app\.npm"
-	@echo "Clean completed."
 
 # --- RUNTIME COMMANDS ---
 
@@ -51,7 +45,9 @@ up:
 # Dừng và xóa containers
 down:
 	docker compose down
-
+# 	Dừng và xóa containers cùng với volumes (dữ liệu)
+down-v:
+	docker compose down -v
 # Khởi động lại hệ thống
 restart:
 	docker compose restart
@@ -74,3 +70,5 @@ log-nginx:
 
 log-db:
 	docker compose logs -f db-main
+logs-short:
+	docker compose logs -f --tail=100

@@ -10,14 +10,13 @@ class UserService
 {
     /**
      * Lấy danh sách người dùng, phân trang mặc định 10 records
-     * Tìm kiếm theo tên, email, số điện thoại; lọc theo role, status 
+     * Tìm kiếm theo tên, email, số điện thoại; lọc theo role, status
      */
     public function getPaginatedUsers(int $perPage, array $filters = []): LengthAwarePaginator
     {
         return User::query()
-            ->when(!empty($filters['search']), function ($query) use ($filters) {
-                // Postgres hỗ trợ ILIKE (không phân biệt hoa thường), nhưng dùng LOWER() LIKE ? vẫn rất chuẩn
-                $search = '%' . mb_strtolower(trim($filters['search'])) . '%';
+            ->when(! empty($filters['search']), function ($query) use ($filters) {
+                $search = '%'.mb_strtolower(trim($filters['search'])).'%';
                 $query->where(function ($q) use ($search) {
                     $q->whereRaw('LOWER(user_name) LIKE ?', [$search])
                         ->orWhereRaw('LOWER(email) LIKE ?', [$search])
@@ -63,6 +62,7 @@ class UserService
             unset($data['password']);
         }
         $user->update($data);
+
         return $user;
     }
 

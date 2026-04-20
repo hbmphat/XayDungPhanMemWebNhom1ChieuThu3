@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turborepo.dev/schema.json",
+  "$schema": "./node_modules/turbo/schema.json",
   "ui": "tui",
   "tasks": {
     "build": {
@@ -8,10 +8,16 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^lint"],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "cache": true
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^check-types"],
+      "cache": true
     },
     "dev": {
       "cache": false,

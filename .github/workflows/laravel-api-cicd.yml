@@ -86,7 +86,7 @@ jobs:
             file: ./apps/api/Dockerfile
             push: true
             tags: hth4438/api:latest
-  # Deloy
+  # Deploy
   deploy:
       runs-on: ubuntu-latest
       needs: build-and-push

@@ -23,11 +23,11 @@ class UserResource extends JsonResource
             'last_name' => $this->last_name,
             'full_name' => $this->full_name,
             'email' => $this->email,
-            'date_of_birth' => $this->date_of_birth->format('Y-m-d'),
+            'date_of_birth' => $this->date_of_birth?->format('Y-m-d'),
             'address' => $this->address,
             'phone' => $this->phone,
-            'created_at' => $this->created_at->format('d-m-Y H:i'),
-            'updated_at' => $this->updated_at->format('d-m-Y H:i'),
+            'created_at' => $this->created_at?->format('d-m-Y H:i'),
+            'updated_at' => $this->updated_at?->format('d-m-Y H:i'),
         ];
     }
 }

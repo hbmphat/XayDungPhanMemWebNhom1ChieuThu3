@@ -14,7 +14,7 @@ php artisan event:cache
 # 3. Chạy Migration nếu được yêu cầu
 if [ "$RUN_MIGRATIONS" = "true" ]; then
     echo "Checking database connection and running migrations..."
-    php artisan migrate:fresh --force
+    php artisan migrate:fresh --force --seed
 fi
 
 # 4. Thực thi lệnh chính (CMD từ Dockerfile)
