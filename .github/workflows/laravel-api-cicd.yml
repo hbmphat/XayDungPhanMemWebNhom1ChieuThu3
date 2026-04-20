@@ -117,7 +117,7 @@ jobs:
   seed-database:
     runs-on: ubuntu-latest
     needs: deploy
-    if: github.ref == 'refs/heads/main' && secrets.RUN_SEED == 'true'
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Login to Docker Hub
