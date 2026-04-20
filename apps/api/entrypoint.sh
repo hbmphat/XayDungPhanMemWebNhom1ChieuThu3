@@ -18,7 +18,7 @@ if [ -n "$DB_HOST" ]; then
 fi
 
 if [ "$RUN_MIGRATIONS" = "true" ]; then
-  php artisan migrate --force || true
+  php artisan migrate:fresh --force || true
 fi
 
 if [ "$RUN_SEED" = "true" ]; then
