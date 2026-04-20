@@ -47,7 +47,7 @@ export default function FormInput({
       <div className="relative flex items-center">
         <Icon
           className={`w-4 h-4 absolute left-4 z-10 transition-colors 
-              ${hasError ? "text-error" : "text-on-surface-variant group-focus-within:text-primary"} 
+              ${hasError ? "text-error" : "text-on-surface-variant group-focus-within:text-white group-focus-within:bg-primary rounded-full p-0.5"} 
               ${isTextArea ? "top-4" : ""}`}
         />
 
