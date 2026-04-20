@@ -5,6 +5,7 @@ import {
   LogOut,
   ShieldCheck,
   Users,
+  Globe,
   Smartphone,
 } from "lucide-react";
 import { SidebarLink } from "@components/core";
@@ -59,6 +60,13 @@ export default function Sidebar() {
           icon={<Smartphone size={20} />}
           label="Quản lý Sim"
           active={pathname.startsWith("/admin/sims")}
+          onClick={close}
+        />
+        <SidebarLink
+          href="/admin/providers"
+          icon={<Globe size={20} />}
+          label="Quản lý Nhà mạng"
+          active={pathname.startsWith("/admin/providers")}
           onClick={close}
         />
       </nav>

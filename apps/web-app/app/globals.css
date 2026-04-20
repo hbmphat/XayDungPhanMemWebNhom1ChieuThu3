@@ -97,8 +97,9 @@
     @apply block w-full px-10 py-3 bg-surface-container-low 
            border-t-0 border-l-0 border-r-0 border-b-2 
            border-outline-variant rounded-xl transition-all 
-           text-sm font-medium
+           text-sm font-medium text-slate-900
            outline-none ring-0;
+    color-scheme: light;
     &::placeholder {
       @apply text-slate-400 opacity-100;
     }
@@ -107,7 +108,17 @@
   .form-input:focus {
     outline: none !important;
     box-shadow: none !important;
-    @apply border-primary bg-primary/5 ring-0;
+    @apply border-primary bg-white ring-0;
+  }
+
+  .form-input:-webkit-autofill,
+  .form-input:-webkit-autofill:hover,
+  .form-input:-webkit-autofill:focus,
+  .form-input:-webkit-autofill:active {
+    -webkit-text-fill-color: #0f172a !important;
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    box-shadow: 0 0 0 1000px #ffffff inset !important;
+    transition: background-color 9999s ease-in-out 0s;
   }
 
   /* Button chính - Tách Hover/Active */

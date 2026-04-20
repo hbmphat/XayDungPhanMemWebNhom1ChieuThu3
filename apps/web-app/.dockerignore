@@ -41,7 +41,5 @@ docs/
 .editorconfig
 
 # --- Docker & CI/CD ---
-Dockerfile
-.dockerignore
 docker-compose*
 .github

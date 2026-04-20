@@ -1,15 +1,14 @@
 "use client";
 
-import { Bell, Menu, CirclePlus } from "lucide-react";
+import { Bell, Menu, CirclePlus, Signal } from "lucide-react";
 import { useSidebar } from "@shared/contexts/SidebarContext";
 
-interface SimHeaderProps {
+interface ProviderHeaderProps {
   total?: number;
-  activeTotal?: number;
   onAddClick: () => void;
 }
 
-export default function SimHeader({ total = 0, activeTotal = 0, onAddClick }: SimHeaderProps) {
+export default function ProviderHeader({ total = 0, onAddClick }: ProviderHeaderProps) {
   const { toggle } = useSidebar();
 
   return (
@@ -23,17 +22,11 @@ export default function SimHeader({ total = 0, activeTotal = 0, onAddClick }: Si
         </button>
         <div className="flex items-center gap-3">
           <h1 className="text-lg sm:text-xl font-semibold text-slate-800 truncate">
-            SIM Management
+            Provider Management
           </h1>
           <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-600 border border-indigo-100">
             Total: {total.toLocaleString()}
           </span>
-          <span className="hidden md:inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
-            Active: {activeTotal.toLocaleString()}
-          </span>
-          {/* <span className="hidden md:inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100">
-            InActive: {total - activeTotal}
-          </span> */}
         </div>
       </div>
 
@@ -48,7 +41,7 @@ export default function SimHeader({ total = 0, activeTotal = 0, onAddClick }: Si
           className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shadow-sm shadow-indigo-200"
         >
           <CirclePlus className="w-4 h-4" />
-          Add SIM
+          Add Provider
         </button>
       </div>
     </header>
