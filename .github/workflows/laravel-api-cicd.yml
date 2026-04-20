@@ -1,11 +1,14 @@
 name: Laravel API CI/CD
 
+env:
+  DOCKER_IMAGE: hth4438/api
+  DOCKER_TAG: test-new
+
 on:
   push:
     branches: [ "main", "develop" ]
 
 jobs:
-  # Chạy test ở nhánh develop
   laravel-tests:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
@@ -29,69 +32,112 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.3'
-        extensions: mbstring, dom, curl, libxml, pdo_pgsql, pgsql
-        coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, curl, libxml, pdo_pgsql, pgsql
+          coverage: none
 
-    - name: Install Dependencies
-      run: composer install --prefer-dist --no-ansi --no-interaction --no-progress
+      # ===== Composer cache =====
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-cache-${{ hashFiles('apps/api/composer.lock') }}
+          restore-keys: |
+            composer-cache-
 
-    - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-ansi --no-interaction --no-progress
 
-    - name: Generate key
-      run: php artisan key:generate
+      - name: Copy .env
+        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
-    - name: Run Migrations
-      env:
-        DB_CONNECTION: pgsql
-        DB_HOST: 127.0.0.1
-        DB_PORT: 5432
-        DB_DATABASE: sim_shop
-        DB_USERNAME: postgres
-        DB_PASSWORD: root
-      run: php artisan migrate --force
+      - name: Generate key
+        run: php artisan key:generate
 
-    - name: Execute tests
-      env:
-        DB_CONNECTION: pgsql
-        DB_HOST: 127.0.0.1
-        DB_PORT: 5432
-        DB_DATABASE: sim_shop
-        DB_USERNAME: postgres
-        DB_PASSWORD: root
-      run: php artisan test
-  # Đóng gói và đẩy lên Docker Hub
+      - name: Run Migrations
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: sim_shop
+          DB_USERNAME: postgres
+          DB_PASSWORD: root
+        run: php artisan migrate --force
+
+      # ===== PHPUnit cache speed =====
+      - name: Cache PHPUnit result cache
+        uses: actions/cache@v4
+        with:
+          path: .phpunit.cache
+          key: phpunit-${{ hashFiles('apps/api/phpunit.xml') }}
+          restore-keys: |
+            phpunit-
+
+      - name: Execute tests
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: sim_shop
+          DB_USERNAME: postgres
+          DB_PASSWORD: root
+        run: php artisan test
   build-and-push:
-      runs-on: ubuntu-latest
-      if: github.ref == 'refs/heads/main'
-      steps:
-        - uses: actions/checkout@v4
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Login to Docker Hub
-          uses: docker/login-action@v3
-          with:
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-        - name: Build and Push Docker Image
-          uses: docker/build-push-action@v5
-          with:
-            context: .
-            file: ./apps/api/Dockerfile
-            push: true
-            tags: hth4438/api:test
-  # Deploy
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/api/Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
   deploy:
-      runs-on: ubuntu-latest
-      needs: build-and-push
-      if: github.ref == 'refs/heads/main'
-      steps:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    steps:
       - name: Trigger Render Deploy Hook
         run: |
           curl -f "${{ secrets.RENDER_DEPLOY_HOOK }}"
+  seed-database:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: github.ref == 'refs/heads/main' && secrets.RUN_SEED == 'true'
+
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Wait for API ready
+        run: sleep 20
+
+      - name: Run Seeder via Docker
+        run: |
+          docker run --rm \
+            -e APP_ENV=production \
+            -e APP_KEY=${{ secrets.APP_KEY }} \
+            -e DB_HOST=${{ secrets.DB_HOST }} \
+            -e DB_PORT=${{ secrets.DB_PORT }} \
+            -e DB_DATABASE=${{ secrets.DB_DATABASE }} \
+            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }} \
+            php artisan db:seed --force

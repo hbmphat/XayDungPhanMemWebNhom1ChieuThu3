@@ -26,9 +26,9 @@
       "@app_types/*": ["./app/_types/*"],
       "@admin.features/*": ["./app/(admin)/admin/(AdminPanel)/_features/*"],
       "@home/*": ["./app/(home)/*"],
-      "@components/*": ["./app/_components/*"],
+      "@components/*": ["./app/_components/*"]
     },
-    "types": ["node", "vitest/globals", "@testing-library/jest-dom"],
+    "types": ["node"]
   },
   "include": [
     "next-env.d.ts",
@@ -36,9 +36,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    "**/*.css"
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

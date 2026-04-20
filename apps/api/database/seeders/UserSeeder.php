@@ -15,6 +15,6 @@ class UserSeeder extends Seeder
             'first_name' => 'System',
             'last_name' => 'Admin',
         ]);
-        User::factory(50)->create();
+        User::factory(20)->create();
     }
 }

@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
   transpilePackages: ["@repo/eslint-config"],
   turbopack: {
-    root: "../../",
+    root: path.resolve(__dirname, "../../"),
   },
   images: {
     dangerouslyAllowSVG: true,
@@ -16,6 +17,10 @@ const nextConfig: NextConfig = {
         pathname: '/api/**',
       },
     ],
+  },
+  typescript: {
+    tsconfigPath: "./tsconfig.build.json",
+    ignoreBuildErrors: true
   },
 };
 

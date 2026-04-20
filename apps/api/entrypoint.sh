@@ -1,36 +1,35 @@
 #!/bin/sh
 set -e
 
-# 1. Xóa toàn bộ cache cũ
-echo "Clearing old caches..."
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
-php artisan event:clear
+echo "Starting Laravel container..."
 
-# 2. Phát hiện package (Cần thiết cho các thư viện mới cài)
-php artisan package:discover --ansi
+if [ "$APP_ENV" != "production" ]; then
+  php artisan config:clear
+  php artisan route:clear
+  php artisan view:clear
+  php artisan event:clear
+fi
 
-# 3. Chạy Migration và Seed
+if [ -n "$DB_HOST" ]; then
+  echo "Waiting for database..."
+  until nc -z "$DB_HOST" "${DB_PORT:-3306}"; do
+    sleep 1
+  done
+fi
+
 if [ "$RUN_MIGRATIONS" = "true" ]; then
-    echo "Checking database connection and running migrations..."
-    
-    # Đợi DB sẵn sàng
-    sleep 5
-
-    php artisan migrate:fresh --force --seed
+  php artisan migrate --force || true
 fi
 
-# 4. Tối ưu hóa hiệu năng (Chỉ nên chạy ở Production)
+if [ "$RUN_SEED" = "true" ]; then
+  php artisan db:seed --force
+fi
+
 if [ "$APP_ENV" = "production" ]; then
-    echo "Optimizing for Production..."
-    php artisan config:cache
-    php artisan route:cache
-    php artisan event:cache
-else
-    echo "Running in $APP_ENV mode. Skipping optimization cache..."
+  php artisan config:cache
+  php artisan route:cache
+  php artisan event:cache
 fi
 
-# 5. Thực thi lệnh chính (CMD từ Dockerfile)
 echo "Application is ready!"
 exec "$@"

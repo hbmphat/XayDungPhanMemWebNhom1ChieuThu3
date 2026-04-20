@@ -1,15 +1,18 @@
-import react from '@vitejs/plugin-react'
+import { defineConfig, type ConfigEnv } from 'vitest/config'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
 
-export default defineConfig({
-    plugins: [tsconfigPaths(), react()],
+export default defineConfig(({ command }: ConfigEnv) => ({
+    plugins: command === 'serve'
+        ? [tsconfigPaths(), react()]
+        : [tsconfigPaths()],
+
     test: {
         environment: 'jsdom',
         globals: true,
         setupFiles: ['./vitest.setup.ts'],
         coverage: {
-            provider: 'v8',
+            provider: 'v8' as const,
             reporter: ['text', 'json', 'html', 'lcov'],
             include: ['app/**/*.{ts,tsx}'],
             exclude: [
@@ -22,17 +25,15 @@ export default defineConfig({
                 '**/*.layout.tsx',
                 '**/*.types.ts',
                 '**/index.ts',
-                // Page và Layout (Thường không test Unit)
                 '**/app/**/layout.tsx',
                 '**/app/**/page.tsx',
                 '**/app/**/loading.tsx',
                 '**/app/**/error.tsx',
-                // Loại trừ các file cấu hình và types
                 'app/(admin)/admin/(AdminPanel)/_features/users/types/**',
                 'app/_types/**',
                 'app/_shared/api-client.ts',
                 'app/_shared/contexts/**',
-                'app/_components/core/**',
+                'app/_components/core/**'
             ],
             thresholds: {
                 lines: 80,
@@ -42,6 +43,6 @@ export default defineConfig({
             }
         },
         pool: 'threads',
-        css: false,
-    },
-})
+        css: false
+    }
+}))
