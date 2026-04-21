@@ -10,21 +10,31 @@ class PermissionController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'data' => Permission::all()
-        ]);
+        return $this->successResponse(
+            Permission::all(),
+            'Permission list'
+        );
     }
 
     public function store(Request $request)
     {
         $request->validate(['name' => 'required|string|unique:permissions,name']);
         $permission = Permission::create(['name' => $request->name]);
-        return response()->json($permission, 201);
+
+        return $this->successResponse(
+            $permission,
+            'Created successfully',
+            201
+        );
     }
 
     public function destroy($id)
     {
         Permission::findOrFail($id)->delete();
-        return response()->json(['message' => 'Xóa thành công']);
+
+        return $this->successResponse(
+            null,
+            'Deleted successfully'
+        );
     }
 }

@@ -10,7 +10,7 @@ use App\Http\Controllers\Permission\PermissionController;
 Route::get('/health', function () {
     return response()->json(['status' => 'ok'], 200);
 });
-
+    
 Route::apiResource('users', UserController::class);
 Route::apiResource('roles', RoleController::class);
 Route::apiResource('permissions', PermissionController::class);
