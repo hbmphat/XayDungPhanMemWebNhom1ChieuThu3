@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Authorization;
+namespace App\Http\Controllers\Role;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
@@ -10,9 +10,8 @@ class RoleController extends Controller
 {
     public function index()
     {
-        // Trả về mảng bọc trong 'data' để code Frontend của Quân không bị trống
         return response()->json([
-            'data' => Role::with('permissions')->orderBy('id', 'desc')->get()
+            'data' => Role::all()
         ]);
     }
 

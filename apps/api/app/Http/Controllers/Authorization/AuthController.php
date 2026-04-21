@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Authorization;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -25,23 +26,24 @@ class AuthController extends Controller
         $user = User::create([
             'user_name'     => $request->user_name,
             'email'         => $request->email,
-            'password'      => Hash::make($request->password),
-
-            // Thông tin bổ sung
+            'password'      => $request->password,
             'first_name'    => $request->first_name,
             'last_name'     => $request->last_name,
             'phone'         => $request->phone,
             'address'       => $request->address,
             'date_of_birth' => $request->date_of_birth,
-
-            // Mặc định
-            'role'          => 'customer',
-            'status'        => 1,
+            'status'        => 'active',
         ]);
+
+        $role = Role::where('name', 'Customer')->first();
+
+        if ($role) {
+            $user->roles()->attach($role->id);
+        }
 
         return response()->json([
             'message' => 'Đăng ký thành công',
-            'user'    => $user
+            'user'    => $user->load('roles')
         ], 201);
     }
 
@@ -60,12 +62,18 @@ class AuthController extends Controller
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'message' => 'Sai email hoặc mật khẩu'
-            ], 400);
+            ], 401);
+        }
+
+        if ($user->status !== 'active') {
+            return response()->json([
+                'message' => 'Tài khoản bị khóa'
+            ], 403);
         }
 
         return response()->json([
             'message' => 'Đăng nhập thành công',
-            'user'    => $user
-        ], 200);
+            'user'    => $user->load('roles')
+        ]);
     }
 }

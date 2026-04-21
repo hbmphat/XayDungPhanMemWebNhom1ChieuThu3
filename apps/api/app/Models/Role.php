@@ -2,18 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $fillable = ['name'];
 
-    // Quan hệ với Permission - Rất quan trọng để hiện danh sách quyền trong Role
-    public function permissions()
+    public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(Permission::class, 'role_has_permissions', 'role_id', 'permission_id');
+        return $this->belongsToMany(
+            Permission::class,
+            'role_has_permissions',
+            'role_id',
+            'permission_id'
+        );
+    }
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'user_has_roles',
+            'role_id',
+            'user_id'
+        );
     }
 }

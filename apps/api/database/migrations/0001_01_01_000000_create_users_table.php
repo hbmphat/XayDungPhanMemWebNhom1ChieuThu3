@@ -21,7 +21,6 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('password');
-            $table->string('role')->default('customer')->index();
             $table->string('status')->default('active')->index();
             $table->rememberToken();
             $table->timestamps();
@@ -42,6 +41,7 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
     }
+
 
     /**
      * Reverse the migrations.
